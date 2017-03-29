@@ -4,6 +4,10 @@ package at.sw2017.q_up;
  * Created by PS on 29.03.17.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+import at.sw2017.q_up.Place;
+
 public class DatabaseHandler {
 
     // these must be filled from config file:
@@ -15,7 +19,7 @@ public class DatabaseHandler {
     private String server_table_places;
 
     // variables to cache server data
-    //private Place placesList ..
+    List<Place> placesList = new ArrayList<Place>();
 
     public DatabaseHandler() {
         // TODO load config file
