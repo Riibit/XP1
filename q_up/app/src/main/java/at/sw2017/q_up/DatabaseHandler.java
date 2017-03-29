@@ -4,17 +4,14 @@ package at.sw2017.q_up;
  * Created by PS on 29.03.17.
  */
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import at.sw2017.q_up.Place;
 
 public class DatabaseHandler {
 
-    // these must be filled from config file:
-    private String server_url;
-    private String server_user;
-    private String server_pw;
-    private String server_dbname;
+    private DatabaseConfig db_config;
     private String server_table_users;
     private String server_table_places;
 
@@ -24,7 +21,15 @@ public class DatabaseHandler {
 
     public DatabaseHandler() {
         // TODO load config file
-        // ...
+        db_config = new DatabaseConfig();
+        try {
+
+            db_config.loadConfigValues();
+
+        } catch (IOException e) {
+            System.out.println("Loading config failed!");
+            e.printStackTrace();
+        }
     }
 
     /**
