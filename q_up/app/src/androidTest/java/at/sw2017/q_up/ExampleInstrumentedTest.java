@@ -23,4 +23,32 @@ public class ExampleInstrumentedTest {
 
         assertEquals("at.sw2017.q_up", appContext.getPackageName());
     }
+
+
+    @Test
+    public void testLoginButton() throws Exception {
+      onView(withText("login")).perform(click());
+
+    }
+
+    @Test
+    public void testLoginTextfield() throws Exception {
+        onView(withText("login")).perform(click()); // click on login
+        onView(withId(R.id.editText2)).check(matches(withText("BLABLA")));
+    }
+
+    @Test
+    public void testLoginEditfield() throws Exception {
+        onView(withText("login")).perform(click());
+        onView(withText("*****")).check(matches(isDisplayed()));
+    }
+
+
+    @Test
+    public void testRegister() throws Exception {
+        onView(withText("login")).perform(click());
+        onView(withText("*****")).check(matches(isDisplayed()));
+    }
 }
+
+
