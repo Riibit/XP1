@@ -9,4 +9,11 @@ public class User {
     private String userName;
     private String password;
     private Integer idCheckInPlace;
+
+    public User(Integer id, String name, String pw, Integer chinplace) {
+        userId = id;
+        userName = name;
+        password = pw;
+        idCheckInPlace = chinplace;
+    }
 }
