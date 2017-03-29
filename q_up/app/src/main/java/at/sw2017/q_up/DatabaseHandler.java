@@ -20,6 +20,7 @@ public class DatabaseHandler {
 
     // variables to cache server data
     List<Place> placesList = new ArrayList<Place>();
+    List<User> usersList = new ArrayList<User>();
 
     public DatabaseHandler() {
         // TODO load config file
@@ -40,9 +41,35 @@ public class DatabaseHandler {
      * @brief read places table
      * @return 0 = OK ; <0 = error
      */
-    public Integer readPlaces() {
+    public Integer readPlacesFromDB() {
         // TODO read table
 
         return -1;
+    }
+
+    /**
+     * @brief get cached places
+     * @return list of places
+     */
+    public List<Place> getPlacesList() {
+        return placesList;
+    }
+
+    /**
+     * @brief read users table
+     * @return 0 = OK ; <0 = error
+     */
+    public Integer readUsersFromDB() {
+        // TODO read table
+
+        return -1;
+    }
+
+    /**
+     * @brief get cached users
+     * @return list of users
+     */
+    public List<User> getUsersList() {
+        return usersList;
     }
 }
