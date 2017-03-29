@@ -48,6 +48,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         if (editTextUsername.getText().toString().equals("admin")
                 && editTextPassword.getText().toString().equals("1234")) {
+           /* Toast.makeText(getApplicationContext(),
+                    "supi", Toast.LENGTH_SHORT).show();*/
             switchActivities();
         } else {
             Toast.makeText(getApplicationContext(),
