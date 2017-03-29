@@ -20,13 +20,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button btnSwitchScreens = (Button) findViewById(R.id.btnSwitchScreens);
-        btnSwitchScreens.setOnClickListener(new View.OnClickListener() {
+        //Button btnSwitchScreens = (Button) findViewById(R.id.btnSwitchScreens);
+       /* btnSwitchScreens.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {
                 switchActivities();
             }
-        });
+        });*/
 
         buttonLogin = (Button) findViewById(R.id.buttonLogin);
         buttonLogin.setOnClickListener(this);
@@ -44,6 +44,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         Button clickedButton = (Button) v;
+        switchActivities();
         if (editTextUsername.getText().toString().equals("admin")
                 && editTextPassword.getText().toString().equals("1234")) {
             Toast.makeText(getApplicationContext(),
