@@ -13,6 +13,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.*;
 
@@ -44,8 +45,8 @@ public class ExampleInstrumentedTest {
 
     @Test
     public void testLoginTextfield() throws Exception {
-        onView(withText("login")).perform(click());
-        onView(withText("login")).check(matches(isDisplayed()));
+        onView(withText("login")).perform(click()); // click on login
+        onView(withId(R.id.editText2)).check(matches(withText("BLABLA")));
     }
 
     @Test
