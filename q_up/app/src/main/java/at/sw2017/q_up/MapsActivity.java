@@ -19,13 +19,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
 
     //Default locations which have to be changed into original coordinates
-    private static final LatLng PERTH = new LatLng(-31.952854, 115.857342);
-    private static final LatLng SYDNEY = new LatLng(-33.87365, 151.20689);
-    private static final LatLng BRISBANE = new LatLng(-27.47093, 153.0235);
+    private static final LatLng MCDONALDS = new LatLng(47.055496, 15.448409);
+    private static final LatLng DAVINCI = new LatLng(47.054160, 15.444241);
+    private static final LatLng HOFER = new LatLng(47.055717, 15.441392);
 
-    private Marker mPerth;
-    private Marker mSydney;
-    private Marker mBrisbane;
+    private Marker mMcdonalds;
+    private Marker mDavinci;
+    private Marker mHofer;
 
     public void mapsGoBack() {
         Intent intent = new Intent(this, MainActivity.class);
@@ -67,17 +67,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Add a marker in Graz and move the camera
 
-        mBrisbane=mMap.addMarker(new MarkerOptions().position(BRISBANE).title("Marker in BRISBANE"));
-        mBrisbane.setTag(0);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(BRISBANE));
+        mMcdonalds=mMap.addMarker(new MarkerOptions().position(MCDONALDS).title("Marker in Mcdonalds"));
+        mMcdonalds.setTag(0);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(MCDONALDS));
 
-        mPerth=mMap.addMarker(new MarkerOptions().position(PERTH).title("Marker in Perth"));
-        mPerth.setTag(0);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(PERTH));
+        mDavinci=mMap.addMarker(new MarkerOptions().position(DAVINCI).title("Marker in Davinci"));
+        mDavinci.setTag(0);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(DAVINCI));
 
-        mSydney=mMap.addMarker(new MarkerOptions().position(SYDNEY).title("Marker in Sydney"));
-        mSydney.setTag(0);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(SYDNEY));
+        mHofer=mMap.addMarker(new MarkerOptions().position(HOFER).title("Marker in Hofer"));
+        mHofer.setTag(0);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(HOFER));
+
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.0707, 15.4395),14));
 
 
     }
