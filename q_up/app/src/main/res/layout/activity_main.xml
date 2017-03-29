@@ -4,15 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="at.sw2017.q_up.MainActivity">
+    tools:context="at.sw2017.q_up.MainActivity"
+    tools:layout_editor_absoluteY="81dp"
+    tools:layout_editor_absoluteX="0dp">
+
+    <Button
+        android:id="@+id/buttonLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="login"
+        tools:layout_editor_absoluteY="410dp"
+        tools:layout_editor_absoluteX="139dp" />
+
+    <TextView
+        android:id="@+id/textViewLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="username"
+        tools:layout_editor_absoluteX="149dp"
+        tools:layout_editor_absoluteY="120dp" />
 
     <EditText
-        android:id="@+id/editText"
-        android:layout_width="276dp"
-        android:layout_height="41dp"
+        android:id="@+id/editTextPasswort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="46dp"
-        tools:layout_editor_absoluteY="38dp" />
+        android:inputType="numberPassword"
+        tools:layout_editor_absoluteX="37dp"
+        tools:layout_editor_absoluteY="197dp" />
+
 </android.support.constraint.ConstraintLayout>

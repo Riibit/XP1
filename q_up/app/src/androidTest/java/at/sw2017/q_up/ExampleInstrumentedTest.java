@@ -11,6 +11,8 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.*;
 
@@ -38,8 +40,18 @@ public class ExampleInstrumentedTest {
     public void testLoginButton() throws Exception {
       onView(withText("login")).perform(click());
 
+    }
 
+    @Test
+    public void testLoginTextfield() throws Exception {
+        onView(withText("login")).perform(click());
+        onView(withText("login")).check(matches(isDisplayed()));
+    }
 
+    @Test
+    public void testLoginEditfield() throws Exception {
+        onView(withText("login")).perform(click());
+        onView(withText("*****")).check(matches(isDisplayed()));
     }
 }
 
