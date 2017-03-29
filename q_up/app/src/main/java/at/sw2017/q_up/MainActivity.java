@@ -22,8 +22,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
         buttonLogin = (Button) findViewById(R.id.buttonLogin);
         buttonLogin.setOnClickListener(this);
         editTextUsername = (EditText) findViewById(R.id.editText2);
-        editTextUsername.setHint("hint");
+        editTextUsername.setHint("Username");
         editTextPassword = (EditText) findViewById(R.id.editTextPasswort);
+        editTextPassword.setHint("Password");
 
 
 
