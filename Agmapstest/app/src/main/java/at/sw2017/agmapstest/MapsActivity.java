@@ -11,11 +11,21 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+
+    //Default locations which have to be changed into original coordinates
+    private static final LatLng PERTH = new LatLng(-31.952854, 115.857342);
+    private static final LatLng SYDNEY = new LatLng(-33.87365, 151.20689);
+    private static final LatLng BRISBANE = new LatLng(-27.47093, 153.0235);
+
+    private Marker mPerth;
+    private Marker mSydney;
+    private Marker mBrisbane;
 
     public void mapsGoBack() {
         Intent intent = new Intent(this, MainActivity.class);
@@ -42,9 +52,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
-
-
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -58,9 +65,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng graz = new LatLng(47, 15);
-        mMap.addMarker(new MarkerOptions().position(graz).title("Marker in Graz"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(graz));
+        // Add a marker in Graz and move the camera
+
+        mBrisbane=mMap.addMarker(new MarkerOptions().position(BRISBANE).title("Marker in BRISBANE"));
+        mBrisbane.setTag(0);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(BRISBANE));
+
+        mPerth=mMap.addMarker(new MarkerOptions().position(PERTH).title("Marker in Perth"));
+        mPerth.setTag(0);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(PERTH));
+
+        mSydney=mMap.addMarker(new MarkerOptions().position(SYDNEY).title("Marker in Sydney"));
+        mSydney.setTag(0);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(SYDNEY));
+
+
     }
 }
