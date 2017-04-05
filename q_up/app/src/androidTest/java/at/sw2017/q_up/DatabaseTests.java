@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -19,29 +20,36 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class DatabaseTests {
 
-    DatabaseHandler db_handle = null;
+    @BeforeClass
+    public static void initTestCase() {
+        int bla = 0;
+        bla += 1;
+        while (QUpApp.getInstance().getDBHandler().getSignInComplete() != true)
+        {
+            bla += 1;
+        }
+        bla += 1;
+    }
 
     @Test
     public void loadDatabaseHandler() {
-        db_handle = new DatabaseHandler();
 
+        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
     }
 
-    @Test
-    public void connectDatabase() {
-        if (db_handle == null)
-            loadDatabaseHandler();
-        assertNotNull(db_handle);
-
-        int result = db_handle.login();
-        assertEquals(0, result);
-    }
+//    @Test
+//    public void connectDatabase() {
+//        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+//        assertNotNull(db_handle);
+//
+//        int result = db_handle.login();
+//        assertEquals(0, result);
+//    }
 
     @Test
     public void loadPlaces() {
-        if (db_handle == null)
-            loadDatabaseHandler();
+        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
 
         int result = db_handle.readPlacesFromDB();
@@ -53,8 +61,7 @@ public class DatabaseTests {
 
     @Test
     public void loadUsers() {
-        if (db_handle == null)
-            loadDatabaseHandler();
+        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
 
         int result = db_handle.readUsersFromDB();
