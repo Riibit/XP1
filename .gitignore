@@ -41,5 +41,6 @@ captures/
 # Keystore files
 *.jks
 
-# ignore DB-config file
+# ignore DB-config files
 *dbconfig.properties
+*google-services.json
