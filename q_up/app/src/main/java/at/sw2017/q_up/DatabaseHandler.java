@@ -45,6 +45,7 @@ public class DatabaseHandler {
     private boolean sign_in_complete = false;
 
     private CountDownLatch getUsersLatch;
+    private CountDownLatch getPlacesLatch;
 
     // variables to cache server data
     List<Place> placesList = new ArrayList<Place>();
@@ -60,11 +61,19 @@ public class DatabaseHandler {
     }
 
     /**
-     *
+     * used to sync DB reading
      * @return latch to wait for event
      */
     public CountDownLatch getGetUsersLatch() {
         return getUsersLatch;
+    }
+
+    /**
+     * used to sync DB reading
+     * @return latch to wait for event
+     */
+    public CountDownLatch getGetPlacesLatch() {
+        return getPlacesLatch;
     }
 
     /**
@@ -141,9 +150,53 @@ public class DatabaseHandler {
      * @return 0 = OK ; <0 = error
      */
     public Integer readPlacesFromDB() {
-        // TODO read table
 
-        return -1;
+        getPlacesLatch = new CountDownLatch(1);
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference mDatabase = database.getReference();
+
+        final DatabaseReference placesref = mDatabase.child("places");
+
+        placesref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                    Integer id = Integer.parseInt(dsp.getKey());
+                    String name = "";
+                    Float lat = 0.0f;
+                    Float lon = 0.0f;
+                    Float avgR = 0.0f;
+                    Integer proctime = 0;
+
+                    for (DataSnapshot u_dsp : dsp.getChildren()) {
+                        String key = u_dsp.getKey();
+                        if ("name".equals(key))
+                            name = u_dsp.getValue().toString();
+                        else if ("lat".equals(key))
+                            lat = Float.parseFloat(u_dsp.getValue().toString());
+                        else if ("lon".equals(key))
+                            lon = Float.parseFloat(u_dsp.getValue().toString());
+                        else if ("avgr".equals(key))
+                            avgR = Float.parseFloat(u_dsp.getValue().toString());
+                        else if ("proctime".equals(key))
+                            proctime = Integer.parseInt(u_dsp.getValue().toString());
+                    }
+                    placesList.add(new Place(id, name, lat, lon, avgR, proctime));
+
+                    Log.d("FB", "read place from DB");
+                }
+                getPlacesLatch.countDown();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("FB", "read places failed with: " + databaseError.toString());
+            }
+        });
+
+        return 0;
     }
 
     /**
@@ -159,7 +212,6 @@ public class DatabaseHandler {
      * @return 0 = OK ; <0 = error
      */
     public Integer readUsersFromDB() {
-        // TODO read table
 
         getUsersLatch = new CountDownLatch(1);
 

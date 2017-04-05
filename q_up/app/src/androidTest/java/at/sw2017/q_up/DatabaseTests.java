@@ -47,6 +47,13 @@ public class DatabaseTests {
         int result = db_handle.readPlacesFromDB();
         assertEquals(0, result);
 
+        try {
+            db_handle.getGetPlacesLatch().await(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            //e.printStackTrace();
+            assertEquals(0, 1);
+        }
+
         List<Place> places = db_handle.getPlacesList();
         assertTrue(!places.isEmpty());
     }
