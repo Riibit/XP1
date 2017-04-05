@@ -12,6 +12,8 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements View.OnClickListener {
 
     Button buttonLogin;
+    Button registerNavigationButton;
+    Button loginNavigationButton;
     EditText editTextUsername;
     EditText editTextPassword;
 
@@ -30,29 +32,44 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         buttonLogin = (Button) findViewById(R.id.buttonLogin);
         buttonLogin.setOnClickListener(this);
-        editTextUsername = (EditText) findViewById(R.id.editText2);
+        registerNavigationButton = (Button) findViewById(R.id.registerNavigationButton);
+        registerNavigationButton.setOnClickListener(this);
+        loginNavigationButton = (Button) findViewById(R.id.loginNavigationButton);
+        editTextUsername = (EditText) findViewById(R.id.inputName);
         editTextUsername.setHint("Username");
         editTextPassword = (EditText) findViewById(R.id.editTextPasswort);
         editTextPassword.setHint("Password");
     }
 
     public void switchActivities() {
-        Intent intent = new Intent(this, MapsActivity.class);
-        startActivity(intent);
+        Intent mapIntent = new Intent(this, MapsActivity.class);
+        startActivity(mapIntent);
+    }
+
+    public void switchLoginRegister() {
+        Intent registerIntent = new Intent(this, RegisterActivity.class);
+        startActivity(registerIntent);
     }
 
     @Override
     public void onClick(View v) {
         Button clickedButton = (Button) v;
 
-        if (editTextUsername.getText().toString().equals("admin")
-                && editTextPassword.getText().toString().equals("1234")) {
-           /* Toast.makeText(getApplicationContext(),
-                    "supi", Toast.LENGTH_SHORT).show();*/
-            switchActivities();
-        } else {
-            Toast.makeText(getApplicationContext(),
-                    "ohoh", Toast.LENGTH_SHORT).show();
+        switch (clickedButton.getId()) {
+            case R.id.buttonLogin:
+                if (editTextUsername.getText().toString().equals("admin")
+                        && editTextPassword.getText().toString().equals("1234")) {
+
+                    switchActivities();
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "ohoh", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.registerNavigationButton:
+                switchLoginRegister();
+            default:
+                break;
         }
     }
 }
