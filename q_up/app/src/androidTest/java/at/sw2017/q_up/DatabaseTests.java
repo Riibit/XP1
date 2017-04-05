@@ -65,9 +65,14 @@ public class DatabaseTests {
             assertEquals(0, result);
             db_handle.waitUsersComplete(20);
         }
+        /* example of accessing users:
 
         List<User> users = db_handle.getUsersList();
-        assertTrue(!users.isEmpty());
+        for (User u : users) {
+            if (u.userName.equals("franz"))
+                checkpassword
+        }
+        assertTrue(!users.isEmpty()); */
     }
 
 /* //disabled - spamming :)

@@ -11,6 +11,9 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+
 public class RegisterActivity extends Activity implements View.OnClickListener {
 
     Button loginNavigationButton;
@@ -34,8 +37,8 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         registerButton.setOnClickListener(this);
         inputPassword = (EditText) findViewById(R.id.inputPassword);
         confirmPassword = (EditText) findViewById(R.id.confirmPassword);
-        inputUsername = (EditText) findViewById(R.id.inputPassword);
-        inputEmail = (EditText) findViewById(R.id.confirmPassword);
+        inputUsername = (EditText) findViewById(R.id.inputUsername);
+        inputEmail = (EditText) findViewById(R.id.inputEmail);
     }
 
     public void switchLoginRegister() {
@@ -47,14 +50,32 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         Button clickedButton = (Button) v;
 
-        // request db
-        // get data db
-        // list<user> is here
+        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+        if (db_handle.getUsersList().isEmpty()) {
 
+            int result = db_handle.readUsersFromDB();
+            assertEquals(0, result);
+            db_handle.waitUsersComplete(20);
+        }
 
+        List<User> users = db_handle.getUsersList();
 
+        boolean flag = false;
         switch (clickedButton.getId()) {
             case R.id.registerButton:
+                for (User u : users) {
+                    if (u.userName.equals(inputUsername.getText().toString())) {
+                        Toast.makeText(getApplicationContext(),
+                                "This user already exists!", Toast.LENGTH_SHORT).show();
+                        flag = true;
+                    }
+                    if (flag) break;
+                }
+                if (!flag) {
+                    Toast.makeText(getApplicationContext(),
+                            "This user is ok", Toast.LENGTH_SHORT).show();
+                }
+
                 // check texfield is already in db
                 // if not add data
                 // check confirm password is the same as password

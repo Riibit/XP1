@@ -78,8 +78,8 @@ public class ExampleInstrumentedTest {
 
         // fill up dummylist
 
-        User test_user_1();
-        test_user_1.
+       // User test_user_1();
+        //test_user_1.
 
 
         // check result is correct
