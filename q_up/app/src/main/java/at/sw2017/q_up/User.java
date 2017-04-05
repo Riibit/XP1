@@ -5,15 +5,19 @@ package at.sw2017.q_up;
  */
 
 public class User {
-    private Integer userId;
-    private String userName;
-    private String password;
-    private Integer idCheckInPlace;
+    public String userId;
+    public String userName;
+    public String password;
+    public String idCheckInPlace;
 
-    public User(Integer id, String name, String pw, Integer chinplace) {
-        userId = id;
-        userName = name;
-        password = pw;
-        idCheckInPlace = chinplace;
+    public User() {
+
+    }
+
+    public User(String id, String name, String pw, String chinplace) {
+        this.userId = id;
+        this.userName = name;
+        this.password = pw;
+        this.idCheckInPlace = chinplace;
     }
 }

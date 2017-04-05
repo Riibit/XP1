@@ -42,6 +42,8 @@ public class DatabaseHandler {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase database;
+    private DatabaseReference mDatabase;
 
     // variables to cache server data
     List<Place> placesList = new ArrayList<Place>();
@@ -156,6 +158,10 @@ public class DatabaseHandler {
                         signInLatch.countDown();
                     }
                 });
+
+
+        database = FirebaseDatabase.getInstance();
+        mDatabase = database.getReference();
     }
 
     /**
@@ -165,9 +171,6 @@ public class DatabaseHandler {
     public Integer readPlacesFromDB() {
 
         getPlacesLatch = new CountDownLatch(1);
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference mDatabase = database.getReference();
 
         final DatabaseReference placesref = mDatabase.child("places");
 
@@ -228,31 +231,33 @@ public class DatabaseHandler {
 
         getUsersLatch = new CountDownLatch(1);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference mDatabase = database.getReference();
-
         final DatabaseReference usersref = mDatabase.child("users");
 
         usersref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                    Integer id = Integer.parseInt(dsp.getKey());
-                    String name = "";
-                    String pw = "";
-                    Integer chinplace = 0;
+                usersList.clear();
 
-                    for (DataSnapshot u_dsp : dsp.getChildren()) {
-                        String key = u_dsp.getKey();
-                        if ("name".equals(key))
-                            name = u_dsp.getValue().toString();
-                        else if ("pw".equals(key))
-                            pw = u_dsp.getValue().toString();
-                        else if ("id_q_place".equals(key))
-                            chinplace = Integer.parseInt(u_dsp.getValue().toString());
-                    }
-                    usersList.add(new User(id, name, pw, chinplace));
+                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+//                    String id = dsp.getKey();
+//                    String name = "";
+//                    String pw = "";
+//                    Integer chinplace = 0;
+//
+//                    for (DataSnapshot u_dsp : dsp.getChildren()) {
+//                        String key = u_dsp.getKey();
+//                        if ("name".equals(key))
+//                            name = u_dsp.getValue().toString();
+//                        else if ("pw".equals(key))
+//                            pw = u_dsp.getValue().toString();
+//                        else if ("id_q_place".equals(key))
+//                            chinplace = Integer.parseInt(u_dsp.getValue().toString());
+//                    }
+//                    usersList.add(new User(id, name, pw, chinplace));
+
+                    User user = dsp.getValue(User.class);
+                    usersList.add(user);
 
                     Log.d("FB", "read user from DB");
                 }
@@ -285,8 +290,13 @@ public class DatabaseHandler {
      */
     public int addUser(String name, String pw) {
 
+        DatabaseReference userref = FirebaseDatabase.getInstance().getReference("users");
 
-        return -1;
+        String userId = userref.push().getKey();
+        User user = new User(userId, name, pw, "0");
+        userref.child(userId).setValue(user);
+
+        return 0;
     }
 
     /**
@@ -296,9 +306,25 @@ public class DatabaseHandler {
      * @param value
      * @return 0 if successful
      */
-    public int modifyUserAttribute(Integer id, String attribute, String value) {
+    public int modifyUserAttribute(String id, String attribute, String value) {
 
-        // TODO
-        return -1;
+        DatabaseReference usersref = FirebaseDatabase.getInstance().getReference("users");
+
+        usersref.child(id).child(attribute).setValue(value);
+
+        return 0;
+    }
+
+    /**
+     *
+     * @param id
+     * @param attribute
+     * @return value
+     */
+    public String getUserAttribute(String id, String attribute) {
+
+        DatabaseReference userref = FirebaseDatabase.getInstance().getReference("users");
+
+        return userref.child(id).child(attribute).toString();
     }
 }

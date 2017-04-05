@@ -3,6 +3,7 @@ package at.sw2017.q_up;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.core.deps.guava.base.Strings;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.BeforeClass;
@@ -24,7 +25,10 @@ public class DatabaseTests {
     @BeforeClass
     public static void initTestCase() {
         // wait for the sign in process to complete
-        QUpApp.getInstance().getDBHandler().waitSignInComplete(10);
+        QUpApp.getInstance().getDBHandler().waitSignInComplete(20);
+
+//        int result = QUpApp.getInstance().getDBHandler().readUsersFromDB();
+//        QUpApp.getInstance().getDBHandler().waitUsersComplete(20);
     }
 
     @Test
@@ -39,10 +43,12 @@ public class DatabaseTests {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
 
-        int result = db_handle.readPlacesFromDB();
-        assertEquals(0, result);
+        if (db_handle.getPlacesList().isEmpty()) {
 
-        db_handle.waitPlacesComplete(10);
+            int result = db_handle.readPlacesFromDB();
+            assertEquals(0, result);
+            db_handle.waitPlacesComplete(20);
+        }
 
         List<Place> places = db_handle.getPlacesList();
         assertTrue(!places.isEmpty());
@@ -53,15 +59,18 @@ public class DatabaseTests {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
 
-        int result = db_handle.readUsersFromDB();
-        assertEquals(0, result);
+        if (db_handle.getUsersList().isEmpty()) {
 
-        db_handle.waitUsersComplete(10);
+            int result = db_handle.readUsersFromDB();
+            assertEquals(0, result);
+            db_handle.waitUsersComplete(20);
+        }
 
         List<User> users = db_handle.getUsersList();
         assertTrue(!users.isEmpty());
     }
 
+/* //disabled - spamming :)
     @Test
     public void addUser() {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
@@ -70,13 +79,15 @@ public class DatabaseTests {
         int result = db_handle.addUser("testuser", "password");
         assertEquals(0, result);
     }
+*/
 
+// adding places currently not supported
 //    @Test
 //    public void addPlace() {
 //        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
 //        assertNotNull(db_handle);
 //
-//        int result = db_handle.addPlace("testplace", 12.34, 23.45, 0.0, 10);
+//        int result = db_handle.addPlace("testplace", 12.34, 23.45, 0.0, 10); --> use place class instead of seperate values!
 //        assertEquals(0, result);
 //    }
 
@@ -85,11 +96,41 @@ public class DatabaseTests {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
 
-        Integer id = 1;
-        String attribute = "id_q_place";
-        String value = "5";
+        if (db_handle.getUsersList().isEmpty()) {
 
-        int result = db_handle.modifyUserAttribute(id, attribute, value);
+            int result = db_handle.readUsersFromDB();
+            assertEquals(0, result);
+            db_handle.waitUsersComplete(20);
+        }
+
+        String id = "";
+        for (User u : db_handle.getUsersList()) {
+            if (u.userName.equals("franz"));
+                id = u.userId;
+        }
+        assertNotEquals(id, "");
+
+        int result = db_handle.modifyUserAttribute(id, "idCheckInPlace", "6");
         assertEquals(0, result);
+    }
+
+    @Test
+    public void getUserAttribute() {
+        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+        assertNotNull(db_handle);
+
+        int result = db_handle.readUsersFromDB();
+        assertEquals(0, result);
+        db_handle.waitUsersComplete(10);
+
+        String id = "";
+        for (User u : db_handle.getUsersList()) {
+            if (u.userName.equals("franz"));
+            id = u.userId;
+        }
+        assertNotEquals(id, "");
+
+        String getvalue = db_handle.getUserAttribute(id, "password");
+        assertEquals(getvalue, "password");
     }
 }
