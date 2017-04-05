@@ -2,6 +2,8 @@ package at.sw2017.q_up;
 
 
 import android.content.Context;
+import android.os.CountDownTimer;
+import android.support.annotation.IntegerRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.core.deps.guava.base.Strings;
 import android.support.test.runner.AndroidJUnit4;
@@ -104,14 +106,39 @@ public class DatabaseTests {
         }
 
         String id = "";
-        for (User u : db_handle.getUsersList()) {
-            if (u.userName.equals("franz"));
+        String old_idCheckInPlace = "";
+        List<User> userlist = db_handle.getUsersList();
+
+        for (User u : userlist) {
+            if (u.userName.equals("franz")) {
                 id = u.userId;
+                old_idCheckInPlace = u.idCheckInPlace;
+                break;
+            }
         }
         assertNotEquals(id, "");
 
-        int result = db_handle.modifyUserAttribute(id, "idCheckInPlace", "6");
+        String new_idCheckInPlace = String.valueOf(Integer.parseInt(old_idCheckInPlace) + 1);
+        int result = db_handle.modifyUserAttribute(id, "idCheckInPlace", new_idCheckInPlace);
+
+        // check new value and reset to old value - all must happen in 10s
+        long startTime = System.currentTimeMillis(); //fetch starting time
+        boolean value_changed = false;
+
+        while(!value_changed || (System.currentTimeMillis()-startTime) < 10000) {
+            userlist = db_handle.getUsersList();
+            for (User u : userlist) {
+                if (u.userName.equals("franz")) {
+                    if (u.idCheckInPlace.equals(new_idCheckInPlace)) {
+                        value_changed = true;
+                        db_handle.modifyUserAttribute(id, "idCheckInPlace", old_idCheckInPlace);
+                    }
+                    break;
+                }
+            }
+        }
         assertEquals(0, result);
+        assertEquals(value_changed, true);
     }
 
     @Test

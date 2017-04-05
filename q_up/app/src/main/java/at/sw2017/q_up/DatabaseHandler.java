@@ -233,34 +233,22 @@ public class DatabaseHandler {
 
         final DatabaseReference usersref = mDatabase.child("users");
 
-        usersref.addListenerForSingleValueEvent(new ValueEventListener() {
+        usersref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                // clear list
                 usersList.clear();
 
+                // fill list with new data
                 for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-//                    String id = dsp.getKey();
-//                    String name = "";
-//                    String pw = "";
-//                    Integer chinplace = 0;
-//
-//                    for (DataSnapshot u_dsp : dsp.getChildren()) {
-//                        String key = u_dsp.getKey();
-//                        if ("name".equals(key))
-//                            name = u_dsp.getValue().toString();
-//                        else if ("pw".equals(key))
-//                            pw = u_dsp.getValue().toString();
-//                        else if ("id_q_place".equals(key))
-//                            chinplace = Integer.parseInt(u_dsp.getValue().toString());
-//                    }
-//                    usersList.add(new User(id, name, pw, chinplace));
 
                     User user = dsp.getValue(User.class);
                     usersList.add(user);
 
                     Log.d("FB", "read user from DB");
                 }
+                // signal, that we are finished
                 getUsersLatch.countDown();
             }
 
@@ -280,7 +268,6 @@ public class DatabaseHandler {
     public List<User> getUsersList() {
         return usersList;
     }
-
 
     /**
      *
