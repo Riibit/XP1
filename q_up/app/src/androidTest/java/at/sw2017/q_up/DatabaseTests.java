@@ -23,13 +23,8 @@ public class DatabaseTests {
 
     @BeforeClass
     public static void initTestCase() {
-        int bla = 0;
-        bla += 1;
-        while (QUpApp.getInstance().getDBHandler().getSignInComplete() != true)
-        {
-            bla += 1;
-        }
-        bla += 1;
+        // wait for the sign in process to complete
+        QUpApp.getInstance().getDBHandler().waitSignInComplete(10);
     }
 
     @Test
@@ -47,12 +42,7 @@ public class DatabaseTests {
         int result = db_handle.readPlacesFromDB();
         assertEquals(0, result);
 
-        try {
-            db_handle.getGetPlacesLatch().await(10, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-            assertEquals(0, 1);
-        }
+        db_handle.waitPlacesComplete(10);
 
         List<Place> places = db_handle.getPlacesList();
         assertTrue(!places.isEmpty());
@@ -66,14 +56,40 @@ public class DatabaseTests {
         int result = db_handle.readUsersFromDB();
         assertEquals(0, result);
 
-        try {
-            db_handle.getGetUsersLatch().await(10, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-            assertEquals(0, 1);
-        }
+        db_handle.waitUsersComplete(10);
 
         List<User> users = db_handle.getUsersList();
         assertTrue(!users.isEmpty());
+    }
+
+    @Test
+    public void addUser() {
+        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+        assertNotNull(db_handle);
+
+        int result = db_handle.addUser("testuser", "password");
+        assertEquals(0, result);
+    }
+
+//    @Test
+//    public void addPlace() {
+//        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+//        assertNotNull(db_handle);
+//
+//        int result = db_handle.addPlace("testplace", 12.34, 23.45, 0.0, 10);
+//        assertEquals(0, result);
+//    }
+
+    @Test
+    public void queueUser() {
+        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+        assertNotNull(db_handle);
+
+        Integer id = 1;
+        String attribute = "id_q_place";
+        String value = "5";
+
+        int result = db_handle.modifyUserAttribute(id, attribute, value);
+        assertEquals(0, result);
     }
 }

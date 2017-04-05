@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 import at.sw2017.q_up.Place;
 
@@ -42,38 +43,49 @@ public class DatabaseHandler {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    private boolean sign_in_complete = false;
-
-    private CountDownLatch getUsersLatch;
-    private CountDownLatch getPlacesLatch;
-
     // variables to cache server data
     List<Place> placesList = new ArrayList<Place>();
     List<User> usersList = new ArrayList<User>();
 
+    // used for synchronisation
+    private CountDownLatch signInLatch;
+    private CountDownLatch getUsersLatch;
+    private CountDownLatch getPlacesLatch;
 
     /**
-     * check if sign in is completed (might take a while)
-     * @return true if connection is established
+     * wait for sign in to complete (might take a while)
+     * @param timeout_s timeout in seconds
      */
-    public boolean getSignInComplete() {
-        return sign_in_complete;
+    public void waitSignInComplete(int timeout_s) {
+        try {
+            signInLatch.await(timeout_s, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     * used to sync DB reading
-     * @return latch to wait for event
+     * wait for users table operation to complete (might take a while)
+     * @param timeout_s timeout in seconds
      */
-    public CountDownLatch getGetUsersLatch() {
-        return getUsersLatch;
+    public void waitUsersComplete(int timeout_s) {
+        try {
+            getUsersLatch.await(timeout_s, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     * used to sync DB reading
-     * @return latch to wait for event
+     * wait for places table operation to complete (might take a while)
+     * @param timeout_s timeout in seconds
      */
-    public CountDownLatch getGetPlacesLatch() {
-        return getPlacesLatch;
+    public void waitPlacesComplete(int timeout_s) {
+        try {
+            getPlacesLatch.await(timeout_s, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -125,6 +137,8 @@ public class DatabaseHandler {
 
         mAuth.addAuthStateListener(mAuthListener);
 
+        signInLatch = new CountDownLatch(1);
+
         mAuth.signInWithEmailAndPassword(db_config.getUser(), db_config.getPw())
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -136,17 +150,16 @@ public class DatabaseHandler {
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w("FB", "signInWithEmail:failed", task.getException());
-                            sign_in_complete = false;
                         }
                         else {
-                            sign_in_complete = true;
                         }
+                        signInLatch.countDown();
                     }
                 });
     }
 
     /**
-     * @brief read places table
+     * read places table
      * @return 0 = OK ; <0 = error
      */
     public Integer readPlacesFromDB() {
@@ -200,7 +213,7 @@ public class DatabaseHandler {
     }
 
     /**
-     * @brief get cached places
+     * get cached places
      * @return list of places
      */
     public List<Place> getPlacesList() {
@@ -208,7 +221,7 @@ public class DatabaseHandler {
     }
 
     /**
-     * @brief read users table
+     * read users table
      * @return 0 = OK ; <0 = error
      */
     public Integer readUsersFromDB() {
@@ -256,10 +269,36 @@ public class DatabaseHandler {
     }
 
     /**
-     * @brief get cached users
+     * get cached users
      * @return list of users
      */
     public List<User> getUsersList() {
         return usersList;
+    }
+
+
+    /**
+     *
+     * @param name
+     * @param pw
+     * @return 0 if successful
+     */
+    public int addUser(String name, String pw) {
+
+
+        return -1;
+    }
+
+    /**
+     *
+     * @param id
+     * @param attribute
+     * @param value
+     * @return 0 if successful
+     */
+    public int modifyUserAttribute(Integer id, String attribute, String value) {
+
+        // TODO
+        return -1;
     }
 }
