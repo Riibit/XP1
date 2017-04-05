@@ -11,6 +11,7 @@ import android.content.Context;
 
 public class QUpApp extends Application {
     private static QUpApp instance;
+    private DatabaseHandler dbHandler;
 
     public static QUpApp getInstance() {
         return instance;
@@ -20,9 +21,12 @@ public class QUpApp extends Application {
         return instance.getApplicationContext();
     }
 
+    public DatabaseHandler getDBHandler() { return dbHandler; }
+
     @Override
     public void onCreate() {
         instance = this;
         super.onCreate();
+        dbHandler = new DatabaseHandler();
     }
 }

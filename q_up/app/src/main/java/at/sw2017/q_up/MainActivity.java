@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+
 public class MainActivity extends Activity implements View.OnClickListener {
 
     Button buttonLogin;
@@ -23,6 +24,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
 
         //Button btnSwitchScreens = (Button) findViewById(R.id.btnSwitchScreens);
+
        /* btnSwitchScreens.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {
@@ -40,6 +42,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
         editTextPassword = (EditText) findViewById(R.id.editTextPasswort);
         editTextPassword.setHint("Password");
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        QUpApp.getInstance().getDBHandler().addAuthStListener();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        QUpApp.getInstance().getDBHandler().removeAuthStListener();
+    }
+
 
     public void switchActivities() {
         Intent mapIntent = new Intent(this, MapsActivity.class);
