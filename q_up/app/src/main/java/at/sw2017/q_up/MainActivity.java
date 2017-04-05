@@ -55,6 +55,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         Button clickedButton = (Button) v;
 
+        // db request
+        // db wait
+        // list<user> is fetched from db
+
         switch (clickedButton.getId()) {
             case R.id.buttonLogin:
                 if (editTextUsername.getText().toString().equals("admin")

@@ -68,6 +68,23 @@ public class ExampleInstrumentedTest {
 
     }
 
+    @Test
+    public void testRegisterLogin() throws Exception {
+        // perform register on main activity
+
+
+        // fill textfield
+
+        // fill up dummylist
+
+        User test_user_1();
+        test_user_1.
+
+
+        // check result is correct
+
+    }
+
     @Rule
     public ActivityTestRule<RegisterActivity> rActivityRule = new ActivityTestRule<RegisterActivity>(RegisterActivity.class);
 
