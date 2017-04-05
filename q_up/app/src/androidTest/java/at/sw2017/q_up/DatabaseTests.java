@@ -72,7 +72,7 @@ public class DatabaseTests {
         assertTrue(!users.isEmpty());
     }
 
-/* //disabled - spamming :)
+/* // disabled - spamming :)
     @Test
     public void addUser() {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
@@ -83,15 +83,25 @@ public class DatabaseTests {
     }
 */
 
-// adding places currently not supported
-//    @Test
-//    public void addPlace() {
-//        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-//        assertNotNull(db_handle);
-//
-//        int result = db_handle.addPlace("testplace", 12.34, 23.45, 0.0, 10); --> use place class instead of seperate values!
-//        assertEquals(0, result);
-//    }
+/* // disabled - spamming :)
+    @Test
+    public void addTestPlaces() {
+        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+        assertNotNull(db_handle);
+
+        if (db_handle.getPlacesList().isEmpty()) {
+
+            int result = db_handle.readPlacesFromDB();
+            assertEquals(0, result);
+            db_handle.waitPlacesComplete(20);
+        }
+
+        int result = db_handle.addPlace("bar", "47.06", "15.4639", "0.0", "10");
+        assertEquals(0, result);
+        result = db_handle.addPlace("market", "47.0608", "15.4682", "0.0", "15");
+        assertEquals(0, result);
+    }
+*/
 
     @Test
     public void queueUser() {

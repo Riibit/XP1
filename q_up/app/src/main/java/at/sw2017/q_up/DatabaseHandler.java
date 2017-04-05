@@ -133,7 +133,6 @@ public class DatabaseHandler {
                     // User is signed out
                     Log.d("FB", "onAuthStateChanged:signed_out");
                 }
-                // ...
             }
         };
 
@@ -159,7 +158,6 @@ public class DatabaseHandler {
                     }
                 });
 
-
         database = FirebaseDatabase.getInstance();
         mDatabase = database.getReference();
     }
@@ -174,35 +172,23 @@ public class DatabaseHandler {
 
         final DatabaseReference placesref = mDatabase.child("places");
 
-        placesref.addListenerForSingleValueEvent(new ValueEventListener() {
+        placesref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                    Integer id = Integer.parseInt(dsp.getKey());
-                    String name = "";
-                    Float lat = 0.0f;
-                    Float lon = 0.0f;
-                    Float avgR = 0.0f;
-                    Integer proctime = 0;
+                // clear list
+                placesList.clear();
 
-                    for (DataSnapshot u_dsp : dsp.getChildren()) {
-                        String key = u_dsp.getKey();
-                        if ("name".equals(key))
-                            name = u_dsp.getValue().toString();
-                        else if ("lat".equals(key))
-                            lat = Float.parseFloat(u_dsp.getValue().toString());
-                        else if ("lon".equals(key))
-                            lon = Float.parseFloat(u_dsp.getValue().toString());
-                        else if ("avgr".equals(key))
-                            avgR = Float.parseFloat(u_dsp.getValue().toString());
-                        else if ("proctime".equals(key))
-                            proctime = Integer.parseInt(u_dsp.getValue().toString());
-                    }
-                    placesList.add(new Place(id, name, lat, lon, avgR, proctime));
+                // fill list with new data
+                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+
+                    Place place = dsp.getValue(Place.class);
+                    placesList.add(place);
 
                     Log.d("FB", "read place from DB");
                 }
+
+                // signal, that we are finished
                 getPlacesLatch.countDown();
             }
 
@@ -221,6 +207,21 @@ public class DatabaseHandler {
      */
     public List<Place> getPlacesList() {
         return placesList;
+    }
+
+    /**
+     * add a new place to the database
+     * @return 0 if OK
+     */
+    public Integer addPlace(String name, String lat, String lon, String avgr, String proct) {
+
+        DatabaseReference placeref = FirebaseDatabase.getInstance().getReference("places");
+
+        String placeId = placeref.push().getKey();
+        Place place = new Place(placeId, name, lat, lon, avgr, proct);
+        placeref.child(placeId).setValue(place);
+
+        return 0;
     }
 
     /**

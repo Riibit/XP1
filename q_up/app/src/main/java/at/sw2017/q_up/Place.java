@@ -5,19 +5,23 @@ package at.sw2017.q_up;
  */
 
 public class Place {
-    private Integer placeId;
-    private String placeName;
-    private Float latitude;
-    private Float longitude;
-    private Float avgRating;
-    private Integer avgProcessingSecs;
+    public String placeId;
+    public String placeName;
+    public String latitude;
+    public String longitude;
+    public String avgRating;
+    public String avgProcessingSecs;
 
-    public Place(Integer id, String name, Float lat, Float lon, Float avgR, Integer proctime) {
+    public Place() {
+
+    }
+
+    public Place(String id, String name, String lat, String lon, String avgr, String proctime) {
         placeId = id;
         placeName = name;
         latitude = lat;
         longitude = lon;
-        avgRating = avgR;
+        avgRating = avgr;
         avgProcessingSecs = proctime;
     }
 }
