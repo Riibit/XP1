@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
@@ -38,15 +39,6 @@ public class DatabaseTests {
         assertNotNull(db_handle);
     }
 
-//    @Test
-//    public void connectDatabase() {
-//        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-//        assertNotNull(db_handle);
-//
-//        int result = db_handle.login();
-//        assertEquals(0, result);
-//    }
-
     @Test
     public void loadPlaces() {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
@@ -66,6 +58,13 @@ public class DatabaseTests {
 
         int result = db_handle.readUsersFromDB();
         assertEquals(0, result);
+
+        try {
+            db_handle.getGetUsersLatch().await(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            //e.printStackTrace();
+            assertEquals(0, 1);
+        }
 
         List<User> users = db_handle.getUsersList();
         assertTrue(!users.isEmpty());

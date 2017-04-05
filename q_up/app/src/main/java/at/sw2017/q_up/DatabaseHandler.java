@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 
 import at.sw2017.q_up.Place;
@@ -43,11 +44,11 @@ public class DatabaseHandler {
 
     private boolean sign_in_complete = false;
 
+    private CountDownLatch getUsersLatch;
+
     // variables to cache server data
     List<Place> placesList = new ArrayList<Place>();
     List<User> usersList = new ArrayList<User>();
-
-    boolean finished = false;
 
 
     /**
@@ -56,6 +57,14 @@ public class DatabaseHandler {
      */
     public boolean getSignInComplete() {
         return sign_in_complete;
+    }
+
+    /**
+     *
+     * @return latch to wait for event
+     */
+    public CountDownLatch getGetUsersLatch() {
+        return getUsersLatch;
     }
 
     /**
@@ -123,17 +132,8 @@ public class DatabaseHandler {
                         else {
                             sign_in_complete = true;
                         }
-
-                        finished = true;
                     }
                 });
-
-
-//        int bla = 0;
-//        while(!finished && sign_in_complete == false) {
-//            bla += 1;
-//        }
-//        finished = false;
     }
 
     /**
@@ -161,37 +161,46 @@ public class DatabaseHandler {
     public Integer readUsersFromDB() {
         // TODO read table
 
+        getUsersLatch = new CountDownLatch(1);
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference mDatabase = database.getReference();
 
-        DatabaseReference usersref = mDatabase.child("users");
-
+        final DatabaseReference usersref = mDatabase.child("users");
 
         usersref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                System.out.println("hi");
-                List Userlist = new ArrayList<String>();
                 for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                    Userlist.add(String.valueOf(dsp.getValue()));
-                    System.out.println("hi");
+                    Integer id = Integer.parseInt(dsp.getKey());
+                    String name = "";
+                    String pw = "";
+                    Integer chinplace = 0;
+
+                    for (DataSnapshot u_dsp : dsp.getChildren()) {
+                        String key = u_dsp.getKey();
+                        if ("name".equals(key))
+                            name = u_dsp.getValue().toString();
+                        else if ("pw".equals(key))
+                            pw = u_dsp.getValue().toString();
+                        else if ("id_q_place".equals(key))
+                            chinplace = Integer.parseInt(u_dsp.getValue().toString());
+                    }
+                    usersList.add(new User(id, name, pw, chinplace));
+
+                    Log.d("FB", "read user from DB");
                 }
-                finished = true;
+                getUsersLatch.countDown();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
-                System.out.println("ho");
-                finished = true;
+                Log.d("FB", "read users failed with: " + databaseError.toString());
             }
         });
 
-        while(!finished){}
-        finished = false;
-
-        return -1;
+        return 0;
     }
 
     /**
