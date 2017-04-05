@@ -22,6 +22,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
 
         //Button btnSwitchScreens = (Button) findViewById(R.id.btnSwitchScreens);
+
        /* btnSwitchScreens.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {
