@@ -61,7 +61,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         //This was already here !
-        Button buttonMapsProfile = (Button) findViewById(R.id.buttonMapsProfile);
+        Button buttonMapsProfile = (Button) findViewById(R.id.buttonMapsBack);
         buttonMapsProfile.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {
@@ -69,7 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        buttonMapsBack.setRotation(90);
+        buttonMapsProfile.setRotation(90);
         goToList.setRotation(270);
     }
 

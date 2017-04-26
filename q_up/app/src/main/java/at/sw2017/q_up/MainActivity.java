@@ -98,6 +98,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                             Toast.makeText(getApplicationContext(),
                                     "Login successful!", Toast.LENGTH_SHORT).show();
                             switchActivities();
+                            return;
                         }
                         break;
                     }
