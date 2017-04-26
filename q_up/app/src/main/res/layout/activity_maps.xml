@@ -13,18 +13,27 @@
         android:layout_height="match_parent"
         tools:context="at.sw2017.q_up.MapsActivity" />
 
-
     <Button
         android:id="@+id/buttonMapsBack"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Back" />
+        android:layout_gravity="left|center_vertical"
+        android:backgroundTint="@android:color/transparent"
+        android:drawableBottom="@drawable/button_arrow"
+        android:text="My Profile"
+        android:textAllCaps="false" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/buttonList"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="180dp"
-        android:text="List" />
+        android:layout_gravity="right|center_vertical"
+        android:backgroundTint="@android:color/transparent"
+        android:drawableBottom="@drawable/button_arrow"
+        android:text="Places"
+        android:textAllCaps="false" />
+
 
 </FrameLayout>
