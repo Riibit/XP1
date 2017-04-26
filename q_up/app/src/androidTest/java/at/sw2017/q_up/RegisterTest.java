@@ -37,7 +37,6 @@ public class RegisterTest {
         QUpApp.getInstance().getDBHandler().waitSignInComplete(20);
         QUpApp.getInstance().getDBHandler().waitPlacesComplete(10);
         QUpApp.getInstance().getDBHandler().waitUsersComplete(10);
-        Intents.init();
 
 
 //        int result = QUpApp.getInstance().getDBHandler().readUsersFromDB();
@@ -61,8 +60,6 @@ public class RegisterTest {
 
         Espresso.closeSoftKeyboard();
         onView( withId(R.id.registerButton)).perform(click());
-        intended(hasComponent(RegisterActivity.class.getName()));
-        Intents.release();
 
 
         String testuser_id = "";
@@ -80,14 +77,29 @@ public class RegisterTest {
         result = db_handle.removeUser(testuser_id);
         assertEquals(0, result);
         db_handle.waitUsersComplete(20);
+    }
+
+    @Test
+    public void SwitchActivity() throws Exception {
+
+        Intents.init();
+        onView( withId(R.id.inputUsername)).perform(click());
+        onView( withId(R.id.inputUsername)).perform(typeText("Testhannes"));
+
+        onView( withId(R.id.inputPassword)).perform(click());
+        onView( withId(R.id.inputPassword)).perform(typeText("password"));
+
+        onView( withId(R.id.confirmPassword)).perform(click());
+        onView( withId(R.id.confirmPassword)).perform(typeText("password"));
 
 
-
-
-
-
+        onView( withId(R.id.loginNavigationButton)).perform(click());
+        intended(hasComponent(MainActivity.class.getName()));
+        Intents.release();
 
     }
+
+
 
 
 

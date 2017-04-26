@@ -51,6 +51,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         inputPassword = (EditText) findViewById(R.id.inputPassword);
         confirmPassword = (EditText) findViewById(R.id.confirmPassword);
         inputUsername = (EditText) findViewById(R.id.inputUsername);
+        switchLoginRegister();
     }
 
     @Override
@@ -101,9 +102,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 // check texfield is already in db
                 // if not add data
                 // check confirm password is the same as password
-                break;
-            case R.id.loginNavigationButton:
-                switchLoginRegister();
                 break;
             default:
                 break;
