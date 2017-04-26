@@ -9,6 +9,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.List;
+
+import static junit.framework.Assert.assertEquals;
+
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -73,19 +77,35 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         Button clickedButton = (Button) v;
 
-        // db request
-        // db wait
-        // list<user> is fetched from db
+
+        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+        if (db_handle.getUsersList().isEmpty()) {
+
+            int result = db_handle.readUsersFromDB();
+            assertEquals(0, result);
+            db_handle.waitUsersComplete(20);
+        }
+        List<User> users = db_handle.getUsersList();
 
         switch (clickedButton.getId()) {
             case R.id.buttonLogin:
-                if (editTextUsername.getText().toString().equals("admin")
-                        && editTextPassword.getText().toString().equals("1234")) {
 
-                    switchActivities();
-                } else {
-                    Toast.makeText(getApplicationContext(),
-                            "ohoh", Toast.LENGTH_SHORT).show();
+                // look for username in our list
+                for (User u : users) {
+                    if (u.userName.equals(editTextUsername.getText().toString())) {
+                        // found entered username in database
+                        // now check if password is correct
+                        if (u.password.equals(editTextPassword.getText().toString())) {
+                            // given password matches entry in database
+                            Toast.makeText(getApplicationContext(),
+                                    "Login successful!", Toast.LENGTH_SHORT).show();
+                            switchActivities();
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    "Wrong password!", Toast.LENGTH_SHORT).show();
+                        }
+                        return;
+                    }
                 }
                 break;
             case R.id.registerNavigationButton:
