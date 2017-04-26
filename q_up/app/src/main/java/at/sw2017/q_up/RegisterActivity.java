@@ -65,10 +65,11 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         switch (clickedButton.getId()) {
             case R.id.registerButton:
 
-                if (!inputPassword.getText().toString().equals(confirmPassword.getText().toString()))
+                if (!inputPassword.getText().toString().equals(confirmPassword.getText().toString()) ||
+                        inputPassword.getText().toString() == "")
                 {
                     Toast.makeText(getApplicationContext(),
-                            "Passwords don't match!", Toast.LENGTH_SHORT).show();
+                            "Passwords don't match / are too weak!", Toast.LENGTH_SHORT).show();
                     break;
                 }
 
@@ -83,7 +84,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                     }
                 }
 
-                // 
+                //
                 if (!user_already_in_list) {
                     db_handle.addUser(inputUsername.getText().toString(), inputPassword.getText().toString());
                     Toast.makeText(getApplicationContext(),
