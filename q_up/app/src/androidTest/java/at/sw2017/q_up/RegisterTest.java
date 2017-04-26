@@ -1,9 +1,11 @@
 package at.sw2017.q_up;
 
 import android.support.test.espresso.Espresso;
+import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,17 +25,24 @@ public class RegisterTest {
     public ActivityTestRule<RegisterActivity> mActivityRule = new ActivityTestRule<>(RegisterActivity.class);
 
 
+    @BeforeClass
+    public static void initTestCase() {
+        // wait for the sign in process to complete
+        QUpApp.getInstance().getDBHandler().waitSignInComplete(20);
+        QUpApp.getInstance().getDBHandler().waitPlacesComplete(10);
+        QUpApp.getInstance().getDBHandler().waitUsersComplete(10);
+        Intents.init();
+
+//        int result = QUpApp.getInstance().getDBHandler().readUsersFromDB();
+//        QUpApp.getInstance().getDBHandler().waitUsersComplete(20);
+    }
+
+
     @Test
     public void TestRegistration() throws Exception {
 
         onView( withId(R.id.inputUsername)).perform(click());
         onView( withId(R.id.inputUsername)).perform(typeText("Testuser"));
-
-
-
-        onView( withId(R.id.inputEmail)).perform(click());
-        onView( withId(R.id.inputEmail)).perform(typeText("testuser@gmail.com"));
-
 
         onView( withId(R.id.inputPassword)).perform(click());
         onView( withId(R.id.inputPassword)).perform(typeText("password"));
@@ -44,6 +53,8 @@ public class RegisterTest {
         Espresso.closeSoftKeyboard();
       //  onView( withId(R.id.btn_save)).perform(click());
     }
+
+
 
 
 }
