@@ -289,17 +289,35 @@ public class DatabaseHandler {
 
     /**
      * add a new user to the database
-     * @param name
-     * @param pw
+     * @param name the name of the new user
+     * @param pw the password of the new user
      * @return 0 if successful
      */
     public int addUser(String name, String pw) {
 
         DatabaseReference userref = FirebaseDatabase.getInstance().getReference("users");
 
+        getUsersLatch = new CountDownLatch(1);
+
         String userId = userref.push().getKey();
         User user = new User(userId, name, pw, "0");
         userref.child(userId).setValue(user);
+
+        return 0;
+    }
+
+    /**
+     * remove user from database
+     * @param id id of user
+     * @return 0 if successful
+     */
+    public int removeUser(String id) {
+
+        DatabaseReference userref = FirebaseDatabase.getInstance().getReference("users");
+
+        getUsersLatch = new CountDownLatch(1);
+
+        userref.child(id).removeValue();
 
         return 0;
     }
