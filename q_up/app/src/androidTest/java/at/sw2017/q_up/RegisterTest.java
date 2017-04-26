@@ -99,6 +99,24 @@ public class RegisterTest {
 
     }
 
+    @Test
+    public void WrongConfirm() throws Exception {
+
+
+        onView( withId(R.id.inputUsername)).perform(click());
+        onView( withId(R.id.inputUsername)).perform(typeText("Failhannes"));
+
+        onView( withId(R.id.inputPassword)).perform(click());
+        onView( withId(R.id.inputPassword)).perform(typeText("password"));
+
+        onView( withId(R.id.confirmPassword)).perform(click());
+        onView( withId(R.id.confirmPassword)).perform(typeText("passwrd"));
+
+
+        onView( withId(R.id.registerButton)).perform(click());
+
+    }
+
 
 
 
