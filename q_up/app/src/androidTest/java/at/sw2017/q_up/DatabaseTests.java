@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.*;
 
 /**
@@ -28,6 +29,8 @@ public class DatabaseTests {
     public static void initTestCase() {
         // wait for the sign in process to complete
         QUpApp.getInstance().getDBHandler().waitSignInComplete(20);
+        QUpApp.getInstance().getDBHandler().waitPlacesComplete(10);
+        QUpApp.getInstance().getDBHandler().waitUsersComplete(10);
 
 //        int result = QUpApp.getInstance().getDBHandler().readUsersFromDB();
 //        QUpApp.getInstance().getDBHandler().waitUsersComplete(20);
@@ -77,16 +80,58 @@ public class DatabaseTests {
         assertTrue(!users.isEmpty()); */
     }
 
-/* // disabled - spamming :)
+ // disabled - spamming :)
     @Test
     public void addUser() {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
 
-        int result = db_handle.addUser("testuser", "password");
+        // get existing users from db
+        int result = db_handle.readUsersFromDB();
         assertEquals(0, result);
+        db_handle.waitUsersComplete(20);
+
+        // add a user
+        result = db_handle.addUser("testuser", "testpassword");
+        assertEquals(0, result);
+        db_handle.waitUsersComplete(20);
+
+        // verify that list is not empty
+        List<User> users = db_handle.getUsersList();
+        assert(!users.isEmpty());
+
+        // look for testuser in list
+        String testuser_id = "";
+        for (User u : users) {
+            if (u.userName.equals("testuser")) {
+                if (u.password.equals("testpassword")) {
+                    testuser_id = u.userId;
+                    break;
+                }
+            }
+        }
+        assertNotEquals("", testuser_id);
+
+        // remove user again
+        result = db_handle.removeUser(testuser_id);
+        assertEquals(0, result);
+        db_handle.waitUsersComplete(20);
+
+        users = db_handle.getUsersList();
+
+        // look for testuser in list - it should be gone
+        boolean user_found = false;
+        for (User u : users) {
+            if (u.userName.equals("testuser")) {
+                if (u.password.equals("testpassword")) {
+                    user_found = true;
+                    break;
+                }
+            }
+        }
+        assertEquals(false, user_found);
     }
-*/
+
 
 /* // disabled - spamming :)
     @Test

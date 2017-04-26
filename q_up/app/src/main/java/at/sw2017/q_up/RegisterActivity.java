@@ -26,6 +26,19 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
 
 
+    public void switchLoginRegister()
+    {
+        Button ButtonLogin = (Button) findViewById(R.id.loginNavigationButton);
+        ButtonLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,11 +51,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         inputPassword = (EditText) findViewById(R.id.inputPassword);
         confirmPassword = (EditText) findViewById(R.id.confirmPassword);
         inputUsername = (EditText) findViewById(R.id.inputUsername);
-    }
-
-    public void switchLoginRegister() {
-        Intent loginIntent = new Intent(this, MainActivity.class);
-        startActivity(loginIntent);
     }
 
     @Override
@@ -59,20 +67,35 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
         List<User> users = db_handle.getUsersList();
 
-        boolean flag = false;
+        boolean user_already_in_list = false;
+
         switch (clickedButton.getId()) {
             case R.id.registerButton:
+
+                if (!inputPassword.getText().toString().equals(confirmPassword.getText().toString()) ||
+                        inputPassword.getText().toString() == "")
+                {
+                    Toast.makeText(getApplicationContext(),
+                            "Passwords don't match / are too weak!", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
+                // check if user already exists
                 for (User u : users) {
                     if (u.userName.equals(inputUsername.getText().toString())) {
+                        // username is already in list
                         Toast.makeText(getApplicationContext(),
                                 "This user already exists!", Toast.LENGTH_SHORT).show();
-                        flag = true;
+                        user_already_in_list = true;
+                        break;
                     }
-                    if (flag) break;
                 }
-                if (!flag) {
+
+                // check if user is not in list of existing users and create the user
+                if (!user_already_in_list) {
+                    db_handle.addUser(inputUsername.getText().toString(), inputPassword.getText().toString());
                     Toast.makeText(getApplicationContext(),
-                            "This user is ok", Toast.LENGTH_SHORT).show();
+                            "User created..", Toast.LENGTH_SHORT).show();
                 }
 
                 // check texfield is already in db
