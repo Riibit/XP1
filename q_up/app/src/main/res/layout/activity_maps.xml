@@ -15,13 +15,13 @@
 
 
     <Button
-        android:id="@+id/buttonMapsBack"
+        android:id="@+id/buttonMapsProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Back" />
+        android:text="My profile" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/buttonList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="180dp"

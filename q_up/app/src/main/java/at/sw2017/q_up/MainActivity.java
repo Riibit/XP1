@@ -2,6 +2,8 @@ package at.sw2017.q_up;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,9 +18,7 @@ import static junit.framework.Assert.assertEquals;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
-
-
-
+    ViewPager viewPager;
     Button buttonLogin;
     Button registerNavigationButton;
     Button loginNavigationButton;
@@ -45,9 +45,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         registerNavigationButton.setOnClickListener(this);
         loginNavigationButton = (Button) findViewById(R.id.loginNavigationButton);
         editTextUsername = (EditText) findViewById(R.id.inputName);
-        editTextUsername.setHint("Username");
         editTextPassword = (EditText) findViewById(R.id.editTextPasswort);
-        editTextPassword.setHint("Password");
     }
 
     @Override

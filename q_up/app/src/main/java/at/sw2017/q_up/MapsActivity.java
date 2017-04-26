@@ -28,7 +28,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Marker mHofer;
 
     public void mapsGoBack() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
 
@@ -48,8 +48,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         //creation of button go to list- ADDED !
-        Button goToList =(Button) findViewById(R.id.button2);
-        goToList.setOnClickListener(new View.OnClickListener() {
+        Button buttonList =(Button) findViewById(R.id.buttonList);
+        buttonList.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {
                 mapsGoList();
@@ -58,8 +58,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         //This was already here !
-        Button buttonMapsBack = (Button) findViewById(R.id.buttonMapsBack);
-        buttonMapsBack.setOnClickListener(new View.OnClickListener() {
+        Button buttonMapsProfile = (Button) findViewById(R.id.buttonMapsProfile);
+        buttonMapsProfile.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {
                 mapsGoBack();
