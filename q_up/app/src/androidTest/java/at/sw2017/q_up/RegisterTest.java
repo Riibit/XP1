@@ -118,8 +118,22 @@ public class RegisterTest {
     }
 
 
+    @Test
+    public void newFranz() throws Exception {
 
 
+        onView( withId(R.id.inputUsername)).perform(click());
+        onView( withId(R.id.inputUsername)).perform(typeText("franz"));
 
+        onView( withId(R.id.inputPassword)).perform(click());
+        onView( withId(R.id.inputPassword)).perform(typeText("password"));
+
+        onView( withId(R.id.confirmPassword)).perform(click());
+        onView( withId(R.id.confirmPassword)).perform(typeText("password"));
+
+
+        onView( withId(R.id.registerButton)).perform(click());
+
+    }
 
 }
