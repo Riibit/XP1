@@ -34,16 +34,11 @@ public class LoginTest {
         QUpApp.getInstance().getDBHandler().waitPlacesComplete(10);
         QUpApp.getInstance().getDBHandler().waitUsersComplete(10);
         Intents.init();
-
-//        int result = QUpApp.getInstance().getDBHandler().readUsersFromDB();
-//        QUpApp.getInstance().getDBHandler().waitUsersComplete(20);
     }
 
     @Test
     public void Login() throws Exception {
 
-       // DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-       // db_handle.waitPlacesComplete(2);
         onView( withId(R.id.inputName)).perform(click());
         onView( withId(R.id.inputName)).perform(typeText("hans"));
 
