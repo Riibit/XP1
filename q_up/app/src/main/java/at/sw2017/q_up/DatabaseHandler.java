@@ -337,17 +337,4 @@ public class DatabaseHandler {
 
         return 0;
     }
-
-    /**
-     * get an attribute of a user
-     * @param id
-     * @param attribute
-     * @return value
-     */
-    public String getUserAttribute(String id, String attribute) {
-
-        DatabaseReference userref = FirebaseDatabase.getInstance().getReference("users");
-
-        return userref.child(id).child(attribute).toString();
-    }
 }

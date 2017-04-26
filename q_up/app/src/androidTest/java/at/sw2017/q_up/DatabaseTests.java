@@ -31,9 +31,6 @@ public class DatabaseTests {
         QUpApp.getInstance().getDBHandler().waitSignInComplete(20);
         QUpApp.getInstance().getDBHandler().waitPlacesComplete(10);
         QUpApp.getInstance().getDBHandler().waitUsersComplete(10);
-
-//        int result = QUpApp.getInstance().getDBHandler().readUsersFromDB();
-//        QUpApp.getInstance().getDBHandler().waitUsersComplete(20);
     }
 
     @Test
@@ -80,7 +77,6 @@ public class DatabaseTests {
         assertTrue(!users.isEmpty()); */
     }
 
- // disabled - spamming :)
     @Test
     public void addUser() {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
@@ -199,25 +195,5 @@ public class DatabaseTests {
         }
         assertEquals(0, result);
         assertEquals(value_changed, true);
-    }
-
-    @Test
-    public void getUserAttribute() {
-        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-        assertNotNull(db_handle);
-
-        int result = db_handle.readUsersFromDB();
-        assertEquals(0, result);
-        db_handle.waitUsersComplete(10);
-
-        String id = "";
-        for (User u : db_handle.getUsersList()) {
-            if (u.userName.equals("franz"));
-            id = u.userId;
-        }
-        assertNotEquals(id, "");
-
-        String getvalue = db_handle.getUserAttribute(id, "password");
-        assertEquals(getvalue, "password");
     }
 }
