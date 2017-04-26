@@ -34,8 +34,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //Function go to list
     public void mapsGoList() {
-        Intent intent = new Intent(this, PlaceViewList.class);
-        startActivity(intent);
+        Intent intent1 = new Intent(MapsActivity.this, PlaceViewList.class);
+        startActivity(intent1);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         //creation of button go to list- ADDED !
-        Button goToList =(Button) findViewById(R.id.button2);
+        Button goToList =(Button) findViewById(R.id.buttonList);
         goToList.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {
