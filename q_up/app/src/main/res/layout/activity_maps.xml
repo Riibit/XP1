@@ -13,20 +13,23 @@
         android:layout_height="match_parent"
         tools:context="at.sw2017.q_up.MapsActivity" />
 
-
     <Button
         android:id="@+id/buttonMapsBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left|center_vertical"
-        android:text="Back" />
+        android:backgroundTint="@android:color/transparent"
+        android:drawableBottom="@drawable/arrow_left1"
+        android:text="My Profile" />
 
     <Button
         android:id="@+id/buttonList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="List"
-        android:onClick="mapsGoList"
-        android:layout_gravity="right|center_vertical"/>
+        android:layout_gravity="right|center_vertical"
+        android:backgroundTint="@android:color/transparent"
+        android:drawableBottom="@drawable/arrow_left1"
+        android:text="Places" />
+
 
 </FrameLayout>
