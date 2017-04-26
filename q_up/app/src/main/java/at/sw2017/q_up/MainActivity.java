@@ -100,13 +100,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
                             Toast.makeText(getApplicationContext(),
                                     "Login successful!", Toast.LENGTH_SHORT).show();
                             switchActivities();
-                        } else {
-                            Toast.makeText(getApplicationContext(),
-                                    "Wrong password!", Toast.LENGTH_SHORT).show();
                         }
-                        return;
+                        break;
                     }
                 }
+                Toast.makeText(getApplicationContext(),
+                        "Wrong username or password!", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.registerNavigationButton:
                 switchLoginRegister();
