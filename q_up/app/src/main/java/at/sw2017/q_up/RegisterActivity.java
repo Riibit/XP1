@@ -26,6 +26,19 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
 
 
+    public void switchLoginRegister()
+    {
+        Button ButtonLogin = (Button) findViewById(R.id.loginNavigationButton);
+        ButtonLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,12 +52,11 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         confirmPassword = (EditText) findViewById(R.id.confirmPassword);
         inputUsername = (EditText) findViewById(R.id.inputUsername);
         inputEmail = (EditText) findViewById(R.id.inputEmail);
+        switchLoginRegister();
     }
 
-    public void switchLoginRegister() {
-        Intent loginIntent = new Intent(this, MainActivity.class);
-        startActivity(loginIntent);
-    }
+
+
 
     @Override
     public void onClick(View v) {
@@ -94,9 +106,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 // check texfield is already in db
                 // if not add data
                 // check confirm password is the same as password
-                break;
-            case R.id.loginNavigationButton:
-                switchLoginRegister();
                 break;
             default:
                 break;
