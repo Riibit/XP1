@@ -33,52 +33,40 @@ public class LoginTest {
         QUpApp.getInstance().getDBHandler().waitSignInComplete(20);
         QUpApp.getInstance().getDBHandler().waitPlacesComplete(10);
         QUpApp.getInstance().getDBHandler().waitUsersComplete(10);
-        Intents.init();
     }
 
     @Test
     public void Login() throws Exception {
 
+        Intents.init();
         onView( withId(R.id.inputName)).perform(click());
         onView( withId(R.id.inputName)).perform(typeText("hans"));
-
 
         onView( withId(R.id.editTextPasswort)).perform(click());
         onView( withId(R.id.editTextPasswort)).perform(typeText("password"));
 
         //Espresso.closeSoftKeyboard();
 
-
         onView( withId(R.id.buttonLogin)).perform(click());
         intended(hasComponent(MapsActivity.class.getName()));
-        intended(hasComponent(MainActivity.class.getName()));
         Intents.release();
-
-
-
-
-
-
     }
-
-//This testcase should faile
+/*
     @Test
     public void LoginFail() throws Exception {
 
-
+        Intents.init();
         onView( withId(R.id.inputName)).perform(click());
         onView( withId(R.id.inputName)).perform(typeText("admin"));
 
         onView( withId(R.id.editTextPasswort)).perform(click());
         onView( withId(R.id.editTextPasswort)).perform(typeText("password"));
 
-        Espresso.closeSoftKeyboard();
+        //Espresso.closeSoftKeyboard();
         onView( withId(R.id.buttonLogin)).perform(click());
-
-        intended(hasComponent(MapsActivity.class.getName()));
         intended(hasComponent(MainActivity.class.getName()));
         Intents.release();
     }
-
+*/
 
 }
