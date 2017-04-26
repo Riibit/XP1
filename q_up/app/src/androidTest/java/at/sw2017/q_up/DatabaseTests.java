@@ -128,26 +128,59 @@ public class DatabaseTests {
         assertEquals(false, user_found);
     }
 
-
-/* // disabled - spamming :)
     @Test
     public void addTestPlaces() {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
 
-        if (db_handle.getPlacesList().isEmpty()) {
+        // get existing places from db
+        int result = db_handle.readPlacesFromDB();
+        assertEquals(0, result);
+        db_handle.waitPlacesComplete(20);
 
-            int result = db_handle.readPlacesFromDB();
-            assertEquals(0, result);
-            db_handle.waitPlacesComplete(20);
+        // add a place
+        result = db_handle.addPlace("testplace", "12.06", "34.4639", "0.0", "10");
+        assertEquals(0, result);
+        db_handle.waitPlacesComplete(20);
+
+        // verify that list is not empty
+        List<Place> places = db_handle.getPlacesList();
+        assert(!places.isEmpty());
+
+        // look for testplace in list
+        String testplace_id = "";
+        for (Place p : places) {
+            if (p.placeName.equals("testplace")) {
+                testplace_id = p.placeId;
+                break;
+            }
         }
+        assertNotEquals("", testplace_id);
 
+        // remove place again
+        result = db_handle.removePlace(testplace_id);
+        assertEquals(0, result);
+        db_handle.waitPlacesComplete(20);
+
+        places = db_handle.getPlacesList();
+
+        // look for testuser in list - it should be gone
+        boolean place_found = false;
+        for (Place p : places) {
+            if (p.placeName.equals("testplace")) {
+                place_found = true;
+                break;
+            }
+        }
+        assertEquals(false, place_found);
+
+/*
         int result = db_handle.addPlace("bar", "47.06", "15.4639", "0.0", "10");
         assertEquals(0, result);
         result = db_handle.addPlace("market", "47.0608", "15.4682", "0.0", "15");
         assertEquals(0, result);
-    }
 */
+    }
 
     @Test
     public void queueUser() {

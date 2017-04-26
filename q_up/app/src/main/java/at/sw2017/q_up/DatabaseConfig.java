@@ -58,7 +58,7 @@ public class DatabaseConfig {
         }
         return result;
     }
-
+/* unused
     public String getUrl() {
         return server_url;
     }
@@ -66,7 +66,7 @@ public class DatabaseConfig {
     public String getDBname() {
         return server_dbname;
     }
-
+*/
     public String getUser() {
         return server_user;
     }

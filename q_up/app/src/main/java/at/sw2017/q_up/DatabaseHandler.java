@@ -229,10 +229,27 @@ public class DatabaseHandler {
 
         DatabaseReference placeref = FirebaseDatabase.getInstance().getReference("places");
 
+        getPlacesLatch = new CountDownLatch(1);
+
         String placeId = placeref.push().getKey();
         Place place = new Place(placeId, name, lat, lon, avgr, proct);
         placeref.child(placeId).setValue(place);
 
+        return 0;
+    }
+
+    /**
+     * remove a place
+     * @param id
+     * @return 0 if OK
+     */
+    public int removePlace(String id) {
+
+        DatabaseReference placeref = FirebaseDatabase.getInstance().getReference("places");
+
+        getPlacesLatch = new CountDownLatch(1);
+
+        placeref.child(id).removeValue();
         return 0;
     }
 
@@ -318,7 +335,6 @@ public class DatabaseHandler {
         getUsersLatch = new CountDownLatch(1);
 
         userref.child(id).removeValue();
-
         return 0;
     }
 
