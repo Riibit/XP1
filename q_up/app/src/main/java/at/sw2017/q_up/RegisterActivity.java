@@ -38,7 +38,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         inputPassword = (EditText) findViewById(R.id.inputPassword);
         confirmPassword = (EditText) findViewById(R.id.confirmPassword);
         inputUsername = (EditText) findViewById(R.id.inputUsername);
-        inputEmail = (EditText) findViewById(R.id.inputEmail);
     }
 
     public void switchLoginRegister() {

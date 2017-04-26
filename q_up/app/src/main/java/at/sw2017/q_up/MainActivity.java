@@ -41,10 +41,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         registerNavigationButton.setOnClickListener(this);
         loginNavigationButton = (Button) findViewById(R.id.loginNavigationButton);
         editTextUsername = (EditText) findViewById(R.id.inputName);
-        editTextUsername.setHint("Username");
         editTextPassword = (EditText) findViewById(R.id.editTextPasswort);
-        editTextPassword.setHint("Password");
-        viewPager = (ViewPager)findViewById(R.id.view_pager);
     }
 
     @Override
