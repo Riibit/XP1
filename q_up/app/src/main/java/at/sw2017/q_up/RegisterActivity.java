@@ -84,7 +84,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                     }
                 }
 
-                //
+                // check if user is not in list of existing users and create the user
                 if (!user_already_in_list) {
                     db_handle.addUser(inputUsername.getText().toString(), inputPassword.getText().toString());
                     Toast.makeText(getApplicationContext(),
