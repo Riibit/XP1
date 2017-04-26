@@ -18,14 +18,15 @@
         android:id="@+id/buttonMapsBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
         android:text="Back" />
 
     <Button
         android:id="@+id/buttonList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="180dp"
         android:text="List"
-        android:onClick="mapsGoList"/>
+        android:onClick="mapsGoList"
+        android:layout_gravity="right|center_vertical"/>
 
 </FrameLayout>
