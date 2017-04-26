@@ -29,6 +29,8 @@ public class DatabaseTests {
     public static void initTestCase() {
         // wait for the sign in process to complete
         QUpApp.getInstance().getDBHandler().waitSignInComplete(20);
+        QUpApp.getInstance().getDBHandler().waitPlacesComplete(10);
+        QUpApp.getInstance().getDBHandler().waitUsersComplete(10);
 
 //        int result = QUpApp.getInstance().getDBHandler().readUsersFromDB();
 //        QUpApp.getInstance().getDBHandler().waitUsersComplete(20);
@@ -114,6 +116,20 @@ public class DatabaseTests {
         result = db_handle.removeUser(testuser_id);
         assertEquals(0, result);
         db_handle.waitUsersComplete(20);
+
+        users = db_handle.getUsersList();
+
+        // look for testuser in list - it should be gone
+        boolean user_found = false;
+        for (User u : users) {
+            if (u.userName.equals("testuser")) {
+                if (u.password.equals("testpassword")) {
+                    user_found = true;
+                    break;
+                }
+            }
+        }
+        assertEquals(false, user_found);
     }
 
 
