@@ -10,13 +10,19 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
+
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class RegisterTest {
@@ -33,6 +39,7 @@ public class RegisterTest {
         QUpApp.getInstance().getDBHandler().waitUsersComplete(10);
         Intents.init();
 
+
 //        int result = QUpApp.getInstance().getDBHandler().readUsersFromDB();
 //        QUpApp.getInstance().getDBHandler().waitUsersComplete(20);
     }
@@ -40,9 +47,11 @@ public class RegisterTest {
 
     @Test
     public void TestRegistration() throws Exception {
-
+        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+        List<User> users = db_handle.getUsersList();
+        int result = db_handle.readUsersFromDB();
         onView( withId(R.id.inputUsername)).perform(click());
-        onView( withId(R.id.inputUsername)).perform(typeText("Testuser"));
+        onView( withId(R.id.inputUsername)).perform(typeText("Testhannes"));
 
         onView( withId(R.id.inputPassword)).perform(click());
         onView( withId(R.id.inputPassword)).perform(typeText("password"));
@@ -51,7 +60,33 @@ public class RegisterTest {
         onView( withId(R.id.confirmPassword)).perform(typeText("password"));
 
         Espresso.closeSoftKeyboard();
-      //  onView( withId(R.id.btn_save)).perform(click());
+        onView( withId(R.id.registerButton)).perform(click());
+        intended(hasComponent(RegisterActivity.class.getName()));
+        Intents.release();
+
+
+        String testuser_id = "";
+        for (User u : users) {
+            if (u.userName.equals("Testhannes")) {
+                if (u.password.equals("password")) {
+                    testuser_id = u.userId;
+                    break;
+                }
+            }
+        }
+
+        assertNotEquals("", testuser_id);
+        // remove user again
+        result = db_handle.removeUser(testuser_id);
+        assertEquals(0, result);
+        db_handle.waitUsersComplete(20);
+
+
+
+
+
+
+
     }
 
 
