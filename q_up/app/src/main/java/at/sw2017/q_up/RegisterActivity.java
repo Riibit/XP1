@@ -60,20 +60,34 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
         List<User> users = db_handle.getUsersList();
 
-        boolean flag = false;
+        boolean user_already_in_list = false;
+
         switch (clickedButton.getId()) {
             case R.id.registerButton:
+
+                if (!inputPassword.getText().toString().equals(confirmPassword.getText().toString()))
+                {
+                    Toast.makeText(getApplicationContext(),
+                            "Passwords don't match!", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
+                // check if user already exists
                 for (User u : users) {
                     if (u.userName.equals(inputUsername.getText().toString())) {
+                        // username is already in list
                         Toast.makeText(getApplicationContext(),
                                 "This user already exists!", Toast.LENGTH_SHORT).show();
-                        flag = true;
+                        user_already_in_list = true;
+                        break;
                     }
-                    if (flag) break;
                 }
-                if (!flag) {
+
+                // 
+                if (!user_already_in_list) {
+                    db_handle.addUser(inputUsername.getText().toString(), inputPassword.getText().toString());
                     Toast.makeText(getApplicationContext(),
-                            "This user is ok", Toast.LENGTH_SHORT).show();
+                            "User created..", Toast.LENGTH_SHORT).show();
                 }
 
                 // check texfield is already in db
