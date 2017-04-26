@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left|center_vertical"
         android:backgroundTint="@android:color/transparent"
-        android:drawableBottom="@drawable/arrow_left1"
+        android:drawableBottom="@drawable/button_arrow"
         android:text="My Profile" />
 
     <Button
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right|center_vertical"
         android:backgroundTint="@android:color/transparent"
-        android:drawableBottom="@drawable/arrow_left1"
+        android:drawableBottom="@drawable/button_arrow"
         android:text="Places" />
 
 
