@@ -31,6 +31,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+
+    //Function go to list
+    public void mapsGoList() {
+        Intent intent = new Intent(this, PlaceViewList.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,18 +47,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        Button buttonMapsBack = (Button) findViewById(R.id.buttonMapsBack);
+        //creation of button go to list- ADDED !
+        Button goToList =(Button) findViewById(R.id.button2);
+        goToList.setOnClickListener(new View.OnClickListener() {
 
+            public void onClick(View arg0) {
+                mapsGoList();
+            }
+        });
+
+
+        //This was already here !
+        Button buttonMapsBack = (Button) findViewById(R.id.buttonMapsBack);
         buttonMapsBack.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {
                 mapsGoBack();
             }
-
         });
 
 
     }
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
