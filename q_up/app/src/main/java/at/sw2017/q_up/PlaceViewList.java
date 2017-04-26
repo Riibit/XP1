@@ -2,6 +2,7 @@ package at.sw2017.q_up;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -22,5 +23,7 @@ public class PlaceViewList extends Activity {
       ListView list = (ListView) findViewById(R.id.list);
       list.setAdapter(myAdapter);
 
+
    }
+
 }

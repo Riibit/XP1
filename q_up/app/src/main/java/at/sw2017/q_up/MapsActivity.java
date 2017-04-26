@@ -5,6 +5,8 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,8 +36,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //Function go to list
     public void mapsGoList() {
-        Intent intent = new Intent(this, PlaceViewList.class);
-        startActivity(intent);
+        Intent intent1 = new Intent(MapsActivity.this, PlaceViewList.class);
+        startActivity(intent1);
     }
 
     @Override
@@ -47,9 +49,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
         //creation of button go to list- ADDED !
-        Button buttonList =(Button) findViewById(R.id.buttonList);
-        buttonList.setOnClickListener(new View.OnClickListener() {
+        Button goToList =(Button) findViewById(R.id.buttonList);
+        goToList.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {
                 mapsGoList();
@@ -66,7 +69,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-
+        buttonMapsBack.setRotation(90);
+        goToList.setRotation(270);
     }
 
     /**
