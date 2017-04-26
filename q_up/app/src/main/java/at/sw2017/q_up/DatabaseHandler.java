@@ -36,6 +36,9 @@ import at.sw2017.q_up.Place;
 
 public class DatabaseHandler {
 
+    private boolean dbreader_users_active = false;
+    private boolean dbreader_places_active = false;
+
     private DatabaseConfig db_config;
     private String server_table_users;
     private String server_table_places;
@@ -160,6 +163,10 @@ public class DatabaseHandler {
 
         database = FirebaseDatabase.getInstance();
         mDatabase = database.getReference();
+
+        // activate handlers for dynamic reading of databases
+        readPlacesFromDB();
+        readUsersFromDB();
     }
 
     /**
@@ -167,6 +174,11 @@ public class DatabaseHandler {
      * @return 0 = OK ; <0 = error
      */
     public Integer readPlacesFromDB() {
+
+        // only call the function once
+        if (dbreader_places_active == true)
+            return 0;
+        dbreader_places_active = true;
 
         getPlacesLatch = new CountDownLatch(1);
 
@@ -225,10 +237,15 @@ public class DatabaseHandler {
     }
 
     /**
-     * read users table
+     * read users table - this should only be ran once
      * @return 0 = OK ; <0 = error
      */
     public Integer readUsersFromDB() {
+
+        // only call the function once
+        if (dbreader_users_active == true)
+            return 0;
+        dbreader_users_active = true;
 
         getUsersLatch = new CountDownLatch(1);
 
@@ -263,7 +280,7 @@ public class DatabaseHandler {
     }
 
     /**
-     * get cached users
+     * get cached users (no update is forced)
      * @return list of users
      */
     public List<User> getUsersList() {
@@ -271,7 +288,7 @@ public class DatabaseHandler {
     }
 
     /**
-     *
+     * add a new user to the database
      * @param name
      * @param pw
      * @return 0 if successful
@@ -288,7 +305,7 @@ public class DatabaseHandler {
     }
 
     /**
-     *
+     * change some attribute of a user
      * @param id
      * @param attribute
      * @param value
@@ -304,7 +321,7 @@ public class DatabaseHandler {
     }
 
     /**
-     *
+     * get an attribute of a user
      * @param id
      * @param attribute
      * @return value
