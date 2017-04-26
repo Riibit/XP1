@@ -172,7 +172,7 @@ public class DatabaseTests {
                 break;
             }
         }
-        assertNotEquals(id, "");
+        assertNotEquals("", id);
 
         String new_idCheckInPlace = String.valueOf(Integer.parseInt(old_idCheckInPlace) + 1);
         int result = db_handle.modifyUserAttribute(id, "idCheckInPlace", new_idCheckInPlace);
