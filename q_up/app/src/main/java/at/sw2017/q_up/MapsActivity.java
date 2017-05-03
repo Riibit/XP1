@@ -16,7 +16,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
 
@@ -87,6 +87,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Graz and move the camera
+        //googleMap.setOnMarkerClickListener(this);
 
         mMcdonalds=mMap.addMarker(new MarkerOptions().position(MCDONALDS).title("Marker in Mcdonalds"));
         mMcdonalds.setTag(0);
@@ -103,5 +104,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.0707, 15.4395),14));
 
 
+    }
+    public boolean onMarkerClick(final Marker marker) {
+
+        if (marker.equals(mMcdonalds))
+        {
+            mapsGoBack();
+        }
+        else if (marker.equals(mDavinci))
+        {
+            mapsGoList();
+        }
+        else if (marker.equals(mHofer))
+        {
+            mapsGoList();
+        }
+        return true;
     }
 }
