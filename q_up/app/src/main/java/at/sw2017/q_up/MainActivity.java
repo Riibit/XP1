@@ -103,7 +103,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         long startTime = System.currentTimeMillis(); //fetch starting time
         boolean data_ready = false;
 
-        while(!data_ready || (System.currentTimeMillis()-startTime) < timeout) {
+        while(!data_ready && (System.currentTimeMillis()-startTime) < timeout) {
             users = db_handle.getUsersList();
             if (!users.isEmpty())
                 data_ready = true;
