@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -48,7 +49,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
 
         //creation of button go to list- ADDED !
         Button goToList =(Button) findViewById(R.id.buttonList);
@@ -86,7 +86,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Graz and move the camera
+        // load places from DB
+        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+        for (Place p : db_handle.getPlacesList()) {
+            LatLng ll = new LatLng(Double.parseDouble(p.latitude), Double.parseDouble(p.longitude));
+            mMap.addMarker(new MarkerOptions().position(ll).title(p.placeName)).setTag(p);
+        }
 
         mMcdonalds=mMap.addMarker(new MarkerOptions().position(MCDONALDS).title("Marker in Mcdonalds"));
         mMcdonalds.setTag(0);
@@ -100,8 +105,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mHofer.setTag(0);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(HOFER));
 
+        // Add a marker in Graz and move the camera
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.0707, 15.4395),14));
-
-
     }
 }
