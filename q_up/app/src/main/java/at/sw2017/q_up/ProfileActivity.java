@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -12,6 +13,9 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        TextView usernameText = (TextView) findViewById(R.id.textView);
+        usernameText.setText(MainActivity.getUsername());
 
         Button buttonMap =(Button) findViewById(R.id.buttonMap);
         buttonMap.setOnClickListener(new View.OnClickListener() {
