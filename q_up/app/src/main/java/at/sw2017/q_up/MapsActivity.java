@@ -7,7 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
+import android.widget.Toast;
+import at.sw2017.q_up.PlaceDetails.*;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -20,7 +21,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener  {
 
     private GoogleMap mMap;
 
@@ -37,8 +38,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivity(intent1);
     }
 
-    public void mapsGoDetails() {
+    public void mapsGoDetails(String title) {
         Intent intent2 = new Intent(MapsActivity.this, PlaceDetails.class);
+        intent2.putExtra("title", title);
         startActivity(intent2);
     }
 
@@ -52,7 +54,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         //creation of button go to list- ADDED !
-        Button goToList =(Button) findViewById(R.id.buttonList);
+        Button goToList = (Button) findViewById(R.id.buttonList);
         goToList.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {
@@ -121,8 +123,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.0707, 15.4395), 14));
     }
 
+
     @Override
     public void onInfoWindowClick(Marker marker) {
-        mapsGoDetails();
+        mapsGoDetails(marker.getTitle());
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+
+        // Retrieve the data from the marker.
+        Integer clickCount = (Integer) marker.getTag();
+
+        // Check if a click count was set, then display the click count.
+        if (clickCount != null) {
+            clickCount = clickCount + 1;
+            marker.setTag(clickCount);
+            Toast.makeText(this,
+                    marker.getPosition() +
+                            " has been clicked " + clickCount + " times.",
+                    Toast.LENGTH_SHORT).show();
+
+
+        }
+
+
+        // Return false to indicate that we have not consumed the event and that we wish
+        // for the default behavior to occur (which is for the camera to move such that the
+        // marker is centered and for the marker's info window to open, if it has one).
+        return false;
+
     }
 }
+
