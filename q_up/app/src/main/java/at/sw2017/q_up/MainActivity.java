@@ -60,7 +60,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
         registerNavigationButton.setOnClickListener(this);
         loginNavigationButton = (Button) findViewById(R.id.loginNavigationButton);
         editTextUsername = (EditText) findViewById(R.id.inputName);
+        editTextUsername.requestFocus();
         editTextPassword = (EditText) findViewById(R.id.editTextPasswort);
+
         editTextPassword.setOnKeyListener(myKeyListener);
 
 
