@@ -7,28 +7,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
+import android.widget.Toast;
+import at.sw2017.q_up.PlaceDetails.*;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener  {
 
     private GoogleMap mMap;
 
-    //Default locations which have to be changed into original coordinates
-    private static final LatLng MCDONALDS = new LatLng(47.055496, 15.448409);
-    private static final LatLng DAVINCI = new LatLng(47.054160, 15.444241);
-    private static final LatLng HOFER = new LatLng(47.055717, 15.441392);
-
-    private Marker mMcdonalds;
-    private Marker mDavinci;
-    private Marker mHofer;
+    private List<Marker> marker_list = new ArrayList<Marker>();
 
     public void mapsGoBack() {
         Intent intent = new Intent(this, ProfileActivity.class);
@@ -41,6 +38,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivity(intent1);
     }
 
+    public void mapsGoDetails(String id) {
+        Intent intent2 = new Intent(MapsActivity.this, PlaceDetails.class);
+        intent2.putExtra("id", id);
+        startActivity(intent2);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +54,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         //creation of button go to list- ADDED !
-        Button goToList =(Button) findViewById(R.id.buttonList);
+        Button goToList = (Button) findViewById(R.id.buttonList);
         goToList.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {
@@ -90,22 +93,63 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         for (Place p : db_handle.getPlacesList()) {
             LatLng ll = new LatLng(Double.parseDouble(p.latitude), Double.parseDouble(p.longitude));
-            mMap.addMarker(new MarkerOptions().position(ll).title(p.placeName)).setTag(p);
+
+            // add marker for place
+            Marker m = mMap.addMarker(new MarkerOptions().position(ll).title(p.placeName));
+            m.setTag(p);
+
+            // count the number of people in the queue
+            int people_in_queue = db_handle.getQueuedUserCountFromPlace(p.placeId);
+
+            // set color of marker
+            if (people_in_queue <= 5)
+                m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+            else if (people_in_queue <= 10)
+                m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+            else if (people_in_queue > 10)
+                m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+
+            // save marker in list
+            marker_list.add(m);
         }
 
-        mMcdonalds=mMap.addMarker(new MarkerOptions().position(MCDONALDS).title("Marker in Mcdonalds"));
-        mMcdonalds.setTag(0);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(MCDONALDS));
+        googleMap.setOnInfoWindowClickListener(this);
 
-        mDavinci=mMap.addMarker(new MarkerOptions().position(DAVINCI).title("Marker in Davinci"));
-        mDavinci.setTag(0);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(DAVINCI));
+        // move the camera to Graz
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.0707, 15.4395), 14));
+    }
 
-        mHofer=mMap.addMarker(new MarkerOptions().position(HOFER).title("Marker in Hofer"));
-        mHofer.setTag(0);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(HOFER));
 
-        // Add a marker in Graz and move the camera
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.0707, 15.4395),14));
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Place p = (Place)marker.getTag();
+        mapsGoDetails(p.placeId);
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+
+        // Retrieve the data from the marker.
+        Integer clickCount = (Integer) marker.getTag();
+
+        // Check if a click count was set, then display the click count.
+        if (clickCount != null) {
+            clickCount = clickCount + 1;
+            marker.setTag(clickCount);
+            Toast.makeText(this,
+                    marker.getPosition() +
+                            " has been clicked " + clickCount + " times.",
+                    Toast.LENGTH_SHORT).show();
+
+
+        }
+
+
+        // Return false to indicate that we have not consumed the event and that we wish
+        // for the default behavior to occur (which is for the camera to move such that the
+        // marker is centered and for the marker's info window to open, if it has one).
+        return false;
+
     }
 }
+

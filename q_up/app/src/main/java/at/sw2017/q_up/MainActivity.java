@@ -33,6 +33,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     static User currentUser;
 
 
+
+
     OnKeyListener myKeyListener = new OnKeyListener() {
         @Override
         public boolean onKey(View arg0, int actionID, KeyEvent event) {
@@ -61,8 +63,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         registerNavigationButton.setOnClickListener(this);
         loginNavigationButton = (Button) findViewById(R.id.loginNavigationButton);
         editTextUsername = (EditText) findViewById(R.id.inputName);
+        editTextUsername.requestFocus();
         editTextPassword = (EditText) findViewById(R.id.editTextPasswort);
+
         editTextPassword.setOnKeyListener(myKeyListener);
+        editTextUsername.requestFocus();
 
 
     }

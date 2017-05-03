@@ -6,12 +6,17 @@ import android.os.CountDownTimer;
 import android.support.annotation.IntegerRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.core.deps.guava.base.Strings;
+import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -23,6 +28,8 @@ import static org.junit.Assert.*;
  */
 
 @RunWith(AndroidJUnit4.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@LargeTest
 public class DatabaseTests {
 
     @BeforeClass
@@ -123,7 +130,7 @@ public class DatabaseTests {
     }
 
     @Test
-    public void addTestPlaces() {
+    public void addRemoveTestPlace() {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
 
@@ -136,7 +143,7 @@ public class DatabaseTests {
         assertEquals(false, db_handle.getPlacesList().isEmpty());
 
         // add a place
-        int result = db_handle.addPlace("testplace", "12.06", "34.4639", "0.0", "10");
+        int result = db_handle.addPlace("testplace", "12.06", "34.4639", "0", "0", "10");
         assertEquals(0, result);
 
         // look for testplace in list
@@ -171,13 +178,97 @@ public class DatabaseTests {
             }
         }
         assertEquals(false, object_found);
+    }
 
-/*
-        int result = db_handle.addPlace("bar", "47.06", "15.4639", "0.0", "10");
+    @Test
+    public void addTestPlaces() {
+        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+        assertNotNull(db_handle);
+
+        // try to remove all testplaces
+        for (Place p : db_handle.getPlacesList()) {
+            if (p.placeName.equals("testplace")) {
+                db_handle.removePlace(p.placeId);
+            }
+        }
+        long startTime = System.currentTimeMillis(); //fetch starting time
+        boolean finished = true;
+        while(!finished && (System.currentTimeMillis()-startTime) < 5000) {
+            for (Place p : db_handle.getPlacesList()) {
+                if (p.placeName.equals("testplace"))
+                    finished = false;
+            }
+        }
+        assertEquals(true, finished);
+
+        // add a dummy place
+        int result = db_handle.addPlace("testplace", "12.06", "34.4639", "0", "0", "10");
         assertEquals(0, result);
-        result = db_handle.addPlace("market", "47.0608", "15.4682", "0.0", "15");
-        assertEquals(0, result);
-*/
+
+        // wait for the creation
+        startTime = System.currentTimeMillis(); //fetch starting time
+        finished = false;
+        while(!finished && (System.currentTimeMillis()-startTime) < 5000) {
+            for (Place p : db_handle.getPlacesList()) {
+                if (p.placeName.equals("testplace"))
+                    finished = true;
+            }
+        }
+        assertEquals(true, finished);
+
+        // clear out existing testplaces from db
+        startTime = System.currentTimeMillis(); //fetch starting time
+        finished = false;
+        while(!finished && (System.currentTimeMillis()-startTime) < 10000) {
+            for (Place p : db_handle.getPlacesList()) {
+                if (p.placeName.equals("testplace")) {
+                    finished = true;
+                    db_handle.removePlace(p.placeId);
+                }
+            }
+        }
+        assertEquals(true, finished);
+
+        //=== ADD TESTPLACES FOR DATABASE HERE =====================================================
+
+        List<Place> testplaces = new ArrayList<Place>();
+        testplaces.add(new Place("", "Pail Coffee", "47.06", "15.4639", "0", "0", "10"));
+        testplaces.add(new Place("", "Spar Market", "47.0608", "15.4682", "0", "0", "15"));
+        testplaces.add(new Place("", "McDonalds", "47.055496", "15.448409", "0", "0", "15"));
+        testplaces.add(new Place("", "Davinci", "47.054160", "15.444241", "0", "0", "15"));
+        testplaces.add(new Place("", "Hofer", "47.055717", "15.441392", "0", "0", "15"));
+
+        //==========================================================================================
+
+        // go through all places in the database
+        for (Place dbP : db_handle.getPlacesList()) {
+            // for each place in the database - look through our local testplaces
+            for (Place localP : testplaces) {
+                // find duplicates and remove them
+                if (localP.placeName.equals(dbP.placeName)) {
+                    db_handle.removePlace(dbP.placeId);
+                    // do not break here - find duplicate entries!
+                }
+            }
+        }
+
+        // add our testplaces
+        for (Place p : testplaces) {
+            db_handle.addPlace(p.placeName, p.latitude, p.longitude, p.ratingPos, p.ratingNeg, p.avgProcessingSecs);
+        }
+
+        startTime = System.currentTimeMillis(); //fetch starting time
+        while(!testplaces.isEmpty() && (System.currentTimeMillis()-startTime) < 10000) {
+            for (Place p : db_handle.getPlacesList()) {
+                for (Place tp : testplaces) {
+                    if (p.placeName.equals(tp.placeName)) {
+                        testplaces.remove(testplaces.indexOf(tp));
+                        break;
+                    }
+                }
+            }
+        }
+        assertEquals(true, testplaces.isEmpty());
     }
 
     @Test

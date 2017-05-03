@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="at.sw2017.q_up.MainActivity"
+    tools:layout_editor_absoluteY="81dp"
+    tools:layout_editor_absoluteX="0dp">
+
+    <TextView
+        android:id="@+id/txtview_title"
+        android:layout_width="378dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:text="Place Details"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="3dp" />
+
+
+    <Button
+        android:id="@+id/buttonlike"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="76dp"
+        android:layout_height="66dp"
+        android:layout_gravity="left|center_vertical"
+        android:drawableBottom="@drawable/like"
+        android:textAllCaps="false"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="54dp" />
+
+    <Button
+        android:id="@+id/btn_qup"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="28dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Q UP!"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_editor_absoluteY="424dp"
+        app:layout_constraintHorizontal_bias="0.496" />
+
+    <TextView
+        android:id="@+id/txt_like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Like"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="101dp"
+        tools:layout_editor_absoluteY="71dp" />
+
+
+</android.support.constraint.ConstraintLayout>

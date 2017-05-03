@@ -5,6 +5,7 @@ package at.sw2017.q_up;
  */
 
 import android.os.Bundle;
+import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -220,14 +221,14 @@ public class DatabaseHandler {
      * add a new place to the database
      * @return 0 if OK
      */
-    public Integer addPlace(String name, String lat, String lon, String avgr, String proct) {
+    public Integer addPlace(String name, String lat, String lon, String rating_pos, String rating_neg, String proct) {
 
         DatabaseReference placeref = FirebaseDatabase.getInstance().getReference("places");
 
         getPlacesLatch = new CountDownLatch(1);
 
         String placeId = placeref.push().getKey();
-        Place place = new Place(placeId, name, lat, lon, avgr, proct);
+        Place place = new Place(placeId, name, lat, lon, rating_pos, rating_neg, proct);
         placeref.child(placeId).setValue(place);
 
         return 0;
@@ -246,6 +247,78 @@ public class DatabaseHandler {
 
         placeref.child(id).removeValue();
         return 0;
+    }
+
+    /**
+     * change some attribute of a user
+     * @param id
+     * @param attribute
+     * @param value
+     * @return 0 if successful
+     */
+    public int modifyPlaceAttribute(String id, String attribute, String value) {
+
+        DatabaseReference placesref = FirebaseDatabase.getInstance().getReference("places");
+        placesref.child(id).child(attribute).setValue(value);
+        return 0;
+    }
+
+    /**
+     * give place a positive vote
+     * just returns when given an invalid id.
+     * @param id id of place
+     */
+    public void votePlacePositive(String id) {
+        int rating = 0;
+        boolean found = false;
+        for (Place p : placesList) {
+            if (p.placeId.equals(id)) {
+                found = true;
+                rating = Integer.parseInt(p.ratingPos);
+            }
+        }
+        // invalid id - return!
+        if (found == false)
+            return;
+
+        rating += 1;
+        modifyPlaceAttribute(id, "ratingPos", Integer.toString(rating));
+    }
+
+    /**
+     * give place a negative vote
+     * just returns when given an invalid id.
+     * @param id id of place
+     */
+    public void votePlaceNegative(String id) {
+        int rating = 0;
+        boolean found = false;
+        for (Place p : placesList) {
+            if (p.placeId.equals(id)) {
+                found = true;
+                rating = Integer.parseInt(p.ratingPos);
+            }
+        }
+        // invalid id - return!
+        if (found == false)
+            return;
+
+        rating -= 1;
+        modifyPlaceAttribute(id, "ratingNeg", Integer.toString(rating));
+    }
+
+    /**
+     * get the number of queued up users in a place
+     * @param id id of the place
+     * @return number of users - 0 if no users are queued
+     */
+    public int getQueuedUserCountFromPlace(String id) {
+        int people_in_queue = 0;
+        for (User u : usersList) {
+            if (u.idCheckInPlace.equals(id))
+                people_in_queue += 1;
+        }
+        return people_in_queue;
     }
 
     /**
@@ -347,5 +420,60 @@ public class DatabaseHandler {
         usersref.child(id).child(attribute).setValue(value);
 
         return 0;
+    }
+
+    /**
+     * checks user into place
+     * just returns when given an invalid id.
+     * @param userID id of user
+     * @param placeID id of place
+     */
+    public void checkUserIntoPlace(String userID, String placeID) {
+        boolean found = false;
+        for (User u : usersList) {
+            if (u.userId.equals(userID)) {
+                found = true;
+            }
+        }
+        // invalid user id - return!
+        if (found == false)
+            return;
+
+        // reset flag
+        found = false;
+
+        for (Place p : placesList) {
+            if (p.placeId.equals(placeID)) {
+                found = true;
+            }
+        }
+        // invalid place id - return!
+        if (found == false)
+            return;
+
+        modifyUserAttribute(userID, "idCheckInPlace" ,placeID);
+
+        return;
+    }
+
+    /**
+     * checks user out of any place he is checked into
+     * just returns when given an invalid id.
+     * @param userID id of user
+     */
+    public void checkOutOfPlace(String userID) {
+        boolean found = false;
+        for (User u : usersList) {
+            if (u.userId.equals(userID)) {
+                found = true;
+            }
+        }
+        // invalid user id - return!
+        if (found == false)
+            return;
+
+        modifyUserAttribute(userID, "idCheckInPlace" , "");
+
+        return;
     }
 }
