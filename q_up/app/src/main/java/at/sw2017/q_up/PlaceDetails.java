@@ -23,12 +23,12 @@ public class PlaceDetails extends Activity {
             }
         }
 
-        TextView getlatitude = (TextView) findViewById(R.id.txtview_getlatitude);
-        TextView getlongtitude = (TextView) findViewById(R.id.txtview_getlongtitude);
+        //TextView getlatitude = (TextView) findViewById(R.id.txtview_getlatitude);
+        //TextView getlongtitude = (TextView) findViewById(R.id.txtview_getlongtitude);
         TextView txtViewtitle = (TextView) findViewById(R.id.txtview_title);
 
-        getlongtitude.setText(place.longitude);
-        getlatitude.setText(place.latitude);
+        //getlongtitude.setText(place.longitude);
+        //getlatitude.setText(place.latitude);
         txtViewtitle.setText(place.placeName);
     }
 

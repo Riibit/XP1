@@ -16,7 +16,6 @@
         android:layout_marginTop="6dp"
         android:text="Place Details"
         android:textAlignment="center"
-        android:textColor="@drawable/common_google_signin_btn_text_dark_focused"
         android:textSize="24sp"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="3dp" />
@@ -28,7 +27,6 @@
         android:layout_width="76dp"
         android:layout_height="66dp"
         android:layout_gravity="left|center_vertical"
-        android:backgroundTint="@android:color/transparent"
         android:drawableBottom="@drawable/like"
         android:textAllCaps="false"
         tools:layout_editor_absoluteX="16dp"
@@ -54,7 +52,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Like"
-        android:textColor="common_google_signin_btn_text_dark_focused"
         android:textSize="24sp"
         tools:layout_editor_absoluteX="101dp"
         tools:layout_editor_absoluteY="71dp" />
