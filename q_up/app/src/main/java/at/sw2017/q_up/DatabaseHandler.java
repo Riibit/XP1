@@ -5,6 +5,7 @@ package at.sw2017.q_up;
  */
 
 import android.os.Bundle;
+import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -246,6 +247,64 @@ public class DatabaseHandler {
 
         placeref.child(id).removeValue();
         return 0;
+    }
+
+    /**
+     * change some attribute of a user
+     * @param id
+     * @param attribute
+     * @param value
+     * @return 0 if successful
+     */
+    public int modifyPlaceAttribute(String id, String attribute, String value) {
+
+        DatabaseReference placesref = FirebaseDatabase.getInstance().getReference("places");
+        placesref.child(id).child(attribute).setValue(value);
+        return 0;
+    }
+
+    /**
+     * give place a positive vote
+     * just returns when given an invalid id.
+     * @param id id of place
+     */
+    public void votePlacePositive(String id) {
+        int rating = 0;
+        boolean found = false;
+        for (Place p : placesList) {
+            if (p.placeId.equals(id)) {
+                found = true;
+                rating = Integer.parseInt(p.ratingPos);
+            }
+        }
+        // invalid id - return!
+        if (found == false)
+            return;
+
+        rating += 1;
+        modifyPlaceAttribute(id, "ratingPos", Integer.toString(rating));
+    }
+
+    /**
+     * give place a negative vote
+     * just returns when given an invalid id.
+     * @param id id of place
+     */
+    public void votePlaceNegative(String id) {
+        int rating = 0;
+        boolean found = false;
+        for (Place p : placesList) {
+            if (p.placeId.equals(id)) {
+                found = true;
+                rating = Integer.parseInt(p.ratingPos);
+            }
+        }
+        // invalid id - return!
+        if (found == false)
+            return;
+
+        rating -= 1;
+        modifyPlaceAttribute(id, "ratingNeg", Integer.toString(rating));
     }
 
     /**
