@@ -45,15 +45,12 @@ public class DatabaseTests {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
 
-        if (db_handle.getPlacesList().isEmpty()) {
-
-            int result = db_handle.readPlacesFromDB();
-            assertEquals(0, result);
-            db_handle.waitPlacesComplete(20);
+        long startTime = System.currentTimeMillis(); //fetch starting time
+        while((System.currentTimeMillis()-startTime) < 5000) {
+            if (!db_handle.getPlacesList().isEmpty())
+                break;
         }
-
-        List<Place> places = db_handle.getPlacesList();
-        assertTrue(!places.isEmpty());
+        assertEquals(false, db_handle.getPlacesList().isEmpty());
     }
 
     @Test
@@ -61,20 +58,12 @@ public class DatabaseTests {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
 
-        if (db_handle.getUsersList().isEmpty()) {
-
-            int result = db_handle.readUsersFromDB();
-            assertEquals(0, result);
-            db_handle.waitUsersComplete(20);
+        long startTime = System.currentTimeMillis(); //fetch starting time
+        while((System.currentTimeMillis()-startTime) < 5000) {
+            if (!db_handle.getUsersList().isEmpty())
+                break;
         }
-        /* example of accessing users:
-
-        List<User> users = db_handle.getUsersList();
-        for (User u : users) {
-            if (u.userName.equals("franz"))
-                checkpassword
-        }
-        assertTrue(!users.isEmpty()); */
+        assertEquals(false, db_handle.getUsersList().isEmpty());
     }
 
     @Test
@@ -83,26 +72,27 @@ public class DatabaseTests {
         assertNotNull(db_handle);
 
         // get existing users from db
-        int result = db_handle.readUsersFromDB();
-        assertEquals(0, result);
-        db_handle.waitUsersComplete(20);
+        long startTime = System.currentTimeMillis(); //fetch starting time
+        while((System.currentTimeMillis()-startTime) < 5000) {
+            if (!db_handle.getUsersList().isEmpty())
+                break;
+        }
+        assertEquals(false, db_handle.getUsersList().isEmpty());
 
         // add a user
-        result = db_handle.addUser("testuser", "testpassword");
+        int result = db_handle.addUser("testuser", "testpassword");
         assertEquals(0, result);
-        db_handle.waitUsersComplete(20);
 
-        // verify that list is not empty
-        List<User> users = db_handle.getUsersList();
-        assert(!users.isEmpty());
-
-        // look for testuser in list
+        startTime = System.currentTimeMillis(); //fetch starting time
         String testuser_id = "";
-        for (User u : users) {
-            if (u.userName.equals("testuser")) {
-                if (u.password.equals("testpassword")) {
-                    testuser_id = u.userId;
-                    break;
+        while(testuser_id == "" && (System.currentTimeMillis()-startTime) < 5000) {
+            // look for testuser in list
+            for (User u : db_handle.getUsersList()) {
+                if (u.userName.equals("testuser")) {
+                    if (u.password.equals("testpassword")) {
+                        testuser_id = u.userId;
+                        break;
+                    }
                 }
             }
         }
@@ -111,21 +101,25 @@ public class DatabaseTests {
         // remove user again
         result = db_handle.removeUser(testuser_id);
         assertEquals(0, result);
-        db_handle.waitUsersComplete(20);
 
-        users = db_handle.getUsersList();
-
-        // look for testuser in list - it should be gone
-        boolean user_found = false;
-        for (User u : users) {
-            if (u.userName.equals("testuser")) {
-                if (u.password.equals("testpassword")) {
-                    user_found = true;
-                    break;
+        startTime = System.currentTimeMillis(); //fetch starting time
+        boolean object_found = true;
+        while(object_found == true && (System.currentTimeMillis()-startTime) < 5000) {
+            // look for testuser in list - it should be gone
+            for (User u : db_handle.getUsersList()) {
+                if (u.userName.equals("testuser")) {
+                    if (u.password.equals("testpassword")) {
+                        object_found = true;
+                        break;
+                    }
+                    else
+                        object_found = false;
                 }
+                else
+                    object_found = false;
             }
         }
-        assertEquals(false, user_found);
+        assertEquals(false, object_found);
     }
 
     @Test
@@ -134,25 +128,26 @@ public class DatabaseTests {
         assertNotNull(db_handle);
 
         // get existing places from db
-        int result = db_handle.readPlacesFromDB();
-        assertEquals(0, result);
-        db_handle.waitPlacesComplete(20);
+        long startTime = System.currentTimeMillis(); //fetch starting time
+        while((System.currentTimeMillis()-startTime) < 5000) {
+            if (!db_handle.getPlacesList().isEmpty())
+                break;
+        }
+        assertEquals(false, db_handle.getPlacesList().isEmpty());
 
         // add a place
-        result = db_handle.addPlace("testplace", "12.06", "34.4639", "0.0", "10");
+        int result = db_handle.addPlace("testplace", "12.06", "34.4639", "0.0", "10");
         assertEquals(0, result);
-        db_handle.waitPlacesComplete(20);
-
-        // verify that list is not empty
-        List<Place> places = db_handle.getPlacesList();
-        assert(!places.isEmpty());
 
         // look for testplace in list
+        startTime = System.currentTimeMillis(); //fetch starting time
         String testplace_id = "";
-        for (Place p : places) {
-            if (p.placeName.equals("testplace")) {
-                testplace_id = p.placeId;
-                break;
+        while((System.currentTimeMillis()-startTime) < 5000) {
+            for (Place p : db_handle.getPlacesList()) {
+                if (p.placeName.equals("testplace")) {
+                    testplace_id = p.placeId;
+                    break;
+                }
             }
         }
         assertNotEquals("", testplace_id);
@@ -160,19 +155,22 @@ public class DatabaseTests {
         // remove place again
         result = db_handle.removePlace(testplace_id);
         assertEquals(0, result);
-        db_handle.waitPlacesComplete(20);
 
-        places = db_handle.getPlacesList();
+        startTime = System.currentTimeMillis(); //fetch starting time
+        boolean object_found = true;
 
-        // look for testuser in list - it should be gone
-        boolean place_found = false;
-        for (Place p : places) {
-            if (p.placeName.equals("testplace")) {
-                place_found = true;
-                break;
+        while(object_found && (System.currentTimeMillis()-startTime) < 5000) {
+            // look for object in list - it should be gone
+            for (Place p : db_handle.getPlacesList()) {
+                if (p.placeName.equals("testplace")) {
+                    object_found = true;
+                    break;
+                }
+                else
+                    object_found = false;
             }
         }
-        assertEquals(false, place_found);
+        assertEquals(false, object_found);
 
 /*
         int result = db_handle.addPlace("bar", "47.06", "15.4639", "0.0", "10");
@@ -187,12 +185,12 @@ public class DatabaseTests {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
 
-        if (db_handle.getUsersList().isEmpty()) {
-
-            int result = db_handle.readUsersFromDB();
-            assertEquals(0, result);
-            db_handle.waitUsersComplete(20);
+        long startTime = System.currentTimeMillis(); //fetch starting time
+        while((System.currentTimeMillis()-startTime) < 5000) {
+            if (!db_handle.getUsersList().isEmpty())
+                break;
         }
+        assertEquals(false, db_handle.getUsersList().isEmpty());
 
         String id = "";
         String old_idCheckInPlace = "";
@@ -210,11 +208,11 @@ public class DatabaseTests {
         String new_idCheckInPlace = String.valueOf(Integer.parseInt(old_idCheckInPlace) + 1);
         int result = db_handle.modifyUserAttribute(id, "idCheckInPlace", new_idCheckInPlace);
 
-        // check new value and reset to old value - all must happen in 10s
-        long startTime = System.currentTimeMillis(); //fetch starting time
+        // check new value and reset to old value - all must happen in a few seconds
+        startTime = System.currentTimeMillis(); //fetch starting time
         boolean value_changed = false;
 
-        while(!value_changed || (System.currentTimeMillis()-startTime) < 10000) {
+        while(!value_changed && (System.currentTimeMillis()-startTime) < 5000) {
             userlist = db_handle.getUsersList();
             for (User u : userlist) {
                 if (u.userName.equals("franz")) {

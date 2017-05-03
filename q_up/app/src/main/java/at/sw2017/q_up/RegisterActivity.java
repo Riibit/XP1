@@ -59,14 +59,23 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         Button clickedButton = (Button) v;
 
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-        if (db_handle.getUsersList().isEmpty()) {
-
-            int result = db_handle.readUsersFromDB();
-            assertEquals(0, result);
-            db_handle.waitUsersComplete(20);
-        }
-
         List<User> users = db_handle.getUsersList();
+
+        // check for DB timeout
+        int timeout = 4 * 1000;
+        long startTime = System.currentTimeMillis(); //fetch starting time
+        boolean data_ready = false;
+
+        while(!data_ready || (System.currentTimeMillis()-startTime) < timeout) {
+            users = db_handle.getUsersList();
+            if (!users.isEmpty())
+                data_ready = true;
+        }
+        if (data_ready != true) {
+            Toast.makeText(getApplicationContext(),
+                    "Server timeout!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         boolean user_already_in_list = false;
 
