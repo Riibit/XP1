@@ -12,11 +12,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
 
@@ -24,6 +25,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final LatLng MCDONALDS = new LatLng(47.055496, 15.448409);
     private static final LatLng DAVINCI = new LatLng(47.054160, 15.444241);
     private static final LatLng HOFER = new LatLng(47.055717, 15.441392);
+    int people_in_queue=12;
+    int people_in_queue1=7;
+    int people_in_queue2=4;
 
     private Marker mMcdonalds;
     private Marker mDavinci;
@@ -98,24 +102,63 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         
         // Add a marker in Graz and move the camera
-        googleMap.setOnMarkerClickListener(this);
+        googleMap.setOnInfoWindowClickListener(this);
 
         mMcdonalds=mMap.addMarker(new MarkerOptions().position(MCDONALDS).title("Marker in Mcdonalds"));
         mMcdonalds.setTag(0);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(MCDONALDS));
+        if(people_in_queue2<=5)
+        {
+            mMcdonalds.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        }
+        else if(people_in_queue2<=10)
+        {
+            mMcdonalds.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+        }
+        else if(people_in_queue2>10)
+        {
+            mMcdonalds.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        }
+
 
         mDavinci=mMap.addMarker(new MarkerOptions().position(DAVINCI).title("Marker in Davinci"));
         mDavinci.setTag(0);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(DAVINCI));
+        if(people_in_queue<=5)
+        {
+            mDavinci.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        }
+        else if(people_in_queue<=10)
+        {
+            mDavinci.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+        }
+        else if(people_in_queue>10)
+        {
+            mDavinci.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        }
 
         mHofer=mMap.addMarker(new MarkerOptions().position(HOFER).title("Marker in Hofer"));
         mHofer.setTag(0);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(HOFER));
+        if(people_in_queue1<=5)
+        {
+            mHofer.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        }
+        else if(people_in_queue1<=10)
+        {
+            mHofer.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+        }
+        else if(people_in_queue1>10)
+        {
+            mHofer.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        }
 
         // Add a marker in Graz and move the camera
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.0707, 15.4395),14));
     }
-    public boolean onMarkerClick(final Marker marker) {
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
 
         if (marker.equals(mMcdonalds))
         {
@@ -129,6 +172,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         {
             mapsGoDetails();
         }
-        return true;
+
     }
 }
