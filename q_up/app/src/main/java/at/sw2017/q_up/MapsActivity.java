@@ -40,6 +40,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivity(intent1);
     }
 
+    public void mapsGoDetails() {
+        Intent intent2 = new Intent(MapsActivity.this, PlaceDetails.class);
+        startActivity(intent2);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +98,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         
         // Add a marker in Graz and move the camera
-        //googleMap.setOnMarkerClickListener(this);
+        googleMap.setOnMarkerClickListener(this);
 
         mMcdonalds=mMap.addMarker(new MarkerOptions().position(MCDONALDS).title("Marker in Mcdonalds"));
         mMcdonalds.setTag(0);
@@ -114,15 +119,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if (marker.equals(mMcdonalds))
         {
-            mapsGoBack();
+            mapsGoDetails();
         }
         else if (marker.equals(mDavinci))
         {
-            mapsGoList();
+            mapsGoDetails();
         }
         else if (marker.equals(mHofer))
         {
-            mapsGoList();
+            mapsGoDetails();
         }
         return true;
     }
