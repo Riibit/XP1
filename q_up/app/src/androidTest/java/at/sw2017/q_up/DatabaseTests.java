@@ -6,11 +6,15 @@ import android.os.CountDownTimer;
 import android.support.annotation.IntegerRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.core.deps.guava.base.Strings;
+import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +28,8 @@ import static org.junit.Assert.*;
  */
 
 @RunWith(AndroidJUnit4.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@LargeTest
 public class DatabaseTests {
 
     @BeforeClass
@@ -174,7 +180,7 @@ public class DatabaseTests {
         assertEquals(false, object_found);
     }
 
-    @Test
+    @Before
     public void addTestPlaces() {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
