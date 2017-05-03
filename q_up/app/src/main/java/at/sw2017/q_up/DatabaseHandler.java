@@ -249,6 +249,20 @@ public class DatabaseHandler {
     }
 
     /**
+     * get the number of queued up users in a place
+     * @param id id of the place
+     * @return number of users - 0 if no users are queued
+     */
+    public int getQueuedUserCountFromPlace(String id) {
+        int people_in_queue = 0;
+        for (User u : usersList) {
+            if (u.idCheckInPlace.equals(id))
+                people_in_queue += 1;
+        }
+        return people_in_queue;
+    }
+
+    /**
      * read users table - this should only be ran once
      * @return 0 = OK ; <0 = error
      */

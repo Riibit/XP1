@@ -99,11 +99,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             m.setTag(p);
 
             // count the number of people in the queue
-            int people_in_queue = 0;
-            for (User u : db_handle.getUsersList()) {
-                if (u.idCheckInPlace.equals(p.placeId))
-                    people_in_queue += 1;
-            }
+            int people_in_queue = db_handle.getQueuedUserCountFromPlace(p.placeId);
 
             // set color of marker
             if (people_in_queue <= 5)
