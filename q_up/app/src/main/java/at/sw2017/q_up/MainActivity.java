@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.KeyEvent;
 
 
-
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -33,20 +32,20 @@ public class MainActivity extends Activity implements View.OnClickListener {
     EditText editTextPassword;
 
 
-        OnKeyListener myKeyListener = new OnKeyListener() {
-            @Override
-            public boolean onKey(View arg0, int actionID, KeyEvent event) {
-                // TODO: do what you got to do
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (actionID == KeyEvent.KEYCODE_ENTER)) {
-                    Toast.makeText(getApplicationContext(),
-                            "ENTER", Toast.LENGTH_SHORT).show();
-                }
-                return false;
+    OnKeyListener myKeyListener = new OnKeyListener() {
+        @Override
+        public boolean onKey(View arg0, int actionID, KeyEvent event) {
+            // TODO: do what you got to do
+            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                    (actionID == KeyEvent.KEYCODE_ENTER)) {
+                Button click = (Button)findViewById(R.id.buttonLogin);
+                click.performClick();
+
+
             }
-        };
-
-
+            return false;
+        }
+    };
 
 
     @Override
@@ -65,7 +64,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         editTextPassword.setOnKeyListener(myKeyListener);
 
 
-
     }
 
     @Override
@@ -82,6 +80,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 
     public void switchActivities() {
+
+
         Intent mapIntent = new Intent(this, MapsActivity.class);
         startActivity(mapIntent);
     }
@@ -103,7 +103,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         long startTime = System.currentTimeMillis(); //fetch starting time
         boolean data_ready = false;
 
-        while(!data_ready && (System.currentTimeMillis()-startTime) < timeout) {
+        while (!data_ready && (System.currentTimeMillis() - startTime) < timeout) {
             users = db_handle.getUsersList();
             if (!users.isEmpty())
                 data_ready = true;
