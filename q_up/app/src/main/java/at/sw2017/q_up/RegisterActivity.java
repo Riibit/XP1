@@ -4,13 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.List;
-
+import android.view.View.OnKeyListener;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
@@ -24,6 +25,22 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     EditText inputEmail;
     List<User> userList;
 
+
+
+    OnKeyListener myKeyListener = new View.OnKeyListener() {
+        @Override
+        public boolean onKey(View arg0, int actionID, KeyEvent event) {
+            // TODO: do what you got to do
+            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                    (actionID == KeyEvent.KEYCODE_ENTER)) {
+                Button click = (Button)findViewById(R.id.registerButton);
+                click.performClick();
+
+
+            }
+            return false;
+        }
+    };
 
 
     public void switchLoginRegister()
@@ -51,6 +68,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         inputPassword = (EditText) findViewById(R.id.inputPassword);
         confirmPassword = (EditText) findViewById(R.id.confirmPassword);
         inputUsername = (EditText) findViewById(R.id.inputUsername);
+        confirmPassword.setOnKeyListener(myKeyListener);
         switchLoginRegister();
     }
 
@@ -59,14 +77,23 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         Button clickedButton = (Button) v;
 
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-        if (db_handle.getUsersList().isEmpty()) {
-
-            int result = db_handle.readUsersFromDB();
-            assertEquals(0, result);
-            db_handle.waitUsersComplete(20);
-        }
-
         List<User> users = db_handle.getUsersList();
+
+        // check for DB timeout
+        int timeout = 4 * 1000;
+        long startTime = System.currentTimeMillis(); //fetch starting time
+        boolean data_ready = false;
+
+        while(!data_ready && (System.currentTimeMillis()-startTime) < timeout) {
+            users = db_handle.getUsersList();
+            if (!users.isEmpty())
+                data_ready = true;
+        }
+        if (data_ready != true) {
+            Toast.makeText(getApplicationContext(),
+                    "Server timeout!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         boolean user_already_in_list = false;
 
@@ -78,6 +105,20 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 {
                     Toast.makeText(getApplicationContext(),
                             "Passwords don't match / are too weak!", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
+                if(inputUsername.getText().toString().equals(""))
+                {
+                    Toast.makeText(getApplicationContext(),
+                            "Enter a username for registration", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
+                if(inputPassword.getText().toString().equals(""))
+                {
+                    Toast.makeText(getApplicationContext(),
+                            "Enter a password for registration", Toast.LENGTH_SHORT).show();
                     break;
                 }
 

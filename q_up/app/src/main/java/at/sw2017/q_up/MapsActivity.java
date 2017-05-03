@@ -49,7 +49,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
         //creation of button go to list- ADDED !
         Button goToList =(Button) findViewById(R.id.buttonList);
         goToList.setOnClickListener(new View.OnClickListener() {
@@ -86,6 +85,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        // load places from DB
+        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+        for (Place p : db_handle.getPlacesList()) {
+            LatLng ll = new LatLng(Double.parseDouble(p.latitude), Double.parseDouble(p.longitude));
+            mMap.addMarker(new MarkerOptions().position(ll).title(p.placeName)).setTag(p);
+        }
+        
         // Add a marker in Graz and move the camera
         //googleMap.setOnMarkerClickListener(this);
 
@@ -101,9 +107,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mHofer.setTag(0);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(HOFER));
 
+        // Add a marker in Graz and move the camera
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.0707, 15.4395),14));
-
-
     }
     public boolean onMarkerClick(final Marker marker) {
 
