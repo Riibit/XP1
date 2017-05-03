@@ -220,14 +220,14 @@ public class DatabaseHandler {
      * add a new place to the database
      * @return 0 if OK
      */
-    public Integer addPlace(String name, String lat, String lon, String avgr, String proct) {
+    public Integer addPlace(String name, String lat, String lon, String rating_pos, String rating_neg, String proct) {
 
         DatabaseReference placeref = FirebaseDatabase.getInstance().getReference("places");
 
         getPlacesLatch = new CountDownLatch(1);
 
         String placeId = placeref.push().getKey();
-        Place place = new Place(placeId, name, lat, lon, avgr, proct);
+        Place place = new Place(placeId, name, lat, lon, rating_pos, rating_neg, proct);
         placeref.child(placeId).setValue(place);
 
         return 0;
