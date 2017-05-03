@@ -38,9 +38,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivity(intent1);
     }
 
-    public void mapsGoDetails(String title) {
+    public void mapsGoDetails(String id) {
         Intent intent2 = new Intent(MapsActivity.this, PlaceDetails.class);
-        intent2.putExtra("title", title);
+        intent2.putExtra("id", id);
         startActivity(intent2);
     }
 
@@ -126,7 +126,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        mapsGoDetails(marker.getTitle());
+        Place p = (Place)marker.getTag();
+        mapsGoDetails(p.placeId);
     }
 
     @Override

@@ -17,6 +17,10 @@ public class Place {
 
     }
 
+    public Place(Place p) {
+        this(p.placeId, p.placeName, p.latitude, p.longitude, p.ratingPos, p.ratingNeg, p.avgProcessingSecs);
+    }
+
     public Place(String id, String name, String lat, String lon, String rating_pos, String rating_neg, String proctime) {
         placeId = id;
         placeName = name;
