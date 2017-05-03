@@ -51,13 +51,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-        QUpApp.getInstance().getDBHandler().addAuthStListener();
+        //QUpApp.getInstance().getDBHandler().addAuthStListener();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        QUpApp.getInstance().getDBHandler().removeAuthStListener();
+        //QUpApp.getInstance().getDBHandler().removeAuthStListener();
     }
 
 
@@ -75,15 +75,24 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         Button clickedButton = (Button) v;
 
-
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-        if (db_handle.getUsersList().isEmpty()) {
-
-            int result = db_handle.readUsersFromDB();
-            assertEquals(0, result);
-            db_handle.waitUsersComplete(20);
-        }
         List<User> users = db_handle.getUsersList();
+
+        // check for DB timeout
+        int timeout = 4 * 1000;
+        long startTime = System.currentTimeMillis(); //fetch starting time
+        boolean data_ready = false;
+
+        while(!data_ready || (System.currentTimeMillis()-startTime) < timeout) {
+            users = db_handle.getUsersList();
+            if (!users.isEmpty())
+                data_ready = true;
+        }
+        if (data_ready != true) {
+            Toast.makeText(getApplicationContext(),
+                    "Server timeout!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         switch (clickedButton.getId()) {
             case R.id.buttonLogin:
