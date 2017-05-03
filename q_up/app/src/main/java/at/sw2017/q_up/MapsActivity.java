@@ -69,8 +69,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        buttonMapsProfile.setRotation(90);
-        goToList.setRotation(270);
+        buttonMapsProfile.setRotation(270);
+        goToList.setRotation(90);
     }
 
     /**

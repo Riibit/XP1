@@ -32,6 +32,8 @@ public class ProfileActivity extends AppCompatActivity {
                 goToMain();
             }
         });
+
+        buttonMap.setRotation(90);
     }
 
     public void goToMaps() {
