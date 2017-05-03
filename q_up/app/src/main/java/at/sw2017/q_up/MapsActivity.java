@@ -17,21 +17,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
 
-    //Default locations which have to be changed into original coordinates
-    private static final LatLng MCDONALDS = new LatLng(47.055496, 15.448409);
-    private static final LatLng DAVINCI = new LatLng(47.054160, 15.444241);
-    private static final LatLng HOFER = new LatLng(47.055717, 15.441392);
-    int people_in_queue=12;
-    int people_in_queue1=7;
-    int people_in_queue2=4;
-
-    private Marker mMcdonalds;
-    private Marker mDavinci;
-    private Marker mHofer;
+    private List<Marker> marker_list = new ArrayList<Marker>();
 
     public void mapsGoBack() {
         Intent intent = new Intent(this, ProfileActivity.class);
@@ -98,80 +91,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         for (Place p : db_handle.getPlacesList()) {
             LatLng ll = new LatLng(Double.parseDouble(p.latitude), Double.parseDouble(p.longitude));
-            mMap.addMarker(new MarkerOptions().position(ll).title(p.placeName)).setTag(p);
+
+            // add marker for place
+            Marker m = mMap.addMarker(new MarkerOptions().position(ll).title(p.placeName));
+            m.setTag(p);
+
+            // count the number of people in the queue
+            int people_in_queue = 0;
+            for (User u : db_handle.getUsersList()) {
+                if (u.idCheckInPlace.equals(p.placeId))
+                    people_in_queue += 1;
+            }
+
+            // set color of marker
+            if (people_in_queue <= 5)
+                m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+            else if (people_in_queue <= 10)
+                m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+            else if (people_in_queue > 10)
+                m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+
+            // save marker in list
+            marker_list.add(m);
         }
-        
-        // Add a marker in Graz and move the camera
+
         googleMap.setOnInfoWindowClickListener(this);
 
-        mMcdonalds=mMap.addMarker(new MarkerOptions().position(MCDONALDS).title("Marker in Mcdonalds"));
-        mMcdonalds.setTag(0);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(MCDONALDS));
-        if(people_in_queue2<=5)
-        {
-            mMcdonalds.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-        }
-        else if(people_in_queue2<=10)
-        {
-            mMcdonalds.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-        }
-        else if(people_in_queue2>10)
-        {
-            mMcdonalds.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        }
-
-
-        mDavinci=mMap.addMarker(new MarkerOptions().position(DAVINCI).title("Marker in Davinci"));
-        mDavinci.setTag(0);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(DAVINCI));
-        if(people_in_queue<=5)
-        {
-            mDavinci.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-        }
-        else if(people_in_queue<=10)
-        {
-            mDavinci.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-        }
-        else if(people_in_queue>10)
-        {
-            mDavinci.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        }
-
-        mHofer=mMap.addMarker(new MarkerOptions().position(HOFER).title("Marker in Hofer"));
-        mHofer.setTag(0);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(HOFER));
-        if(people_in_queue1<=5)
-        {
-            mHofer.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-        }
-        else if(people_in_queue1<=10)
-        {
-            mHofer.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-        }
-        else if(people_in_queue1>10)
-        {
-            mHofer.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        }
-
-        // Add a marker in Graz and move the camera
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.0707, 15.4395),14));
+        // move the camera to Graz
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.0707, 15.4395), 14));
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-
-        if (marker.equals(mMcdonalds))
-        {
-            mapsGoDetails();
-        }
-        else if (marker.equals(mDavinci))
-        {
-            mapsGoDetails();
-        }
-        else if (marker.equals(mHofer))
-        {
-            mapsGoDetails();
-        }
-
+        mapsGoDetails();
     }
 }

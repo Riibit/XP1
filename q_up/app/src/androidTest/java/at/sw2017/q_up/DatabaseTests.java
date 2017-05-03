@@ -180,7 +180,7 @@ public class DatabaseTests {
         assertEquals(false, object_found);
     }
 
-    @Before
+    @Test
     public void addTestPlaces() {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
@@ -234,6 +234,9 @@ public class DatabaseTests {
         List<Place> testplaces = new ArrayList<Place>();
         testplaces.add(new Place("", "Pail Coffee", "47.06", "15.4639", "0", "0", "10"));
         testplaces.add(new Place("", "Spar Market", "47.0608", "15.4682", "0", "0", "15"));
+        testplaces.add(new Place("", "McDonalds", "47.055496", "15.448409", "0", "0", "15"));
+        testplaces.add(new Place("", "Davinci", "47.054160", "15.444241", "0", "0", "15"));
+        testplaces.add(new Place("", "Hofer", "47.055717", "15.441392", "0", "0", "15"));
 
         //==========================================================================================
 
