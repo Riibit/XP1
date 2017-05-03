@@ -46,6 +46,7 @@
             android:label="@string/title_activity_maps" />
         <activity android:name=".RegisterActivity"></activity>
         <activity android:name=".PlaceViewList"></activity>
+        <activity android:name=".PlaceDetails"></activity>
         <activity android:name=".ProfileActivity" />
     </application>
 
