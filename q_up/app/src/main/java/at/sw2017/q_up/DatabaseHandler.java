@@ -421,4 +421,59 @@ public class DatabaseHandler {
 
         return 0;
     }
+
+    /**
+     * checks user into place
+     * just returns when given an invalid id.
+     * @param userID id of user
+     * @param placeID id of place
+     */
+    public void checkUserIntoPlace(String userID, String placeID) {
+        boolean found = false;
+        for (User u : usersList) {
+            if (u.userId.equals(userID)) {
+                found = true;
+            }
+        }
+        // invalid user id - return!
+        if (found == false)
+            return;
+
+        // reset flag
+        found = false;
+
+        for (Place p : placesList) {
+            if (p.placeId.equals(placeID)) {
+                found = true;
+            }
+        }
+        // invalid place id - return!
+        if (found == false)
+            return;
+
+        modifyUserAttribute(userID, "idCheckInPlace" ,placeID);
+
+        return;
+    }
+
+    /**
+     * checks user out of any place he is checked into
+     * just returns when given an invalid id.
+     * @param userID id of user
+     */
+    public void checkOutOfPlace(String userID) {
+        boolean found = false;
+        for (User u : usersList) {
+            if (u.userId.equals(userID)) {
+                found = true;
+            }
+        }
+        // invalid user id - return!
+        if (found == false)
+            return;
+
+        modifyUserAttribute(userID, "idCheckInPlace" , "");
+
+        return;
+    }
 }
