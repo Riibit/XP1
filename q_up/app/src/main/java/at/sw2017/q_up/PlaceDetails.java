@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 public class PlaceDetails extends Activity{
 
-    String id;
+    String id, title;
     DatabaseHandler db_handle;
 
     public void LikeDislike()
@@ -45,7 +45,7 @@ public class PlaceDetails extends Activity{
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PlaceDetails.this, InfoActivity.class);
-                intent.putExtra("title", id);
+                intent.putExtra("title", title);
                 startActivity(intent);
 
             }
@@ -75,6 +75,7 @@ public class PlaceDetails extends Activity{
                                         break;
                                     }
                                 }
+
                                 TextView txtViewtitle = (TextView) findViewById(R.id.txtview_title);
                                 TextView txtViewlike = (TextView) findViewById(R.id.txt_like);
                                 TextView txtViewdislike = (TextView) findViewById(R.id.txt_dislike);
@@ -83,7 +84,8 @@ public class PlaceDetails extends Activity{
                                 txtViewdislike.setText(place.ratingNeg);
                                 LikeDislike();
                                 NumberQUP(db_handle.getQueuedUserCountFromPlace(place.placeId));
-                                
+                                title = place.placeName;
+
 
 
                             }
