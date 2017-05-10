@@ -18,7 +18,7 @@
         android:textAlignment="center"
         android:textSize="24sp"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
@@ -35,7 +35,7 @@
         android:textAllCaps="false"
         android:layout_marginLeft="3dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="19dp"
         app:layout_constraintTop_toBottomOf="@+id/txtview_title" />
 
 
@@ -47,48 +47,80 @@
         android:layout_gravity="left|center_vertical"
         android:drawableBottom="@drawable/dislike"
         android:textAllCaps="false"
-        android:layout_marginRight="3dp"
+        android:layout_marginRight="16dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="19dp"
         app:layout_constraintTop_toBottomOf="@+id/txtview_title" />
 
-    <ToggleButton
-        android:id="@+id/btn_qup"
-        android:layout_width="100dp"
-        android:layout_height="60dp"
-        android:textOff="Q UP"
-        android:textOn="EXIT Q"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="33dp"
+
+
+    <Button
+        android:id="@+id/buttoninfo"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="76dp"
+        android:layout_height="66dp"
+        android:layout_gravity="left|center_vertical"
+        android:drawableBottom="@drawable/info"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toRightOf="@+id/btn_qup"
+        android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintHorizontal_bias="1.0" />
+
 
     <TextView
         android:id="@+id/txt_dislike"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="27dp"
         android:text="Dislike"
         android:textColor="@color/common_google_signin_btn_text_dark_focused"
         android:textSize="24sp"
         app:layout_constraintRight_toLeftOf="@+id/buttondislike"
+        android:layout_marginRight="9dp"
+        android:layout_marginTop="35dp"
         app:layout_constraintTop_toBottomOf="@+id/txtview_title" />
 
     <TextView
         android:id="@+id/txt_like"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="29dp"
         android:text="Like"
         android:textColor="@color/common_google_signin_btn_text_dark_focused"
         android:textSize="24sp"
         app:layout_constraintLeft_toRightOf="@+id/buttonlike"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="35dp"
         app:layout_constraintTop_toBottomOf="@+id/txtview_title" />
+
+    <ToggleButton
+        android:id="@+id/btn_qup"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:textOff="Q UP!"
+        android:textOn="EXIT Q"
+        android:textSize="24sp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="135dp" />
+
+    <TextView
+        android:id="@+id/txtView_numberqup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="20sp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="95dp"
+        app:layout_constraintTop_toBottomOf="@+id/btn_qup" />
 
 
 </android.support.constraint.ConstraintLayout>

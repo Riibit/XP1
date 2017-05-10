@@ -2,6 +2,7 @@ package at.sw2017.q_up;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.icu.text.IDNA;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,7 +15,7 @@ import java.util.List;
 
 public class PlaceDetails extends Activity implements OnClickListener {
 
-    static String id;
+    static String id, title;
     static String userid;
     static String placeid;
     DatabaseHandler db_handle;
@@ -49,6 +50,24 @@ public class PlaceDetails extends Activity implements OnClickListener {
             }
         });
     }
+
+
+
+    public void InfoButton()
+    {
+           Button ButtonInfo = (Button) findViewById(R.id.buttoninfo);
+        ButtonInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PlaceDetails.this, InfoActivity.class);
+                intent.putExtra("title", title);
+                intent.putExtra("id", id);
+                startActivity(intent);
+
+            }
+        });
+
+    }
     public void EvaluationOnTime()
     {
         Thread t = new Thread() {
@@ -72,15 +91,18 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                         break;
                                     }
                                 }
+
                                 TextView txtViewtitle = (TextView) findViewById(R.id.txtview_title);
                                 TextView txtViewlike = (TextView) findViewById(R.id.txt_like);
                                 TextView txtViewdislike = (TextView) findViewById(R.id.txt_dislike);
-
                                 txtViewtitle.setText(place.placeName);
                                 txtViewlike.setText(place.ratingPos);
                                 txtViewdislike.setText(place.ratingNeg);
-
                                 LikeDislike();
+                                NumberQUP(db_handle.getQueuedUserCountFromPlace(place.placeId));
+                                title = place.placeName;
+
+
 
                             }
                         });
@@ -89,8 +111,34 @@ public class PlaceDetails extends Activity implements OnClickListener {
                 }
             }
         };
-
         t.start();
+    }
+
+
+
+    public void NumberQUP(int number)
+    {
+        String text;
+
+        switch (number)
+        {
+
+            case 0:
+                text= "Be the first in the Q!";
+                break;
+            case 1:
+                text = "Be the second in the Q!";
+                break;
+            case 2:
+                text = "Be the third in the Q!";
+                break;
+            default:
+                text = "Be the " + Integer.toString(number+1) + "th in the Q!";
+                break;
+        }
+        TextView txtViewNumberQUP = (TextView) findViewById(R.id.txtView_numberqup);
+        txtViewNumberQUP.setText(text);
+
     }
 
 
@@ -102,10 +150,11 @@ public class PlaceDetails extends Activity implements OnClickListener {
         ButtonQ = (ToggleButton) findViewById(R.id.btn_qup);
         ButtonQ.setOnClickListener(this);
         EvaluationOnTime();
+        InfoButton();
 
 
 
-        //
+
 
     }
 

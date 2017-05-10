@@ -1,22 +1,29 @@
 package at.sw2017.q_up;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.CountDownTimer;
 import android.support.annotation.IntegerRes;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.core.deps.guava.base.Strings;
 import android.support.test.filters.LargeTest;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.Log;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -24,7 +31,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.*;
 
 /**
- * Created by chibby on 29.03.17.
+ * Created by PS on 29.03.17.
  */
 
 @RunWith(AndroidJUnit4.class)
@@ -32,16 +39,43 @@ import static org.junit.Assert.*;
 @LargeTest
 public class DatabaseTests {
 
+
+    private SimpleIdlingResource placesIdlingResource;
+    private SimpleIdlingResource usersIdlingResource;
+
+    //@Rule
+    //public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+
     @BeforeClass
     public static void initTestCase() {
+        Log.d("TestDB", "BeforeClass");
         // wait for the sign in process to complete
-        QUpApp.getInstance().getDBHandler().waitSignInComplete(20);
+        QUpApp.getInstance().getDBHandler().waitSignInComplete(10);
         QUpApp.getInstance().getDBHandler().waitPlacesComplete(10);
         QUpApp.getInstance().getDBHandler().waitUsersComplete(10);
     }
 
+    @Before
+    public void registerIntentServiceIdlingResource() {
+        Log.d("TestDB", "Before");
+        //Activity activity = activityTestRule.getActivity();
+
+        placesIdlingResource = QUpApp.getInstance().getDBHandler().getPlacesIdlingResource();
+        Espresso.registerIdlingResources(placesIdlingResource);
+        usersIdlingResource = QUpApp.getInstance().getDBHandler().getUsersIdlingResource();
+        Espresso.registerIdlingResources(usersIdlingResource);
+    }
+
+    @After
+    public void unregisterIntentServiceIdlingResource() {
+        Log.d("TestDB", "After");
+        Espresso.unregisterIdlingResources(placesIdlingResource);
+        Espresso.unregisterIdlingResources(usersIdlingResource);
+    }
+
     @Test
     public void loadDatabaseHandler() {
+        Log.d("TestDB", "  loadDatabaseHandler()");
 
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
@@ -49,6 +83,7 @@ public class DatabaseTests {
 
     @Test
     public void loadPlaces() {
+        Log.d("TestDB", "  loadPlaces()");
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
 
@@ -62,6 +97,7 @@ public class DatabaseTests {
 
     @Test
     public void loadUsers() {
+        Log.d("TestDB", "  loadUsers()");
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
 
@@ -75,6 +111,7 @@ public class DatabaseTests {
 
     @Test
     public void addUser() {
+        Log.d("TestDB", "  addUser()");
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
 
@@ -94,6 +131,7 @@ public class DatabaseTests {
         String testuser_id = "";
         while(testuser_id == "" && (System.currentTimeMillis()-startTime) < 5000) {
             // look for testuser in list
+            db_handle.usersLock();
             for (User u : db_handle.getUsersList()) {
                 if (u.userName.equals("testuser")) {
                     if (u.password.equals("testpassword")) {
@@ -102,6 +140,7 @@ public class DatabaseTests {
                     }
                 }
             }
+            db_handle.usersUnlock();
         }
         assertNotEquals("", testuser_id);
 
@@ -113,6 +152,7 @@ public class DatabaseTests {
         boolean object_found = true;
         while(object_found == true && (System.currentTimeMillis()-startTime) < 5000) {
             // look for testuser in list - it should be gone
+            db_handle.usersLock();
             for (User u : db_handle.getUsersList()) {
                 if (u.userName.equals("testuser")) {
                     if (u.password.equals("testpassword")) {
@@ -125,18 +165,20 @@ public class DatabaseTests {
                 else
                     object_found = false;
             }
+            db_handle.usersUnlock();
         }
         assertEquals(false, object_found);
     }
 
     @Test
     public void addRemoveTestPlace() {
+        Log.d("TestDB", "  addRemoveTestPlace()");
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
 
         // get existing places from db
         long startTime = System.currentTimeMillis(); //fetch starting time
-        while((System.currentTimeMillis()-startTime) < 5000) {
+        while((System.currentTimeMillis()-startTime) < 10000) {
             if (!db_handle.getPlacesList().isEmpty())
                 break;
         }
@@ -150,12 +192,14 @@ public class DatabaseTests {
         startTime = System.currentTimeMillis(); //fetch starting time
         String testplace_id = "";
         while((System.currentTimeMillis()-startTime) < 5000) {
+            db_handle.placesLock();
             for (Place p : db_handle.getPlacesList()) {
                 if (p.placeName.equals("testplace")) {
                     testplace_id = p.placeId;
                     break;
                 }
             }
+            db_handle.placesUnlock();
         }
         assertNotEquals("", testplace_id);
 
@@ -168,6 +212,7 @@ public class DatabaseTests {
 
         while(object_found && (System.currentTimeMillis()-startTime) < 5000) {
             // look for object in list - it should be gone
+            db_handle.placesLock();
             for (Place p : db_handle.getPlacesList()) {
                 if (p.placeName.equals("testplace")) {
                     object_found = true;
@@ -176,28 +221,39 @@ public class DatabaseTests {
                 else
                     object_found = false;
             }
+            db_handle.placesUnlock();
         }
         assertEquals(false, object_found);
     }
 
     @Test
     public void addTestPlaces() {
+        Log.d("TestDB", "  addTestPlaces()");
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
 
         // try to remove all testplaces
+        List<String> oldtestplaces_to_remove = new ArrayList<String>();
+        db_handle.placesLock();
         for (Place p : db_handle.getPlacesList()) {
             if (p.placeName.equals("testplace")) {
-                db_handle.removePlace(p.placeId);
+                oldtestplaces_to_remove.add(p.placeId);
             }
         }
+        db_handle.placesUnlock();
+        for (String id : oldtestplaces_to_remove) {
+            db_handle.removePlace(id);
+        }
+
         long startTime = System.currentTimeMillis(); //fetch starting time
         boolean finished = true;
         while(!finished && (System.currentTimeMillis()-startTime) < 5000) {
+            db_handle.placesLock();
             for (Place p : db_handle.getPlacesList()) {
                 if (p.placeName.equals("testplace"))
                     finished = false;
             }
+            db_handle.placesUnlock();
         }
         assertEquals(true, finished);
 
@@ -209,22 +265,30 @@ public class DatabaseTests {
         startTime = System.currentTimeMillis(); //fetch starting time
         finished = false;
         while(!finished && (System.currentTimeMillis()-startTime) < 5000) {
+            db_handle.placesLock();
             for (Place p : db_handle.getPlacesList()) {
                 if (p.placeName.equals("testplace"))
                     finished = true;
             }
+            db_handle.placesUnlock();
         }
         assertEquals(true, finished);
 
         // clear out existing testplaces from db
         startTime = System.currentTimeMillis(); //fetch starting time
         finished = false;
+        List<String> testplaces_to_remove = new ArrayList<String>();
         while(!finished && (System.currentTimeMillis()-startTime) < 10000) {
+            db_handle.placesLock();
             for (Place p : db_handle.getPlacesList()) {
                 if (p.placeName.equals("testplace")) {
                     finished = true;
-                    db_handle.removePlace(p.placeId);
+                    testplaces_to_remove.add(p.placeId);
                 }
+            }
+            db_handle.placesUnlock();
+            for (String id : testplaces_to_remove) {
+                db_handle.removePlace(id);
             }
         }
         assertEquals(true, finished);
@@ -241,15 +305,23 @@ public class DatabaseTests {
         //==========================================================================================
 
         // go through all places in the database
+        List<String> places_to_remove = new ArrayList<String>();
+        db_handle.placesLock();
         for (Place dbP : db_handle.getPlacesList()) {
             // for each place in the database - look through our local testplaces
             for (Place localP : testplaces) {
                 // find duplicates and remove them
                 if (localP.placeName.equals(dbP.placeName)) {
-                    db_handle.removePlace(dbP.placeId);
+                    places_to_remove.add(dbP.placeId);
                     // do not break here - find duplicate entries!
                 }
             }
+        }
+        db_handle.placesUnlock();
+
+        // actually remove the places after we are finished iterating the list
+        for (String id : places_to_remove) {
+            db_handle.removePlace(id);
         }
 
         // add our testplaces
@@ -260,9 +332,11 @@ public class DatabaseTests {
         startTime = System.currentTimeMillis(); //fetch starting time
         while(!testplaces.isEmpty() && (System.currentTimeMillis()-startTime) < 10000) {
             for (Place p : db_handle.getPlacesList()) {
-                for (Place tp : testplaces) {
+                for (Iterator<Place> it = testplaces.iterator(); it.hasNext(); ){
+                    //    Place tp : testplaces) {
+                    Place tp = it.next();
                     if (p.placeName.equals(tp.placeName)) {
-                        testplaces.remove(testplaces.indexOf(tp));
+                        it.remove();
                         break;
                     }
                 }
@@ -273,6 +347,7 @@ public class DatabaseTests {
 
     @Test
     public void queueUser() {
+        Log.d("TestDB", "  queueUser()");
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
 
@@ -285,18 +360,20 @@ public class DatabaseTests {
 
         String id = "";
         String old_idCheckInPlace = "";
-        List<User> userlist = db_handle.getUsersList();
 
-        for (User u : userlist) {
+        db_handle.usersLock();
+        for (User u : db_handle.getUsersList()) {
             if (u.userName.equals("franz")) {
                 id = u.userId;
                 old_idCheckInPlace = u.idCheckInPlace;
                 break;
             }
         }
+        db_handle.usersUnlock();
+
         assertNotEquals("", id);
 
-        String new_idCheckInPlace = String.valueOf(Integer.parseInt(old_idCheckInPlace) + 1);
+        String new_idCheckInPlace = "test";
         int result = db_handle.modifyUserAttribute(id, "idCheckInPlace", new_idCheckInPlace);
 
         // check new value and reset to old value - all must happen in a few seconds
@@ -304,8 +381,8 @@ public class DatabaseTests {
         boolean value_changed = false;
 
         while(!value_changed && (System.currentTimeMillis()-startTime) < 5000) {
-            userlist = db_handle.getUsersList();
-            for (User u : userlist) {
+            db_handle.usersLock();
+            for (User u : db_handle.getUsersList()) {
                 if (u.userName.equals("franz")) {
                     if (u.idCheckInPlace.equals(new_idCheckInPlace)) {
                         value_changed = true;
@@ -314,6 +391,7 @@ public class DatabaseTests {
                     break;
                 }
             }
+            db_handle.usersUnlock();
         }
         assertEquals(0, result);
         assertEquals(value_changed, true);
