@@ -14,7 +14,7 @@ public class PlaceDetails extends Activity{
     static String id;
     DatabaseHandler db_handle;
 
-    public void switchLoginRegister()
+    public void LikeDislike()
     {
         Button ButtonLike = (Button) findViewById(R.id.buttonlike);
         ButtonLike.setOnClickListener(new View.OnClickListener() {
@@ -22,7 +22,7 @@ public class PlaceDetails extends Activity{
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),
                         "Like" + id, Toast.LENGTH_SHORT).show();
-                db_handle.votePlaceNegative(id);
+                db_handle.votePlacePositive(id);
 
             }
         });
@@ -72,7 +72,7 @@ public class PlaceDetails extends Activity{
         txtViewdislike.setText(place.ratingNeg);
 
         //
-        switchLoginRegister();
+        LikeDislike();
     }
 
 
