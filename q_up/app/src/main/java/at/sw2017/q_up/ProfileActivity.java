@@ -23,14 +23,15 @@ public class ProfileActivity extends AppCompatActivity {
         usernameText.setText(currentUser.userName);
 
         db_handle = QUpApp.getInstance().getDBHandler();
-        Place place;
+        Place place = new Place();
         for (Place p : db_handle.getPlacesList()) {
             if (p.placeId.equals(currentUser.idCheckInPlace)) {
                 place = p;
-                currentPlace.setText(place.placeName);
                 break;
             }
         }
+
+        currentPlace.setText(place.placeName);
 
         Button buttonMap =(Button) findViewById(R.id.buttonMap);
         buttonMap.setRotation(270);
