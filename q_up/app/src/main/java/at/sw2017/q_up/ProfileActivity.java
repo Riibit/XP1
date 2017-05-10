@@ -18,6 +18,8 @@ public class ProfileActivity extends AppCompatActivity {
         usernameText.setText(MainActivity.getUsername());
 
         Button buttonMap =(Button) findViewById(R.id.buttonMap);
+        buttonMap.setRotation(270);
+
         buttonMap.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {
