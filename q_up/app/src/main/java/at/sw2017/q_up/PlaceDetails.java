@@ -8,11 +8,26 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
-public class PlaceDetails extends Activity{
+import java.util.List;
+
+public class PlaceDetails extends Activity implements OnClickListener {
 
     static String id;
+    static String userid;
+    static String placeid;
     DatabaseHandler db_handle;
+    ToggleButton ButtonQ;
+
+    public void qupFunction()
+    {
+
+    }
+
+
+
+
 
     public void LikeDislike()
     {
@@ -81,8 +96,11 @@ public class PlaceDetails extends Activity{
 
 
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
+        ButtonQ = (ToggleButton) findViewById(R.id.btn_qup);
+        ButtonQ.setOnClickListener(this);
         EvaluationOnTime();
 
 
@@ -92,6 +110,37 @@ public class PlaceDetails extends Activity{
     }
 
 
+    @Override
+    public void onClick(View v) {
+
+        ToggleButton clicked = (ToggleButton)v;
+        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+        List<User> users = db_handle.getUsersList();
+        String Username = (MainActivity.getUsername());
+        Bundle bundle = getIntent().getExtras();
+        placeid  = bundle.getString("id");
+        String text = (String) clicked.getText();
 
 
+            if(clicked.isChecked() == true) {
+                for (User u : users) {
+                    if (u.userName.equals(Username)) {
+                        userid = u.userId;
+                    }
+                }
+                db_handle.checkUserIntoPlace(userid, placeid);
+                Toast.makeText(getApplicationContext(),
+                        "User checked in..", Toast.LENGTH_SHORT).show();
+            }
+
+         else
+            {
+                db_handle.checkOutOfPlace(userid);
+            Toast.makeText(getApplicationContext(),
+                    "User checked out..", Toast.LENGTH_SHORT).show();
+            }
+
+
+
+    }
 }
