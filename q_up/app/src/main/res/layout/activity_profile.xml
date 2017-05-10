@@ -59,18 +59,17 @@
 
     <Button
         android:id="@+id/buttonMap"
-        android:layout_width="88dp"
-        android:layout_height="48dp"
-        android:text="Map"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/transparent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintVertical_bias="0.293"
-        android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/toggleButton"
-        app:layout_constraintHorizontal_bias="0.928" />
+        android:layout_gravity="right|center_vertical"
+        android:drawableBottom="@drawable/button_arrow"
+        android:text="Map"
+        android:textAllCaps="false"
+        android:layout_marginTop="187dp"
+        android:layout_marginRight="-8dp" />
 
 </android.support.constraint.ConstraintLayout>

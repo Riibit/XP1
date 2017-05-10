@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -31,12 +32,14 @@ public class PlaceViewList extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_places);
 
-        List<String> places_to_show = new ArrayList<String>();
+        final List<String> places_to_show = new ArrayList<String>();
+        final List<String> place_ids = new ArrayList<String>();
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
 
         // fill list with places from DB
         for (Place p : db_handle.getPlacesList()) {
             places_to_show.add(p.placeName);
+            place_ids.add(p.placeId);
         }
 
 
@@ -45,16 +48,20 @@ public class PlaceViewList extends Activity{
         ListView list = (ListView) findViewById(R.id.list);
         list.setAdapter(myAdapter);
 
-
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        list.setOnItemClickListener(new OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String str_id = id +"";
-                mapsGoDetails(str_id);
-
+                String p = place_ids.get(position);
+                goToPlace(p);
             }
         });
+    }
 
+    public void goToPlace(String id) {
+
+        Intent intent = new Intent(PlaceViewList.this, PlaceDetails.class);
+        intent.putExtra("id", id);
+        startActivity(intent);
 
     }
 
