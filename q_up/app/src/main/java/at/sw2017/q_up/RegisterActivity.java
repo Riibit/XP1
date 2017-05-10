@@ -74,7 +74,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         Button clickedButton = (Button) v;
 
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-        List<User> users = db_handle.getUsersList();
 
         // check for DB timeout
         int timeout = 4 * 1000;
@@ -82,8 +81,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         boolean data_ready = false;
 
         while(!data_ready && (System.currentTimeMillis()-startTime) < timeout) {
-            users = db_handle.getUsersList();
-            if (!users.isEmpty())
+            if (!db_handle.isUsersListEmpty())
                 data_ready = true;
         }
         if (data_ready != true) {
@@ -120,7 +118,8 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 }
 
                 // check if user already exists
-                for (User u : users) {
+                db_handle.usersLock();
+                for (User u : db_handle.getUsersList()) {
                     if (u.userName.equals(inputUsername.getText().toString())) {
                         // username is already in list
                         Toast.makeText(getApplicationContext(),
@@ -129,6 +128,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                         break;
                     }
                 }
+                db_handle.usersUnlock();
 
                 // check if user is not in list of existing users and create the user
                 if (!user_already_in_list) {
