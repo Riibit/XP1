@@ -64,6 +64,8 @@ public class PlaceDetails extends Activity{
                                 txtViewlike.setText(place.ratingPos);
                                 txtViewdislike.setText(place.ratingNeg);
                                 LikeDislike();
+                                int number = db_handle.getQueuedUserCountFromPlace(place.placeId);
+                                NumberQUP(number);
                             }
                         });
                     }
@@ -79,19 +81,22 @@ public class PlaceDetails extends Activity{
     public void NumberQUP(int number)
     {
         String text;
+
         switch (number)
         {
+
+            case 0:
+                text= "And be the first in the Q!";
+                break;
             case 1:
-                text= "And be the " + Integer.toString(number) + "st in the Q";
+                number++;
+                text = "And be the second in the Q!";
                 break;
             case 2:
-                text = "And be the " + Integer.toString(number) + "nd in the Q";
-                break;
-            case 3:
-                text = "And be the " + Integer.toString(number) + "rd in the Q";
+                text = "And be the third in the Q!";
                 break;
             default:
-                text = "And be the " + Integer.toString(number) + "th in the Q";
+                text = "And be the " + Integer.toString(number+1) + "th in the Q!";
                 break;
         }
         TextView txtViewNumberQUP = (TextView) findViewById(R.id.txtView_numberqup);
@@ -104,7 +109,7 @@ public class PlaceDetails extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
         EvaluationOnTime();
-        NumberQUP(1);
+
 
 
 
