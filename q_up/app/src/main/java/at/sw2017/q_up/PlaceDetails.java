@@ -60,13 +60,10 @@ public class PlaceDetails extends Activity{
                                 TextView txtViewtitle = (TextView) findViewById(R.id.txtview_title);
                                 TextView txtViewlike = (TextView) findViewById(R.id.txt_like);
                                 TextView txtViewdislike = (TextView) findViewById(R.id.txt_dislike);
-
                                 txtViewtitle.setText(place.placeName);
                                 txtViewlike.setText(place.ratingPos);
                                 txtViewdislike.setText(place.ratingNeg);
-
                                 LikeDislike();
-
                             }
                         });
                     }
@@ -74,8 +71,31 @@ public class PlaceDetails extends Activity{
                 }
             }
         };
-
         t.start();
+    }
+
+
+
+    public void NumberQUP(int number)
+    {
+        String text;
+        switch (number)
+        {
+            case 1:
+                text= "And be the " + Integer.toString(number) + "st in the Q";
+                break;
+            case 2:
+                text = "And be the " + Integer.toString(number) + "nd in the Q";
+                break;
+            case 3:
+                text = "And be the " + Integer.toString(number) + "rd in the Q";
+                break;
+            default:
+                text = "And be the " + Integer.toString(number) + "th in the Q";
+                break;
+        }
+        TextView txtViewNumberQUP = (TextView) findViewById(R.id.txtView_numberqup);
+        txtViewNumberQUP.setText(text);
     }
 
 
@@ -84,10 +104,9 @@ public class PlaceDetails extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
         EvaluationOnTime();
+        NumberQUP(1);
 
 
-
-        //
 
     }
 
