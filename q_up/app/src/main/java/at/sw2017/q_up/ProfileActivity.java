@@ -23,7 +23,7 @@ public class ProfileActivity extends AppCompatActivity {
         usernameText.setText(currentUser.userName);
 
         db_handle = QUpApp.getInstance().getDBHandler();
-        Place place = new Place();
+        Place place;
         for (Place p : db_handle.getPlacesList()) {
             if (p.placeId.equals(currentUser.idCheckInPlace)) {
                 place = p;
