@@ -33,10 +33,6 @@ public class InfoActivity extends AppCompatActivity {
         }
         txtViewLongtitude.setText(place.longitude);
         txtViewlatitude.setText(place.latitude);
-
-
-
-
     }
 }
 

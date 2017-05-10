@@ -91,6 +91,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // load places from DB
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+        db_handle.placesLock();
         for (Place p : db_handle.getPlacesList()) {
             LatLng ll = new LatLng(Double.parseDouble(p.latitude), Double.parseDouble(p.longitude));
 
@@ -112,6 +113,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // save marker in list
             marker_list.add(m);
         }
+        db_handle.placesUnlock();
 
         googleMap.setOnInfoWindowClickListener(this);
 

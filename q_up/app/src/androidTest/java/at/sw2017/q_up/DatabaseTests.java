@@ -1,15 +1,8 @@
 package at.sw2017.q_up;
 
 
-import android.app.Activity;
-import android.content.Context;
-import android.os.CountDownTimer;
-import android.support.annotation.IntegerRes;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.core.deps.guava.base.Strings;
 import android.support.test.filters.LargeTest;
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
@@ -17,7 +10,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -25,7 +17,6 @@ import org.junit.runners.MethodSorters;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.*;
@@ -89,10 +80,10 @@ public class DatabaseTests {
 
         long startTime = System.currentTimeMillis(); //fetch starting time
         while((System.currentTimeMillis()-startTime) < 5000) {
-            if (!db_handle.getPlacesList().isEmpty())
+            if (!db_handle.isPlacesListEmpty())
                 break;
         }
-        assertEquals(false, db_handle.getPlacesList().isEmpty());
+        assertEquals(false, db_handle.isPlacesListEmpty());
     }
 
     @Test
@@ -103,10 +94,10 @@ public class DatabaseTests {
 
         long startTime = System.currentTimeMillis(); //fetch starting time
         while((System.currentTimeMillis()-startTime) < 5000) {
-            if (!db_handle.getUsersList().isEmpty())
+            if (!db_handle.isUsersListEmpty())
                 break;
         }
-        assertEquals(false, db_handle.getUsersList().isEmpty());
+        assertEquals(false, db_handle.isUsersListEmpty());
     }
 
     @Test
@@ -118,10 +109,10 @@ public class DatabaseTests {
         // get existing users from db
         long startTime = System.currentTimeMillis(); //fetch starting time
         while((System.currentTimeMillis()-startTime) < 5000) {
-            if (!db_handle.getUsersList().isEmpty())
+            if (!db_handle.isUsersListEmpty())
                 break;
         }
-        assertEquals(false, db_handle.getUsersList().isEmpty());
+        assertEquals(false, db_handle.isUsersListEmpty());
 
         // add a user
         int result = db_handle.addUser("testuser", "testpassword");
@@ -179,10 +170,10 @@ public class DatabaseTests {
         // get existing places from db
         long startTime = System.currentTimeMillis(); //fetch starting time
         while((System.currentTimeMillis()-startTime) < 10000) {
-            if (!db_handle.getPlacesList().isEmpty())
+            if (!db_handle.isPlacesListEmpty())
                 break;
         }
-        assertEquals(false, db_handle.getPlacesList().isEmpty());
+        assertEquals(false, db_handle.isPlacesListEmpty());
 
         // add a place
         int result = db_handle.addPlace("testplace", "12.06", "34.4639", "0", "0", "10");
@@ -331,6 +322,7 @@ public class DatabaseTests {
 
         startTime = System.currentTimeMillis(); //fetch starting time
         while(!testplaces.isEmpty() && (System.currentTimeMillis()-startTime) < 10000) {
+            db_handle.placesLock();
             for (Place p : db_handle.getPlacesList()) {
                 for (Iterator<Place> it = testplaces.iterator(); it.hasNext(); ){
                     //    Place tp : testplaces) {
@@ -341,6 +333,7 @@ public class DatabaseTests {
                     }
                 }
             }
+            db_handle.placesUnlock();
         }
         assertEquals(true, testplaces.isEmpty());
     }
@@ -353,10 +346,10 @@ public class DatabaseTests {
 
         long startTime = System.currentTimeMillis(); //fetch starting time
         while((System.currentTimeMillis()-startTime) < 5000) {
-            if (!db_handle.getUsersList().isEmpty())
+            if (!db_handle.isUsersListEmpty())
                 break;
         }
-        assertEquals(false, db_handle.getUsersList().isEmpty());
+        assertEquals(false, db_handle.isUsersListEmpty());
 
         String id = "";
         String old_idCheckInPlace = "";

@@ -2,22 +2,16 @@ package at.sw2017.q_up;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import android.view.View.OnKeyListener;
-import android.view.View;
 import android.view.KeyEvent;
 
-
-import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -106,7 +100,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Button clickedButton = (Button) v;
 
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-        List<User> users = db_handle.getUsersList();
 
         // check for DB timeout
         int timeout = 4 * 1000;
@@ -114,8 +107,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         boolean data_ready = false;
 
         while (!data_ready && (System.currentTimeMillis() - startTime) < timeout) {
-            users = db_handle.getUsersList();
-            if (!users.isEmpty())
+            if (!db_handle.isUsersListEmpty())
                 data_ready = true;
         }
         if (data_ready != true) {
@@ -128,7 +120,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
             case R.id.buttonLogin:
 
                 // look for username in our list
-                for (User u : users) {
+                db_handle.usersLock();
+                for (User u : db_handle.getUsersList()) {
                     if (u.userName.equals(editTextUsername.getText().toString())) {
                         // found entered username in database
                         // now check if password is correct
@@ -140,11 +133,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
                             currentUser = u;
 
                             switchActivities();
+                            db_handle.usersUnlock();
                             return;
                         }
                         break;
                     }
                 }
+                db_handle.usersUnlock();
+
                 Toast.makeText(getApplicationContext(),
                         "Wrong username or password!", Toast.LENGTH_SHORT).show();
                 break;

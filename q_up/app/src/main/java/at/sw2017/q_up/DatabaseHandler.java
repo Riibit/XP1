@@ -240,7 +240,18 @@ public class DatabaseHandler {
      * @return list of places
      */
     public List<Place> getPlacesList() {
+        if (!placesListLock.isLocked())
+            throw new AssertionError("List must be locked and unlocked!");
         return placesList;
+    }
+
+    public boolean isPlacesListEmpty() {
+        boolean retval = false;
+        placesLock();
+        if (placesList.isEmpty())
+            retval = true;
+        placesUnlock();
+        return retval;
     }
 
     /**
@@ -409,7 +420,18 @@ public class DatabaseHandler {
      * @return list of users
      */
     public List<User> getUsersList() {
+        if (!usersListLock.isLocked())
+            throw new AssertionError("List must be locked and unlocked!");
         return usersList;
+    }
+
+    public boolean isUsersListEmpty() {
+        boolean retval = false;
+        usersLock();
+        if (usersList.isEmpty())
+            retval = true;
+        usersUnlock();
+        return retval;
     }
 
     /**
