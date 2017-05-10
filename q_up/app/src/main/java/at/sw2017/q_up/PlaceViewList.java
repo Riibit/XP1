@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -18,6 +18,13 @@ import java.util.ArrayList;
  */
 
 public class PlaceViewList extends Activity {
+
+
+    public void mapsGoDetails(String id) {
+        Intent intent2 = new Intent(PlaceViewList.this, PlaceDetails.class);
+        intent2.putExtra("id", id);
+        startActivity(intent2);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +45,7 @@ public class PlaceViewList extends Activity {
         ListView list = (ListView) findViewById(R.id.list);
         list.setAdapter(myAdapter);
 
-        list.setOnItemClickListener(new OnItemClickListener(){
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String p = place_ids.get(position);
@@ -54,4 +61,6 @@ public class PlaceViewList extends Activity {
         startActivity(intent);
 
     }
+
+
 }
