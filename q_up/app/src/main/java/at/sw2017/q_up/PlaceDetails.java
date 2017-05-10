@@ -116,7 +116,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
         ToggleButton clicked = (ToggleButton)v;
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         List<User> users = db_handle.getUsersList();
-        String Username = (MainActivity.getUsername());
+        String Username = (MainActivity.currentUser.userName);
         Bundle bundle = getIntent().getExtras();
         placeid  = bundle.getString("id");
         String text = (String) clicked.getText();
