@@ -7,6 +7,9 @@ package at.sw2017.q_up;
 import android.os.Bundle;
 import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +29,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 import at.sw2017.q_up.Place;
 
@@ -45,13 +49,26 @@ public class DatabaseHandler {
     private DatabaseReference mDatabase;
 
     // variables to cache server data
+    ReentrantLock placesListLock = new ReentrantLock();
     List<Place> placesList = new ArrayList<Place>();
+    ReentrantLock usersListLock = new ReentrantLock();
     List<User> usersList = new ArrayList<User>();
+
+    public void placesLock() { placesListLock.lock(); }
+    public void usersLock() { usersListLock.lock(); }
+    public void placesUnlock() { placesListLock.unlock(); }
+    public void usersUnlock() { usersListLock.unlock(); }
 
     // used for synchronisation
     private CountDownLatch signInLatch;
     private CountDownLatch getUsersLatch;
     private CountDownLatch getPlacesLatch;
+
+    // The Idling Resource which will be null in production.
+    @Nullable
+    private SimpleIdlingResource placesIdlingResource;
+    @Nullable
+    private SimpleIdlingResource usersIdlingResource;
 
     /**
      * wait for sign in to complete (might take a while)
@@ -109,6 +126,15 @@ public class DatabaseHandler {
      * constructor
      */
     public DatabaseHandler() {
+
+        if (placesIdlingResource == null) {
+            placesIdlingResource = new SimpleIdlingResource();
+            placesIdlingResource.setName("placesIR");
+        }
+        if (usersIdlingResource == null) {
+            usersIdlingResource = new SimpleIdlingResource();
+            usersIdlingResource.setName("usersIR");
+        }
 
         // load config file
         db_config = new DatabaseConfig();
@@ -183,21 +209,21 @@ public class DatabaseHandler {
         placesref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("FB", "read places from DB");
 
+                placesLock();
                 // clear list
                 placesList.clear();
-
                 // fill list with new data
                 for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-
                     Place place = dsp.getValue(Place.class);
                     placesList.add(place);
-
-                    Log.d("FB", "read place from DB");
                 }
+                placesUnlock();
 
                 // signal, that we are finished
                 getPlacesLatch.countDown();
+                placesIdlingResource.setIdleState(true);
             }
 
             @Override
@@ -225,12 +251,12 @@ public class DatabaseHandler {
 
         DatabaseReference placeref = FirebaseDatabase.getInstance().getReference("places");
 
-        getPlacesLatch = new CountDownLatch(1);
-
         String placeId = placeref.push().getKey();
         Place place = new Place(placeId, name, lat, lon, rating_pos, rating_neg, proct);
-        placeref.child(placeId).setValue(place);
 
+        getPlacesLatch = new CountDownLatch(1);
+        placesIdlingResource.setIdleState(false);
+        placeref.child(placeId).setValue(place);
         return 0;
     }
 
@@ -244,7 +270,7 @@ public class DatabaseHandler {
         DatabaseReference placeref = FirebaseDatabase.getInstance().getReference("places");
 
         getPlacesLatch = new CountDownLatch(1);
-
+        placesIdlingResource.setIdleState(false);
         placeref.child(id).removeValue();
         return 0;
     }
@@ -259,6 +285,9 @@ public class DatabaseHandler {
     public int modifyPlaceAttribute(String id, String attribute, String value) {
 
         DatabaseReference placesref = FirebaseDatabase.getInstance().getReference("places");
+
+        getPlacesLatch = new CountDownLatch(1);
+        placesIdlingResource.setIdleState(false);
         placesref.child(id).child(attribute).setValue(value);
         return 0;
     }
@@ -271,12 +300,16 @@ public class DatabaseHandler {
     public void votePlacePositive(String id) {
         int rating = 0;
         boolean found = false;
+
+        placesLock();
         for (Place p : placesList) {
             if (p.placeId.equals(id)) {
                 found = true;
                 rating = Integer.parseInt(p.ratingPos);
             }
         }
+        placesUnlock();
+
         // invalid id - return!
         if (found == false)
             return;
@@ -293,17 +326,21 @@ public class DatabaseHandler {
     public void votePlaceNegative(String id) {
         int rating = 0;
         boolean found = false;
+
+        placesLock();
         for (Place p : placesList) {
             if (p.placeId.equals(id)) {
                 found = true;
-                rating = Integer.parseInt(p.ratingPos);
+                rating = Integer.parseInt(p.ratingNeg);
             }
         }
+        placesUnlock();
+
         // invalid id - return!
         if (found == false)
             return;
 
-        rating -= 1;
+        rating += 1;
         modifyPlaceAttribute(id, "ratingNeg", Integer.toString(rating));
     }
 
@@ -314,10 +351,12 @@ public class DatabaseHandler {
      */
     public int getQueuedUserCountFromPlace(String id) {
         int people_in_queue = 0;
+        usersLock();
         for (User u : usersList) {
             if (u.idCheckInPlace.equals(id))
                 people_in_queue += 1;
         }
+        usersUnlock();
         return people_in_queue;
     }
 
@@ -339,20 +378,21 @@ public class DatabaseHandler {
         usersref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("FB", "read users from DB");
 
+                usersLock();
                 // clear list
                 usersList.clear();
-
                 // fill list with new data
                 for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-
                     User user = dsp.getValue(User.class);
                     usersList.add(user);
-
-                    Log.d("FB", "read user from DB");
                 }
+                usersUnlock();
+
                 // signal, that we are finished
                 getUsersLatch.countDown();
+                usersIdlingResource.setIdleState(true);
             }
 
             @Override
@@ -382,12 +422,12 @@ public class DatabaseHandler {
 
         DatabaseReference userref = FirebaseDatabase.getInstance().getReference("users");
 
-        getUsersLatch = new CountDownLatch(1);
-
         String userId = userref.push().getKey();
         User user = new User(userId, name, pw, "0");
-        userref.child(userId).setValue(user);
 
+        getUsersLatch = new CountDownLatch(1);
+        usersIdlingResource.setIdleState(false);
+        userref.child(userId).setValue(user);
         return 0;
     }
 
@@ -401,7 +441,7 @@ public class DatabaseHandler {
         DatabaseReference userref = FirebaseDatabase.getInstance().getReference("users");
 
         getUsersLatch = new CountDownLatch(1);
-
+        usersIdlingResource.setIdleState(false);
         userref.child(id).removeValue();
         return 0;
     }
@@ -417,8 +457,9 @@ public class DatabaseHandler {
 
         DatabaseReference usersref = FirebaseDatabase.getInstance().getReference("users");
 
+        getUsersLatch = new CountDownLatch(1);
+        usersIdlingResource.setIdleState(false);
         usersref.child(id).child(attribute).setValue(value);
-
         return 0;
     }
 
@@ -430,11 +471,15 @@ public class DatabaseHandler {
      */
     public void checkUserIntoPlace(String userID, String placeID) {
         boolean found = false;
+
+        usersLock();
         for (User u : usersList) {
             if (u.userId.equals(userID)) {
                 found = true;
             }
         }
+        usersUnlock();
+
         // invalid user id - return!
         if (found == false)
             return;
@@ -442,18 +487,19 @@ public class DatabaseHandler {
         // reset flag
         found = false;
 
+        placesLock();
         for (Place p : placesList) {
             if (p.placeId.equals(placeID)) {
                 found = true;
             }
         }
+        placesUnlock();
+
         // invalid place id - return!
         if (found == false)
             return;
 
         modifyUserAttribute(userID, "idCheckInPlace" ,placeID);
-
-        return;
     }
 
     /**
@@ -463,17 +509,32 @@ public class DatabaseHandler {
      */
     public void checkOutOfPlace(String userID) {
         boolean found = false;
+        usersLock();
         for (User u : usersList) {
             if (u.userId.equals(userID)) {
                 found = true;
             }
         }
+        usersUnlock();
+
         // invalid user id - return!
         if (found == false)
             return;
 
         modifyUserAttribute(userID, "idCheckInPlace" , "");
+    }
 
-        return;
+    /**
+     * Only called from test, creates and returns a new simple IdlingResource}.
+     */
+    @VisibleForTesting
+    @NonNull
+    public SimpleIdlingResource getPlacesIdlingResource() {
+        return placesIdlingResource;
+    }
+    @VisibleForTesting
+    @NonNull
+    public SimpleIdlingResource getUsersIdlingResource() {
+        return usersIdlingResource;
     }
 }
