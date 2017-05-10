@@ -83,8 +83,8 @@ public class PlaceDetails extends Activity{
                                 txtViewdislike.setText(place.ratingNeg);
                                 LikeDislike();
                                 NumberQUP(db_handle.getQueuedUserCountFromPlace(place.placeId));
-                                id = place.placeName;
-                                InfoButton();
+                                
+
 
                             }
                         });
@@ -129,6 +129,7 @@ public class PlaceDetails extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
         EvaluationOnTime();
+        InfoButton();
 
 
 
