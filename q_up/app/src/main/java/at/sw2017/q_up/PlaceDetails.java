@@ -46,6 +46,7 @@ public class PlaceDetails extends Activity{
             public void onClick(View v) {
                 Intent intent = new Intent(PlaceDetails.this, InfoActivity.class);
                 intent.putExtra("title", title);
+                intent.putExtra("id", id);
                 startActivity(intent);
 
             }
