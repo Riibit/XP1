@@ -19,33 +19,36 @@ public class PlaceDetails extends Activity implements OnClickListener {
     static String userid;
     static String placeid;
     DatabaseHandler db_handle;
+
+    private Button ButtonLike;
+    private Button ButtonDislike;
+
     ToggleButton ButtonQ;
-
-    public void qupFunction()
-    {
-
-    }
-
 
 
 
 
     public void LikeDislike()
     {
-        Button ButtonLike = (Button) findViewById(R.id.buttonlike);
+        ButtonLike = (Button) findViewById(R.id.buttonlike);
         ButtonLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 db_handle.votePlacePositive(id);
+                ButtonLike.setEnabled(false);
+                ButtonDislike.setEnabled(false);
+                //ButtonLike.setVisibility(View.INVISIBLE);
 
             }
         });
 
-        Button ButtonDislike = (Button) findViewById(R.id.buttondislike);
+        ButtonDislike = (Button) findViewById(R.id.buttondislike);
         ButtonDislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 db_handle.votePlaceNegative(id);
+                ButtonLike.setEnabled(false);
+                ButtonDislike.setEnabled(false);
 
             }
         });
@@ -55,7 +58,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
 
     public void InfoButton()
     {
-           Button ButtonInfo = (Button) findViewById(R.id.buttoninfo);
+        Button ButtonInfo = (Button) findViewById(R.id.buttoninfo);
         ButtonInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,12 +88,14 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                 id  = bundle.getString("id");
                                 db_handle = QUpApp.getInstance().getDBHandler();
                                 Place place = new Place();
+                                db_handle.placesLock();
                                 for (Place p : db_handle.getPlacesList()) {
                                     if (p.placeId.equals(id)) {
                                         place = p;
                                         break;
                                     }
                                 }
+                                db_handle.placesUnlock();
 
                                 TextView txtViewtitle = (TextView) findViewById(R.id.txtview_title);
                                 TextView txtViewlike = (TextView) findViewById(R.id.txt_like);
@@ -119,7 +124,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
     public void NumberQUP(int number)
     {
         String text;
-
         switch (number)
         {
 
@@ -141,8 +145,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
 
     }
 
-
-
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
@@ -153,9 +155,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
         InfoButton();
 
 
-
-
-
     }
 
 
@@ -164,30 +163,31 @@ public class PlaceDetails extends Activity implements OnClickListener {
 
         ToggleButton clicked = (ToggleButton)v;
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-        List<User> users = db_handle.getUsersList();
         String Username = (MainActivity.currentUser.userName);
         Bundle bundle = getIntent().getExtras();
         placeid  = bundle.getString("id");
         String text = (String) clicked.getText();
 
 
-            if(clicked.isChecked() == true) {
-                for (User u : users) {
-                    if (u.userName.equals(Username)) {
-                        userid = u.userId;
-                    }
+        if(clicked.isChecked() == true) {
+            db_handle.usersLock();
+            for (User u : db_handle.getUsersList()) {
+                if (u.userName.equals(Username)) {
+                    userid = u.userId;
                 }
-                db_handle.checkUserIntoPlace(userid, placeid);
-                Toast.makeText(getApplicationContext(),
-                        "User checked in..", Toast.LENGTH_SHORT).show();
             }
+            db_handle.usersUnlock();
+            db_handle.checkUserIntoPlace(userid, placeid);
+            Toast.makeText(getApplicationContext(),
+                    "User checked in..", Toast.LENGTH_SHORT).show();
+        }
 
-         else
-            {
-                db_handle.checkOutOfPlace(userid);
+        else
+        {
+            db_handle.checkOutOfPlace(userid);
             Toast.makeText(getApplicationContext(),
                     "User checked out..", Toast.LENGTH_SHORT).show();
-            }
+        }
 
 
 

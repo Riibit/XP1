@@ -12,26 +12,80 @@ public class ProfileActivity extends AppCompatActivity {
     DatabaseHandler db_handle;
     User currentUser = MainActivity.getUser();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
 
-        TextView usernameText = (TextView) findViewById(R.id.textView);
-        TextView currentPlace = (TextView) findViewById(R.id.textViewQueuePlace);
+    TextView usernameText;
 
-        usernameText.setText(currentUser.userName);
+    TextView currentPlace;
 
+
+    /*
+        public String setPlaceOnProfile()
+        {
+
+            Thread t = new Thread() {
+
+                @Override
+                public void run() {
+                    try {
+                        while (!isInterrupted()) {
+                            Thread.sleep(10);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //TODO code inside which should be updated
+                                    Bundle bundle = getIntent().getExtras();
+                                    id  = bundle.getString("id");
+                                    db_handle = QUpApp.getInstance().getDBHandler();
+                                    db_handle.placesLock();
+                                    String currPlace = currentUser.idCheckInPlace;
+
+                                    for (Place p : db_handle.getPlacesList()) {
+                                        if (p.placeId.equals(currPlace)) {
+                                            place = p.placeName;
+                                            break;
+                                        }
+                                    }
+                                   // currentPlace.setText(place.placeName);
+                                    db_handle.placesUnlock();
+
+                                }
+                            });
+                        }
+                    } catch (InterruptedException e) {
+                    }
+                }
+            };
+            t.start();
+            return place;
+        }
+    */
+    protected void onResume(Bundle savedInstancesState)
+    {
         db_handle = QUpApp.getInstance().getDBHandler();
-        Place place = new Place();
+        db_handle.placesLock();
         for (Place p : db_handle.getPlacesList()) {
             if (p.placeId.equals(currentUser.idCheckInPlace)) {
-                place = p;
+                currentPlace.setText(p.placeName);
                 break;
             }
         }
+        db_handle.placesUnlock();
+    }
 
-        currentPlace.setText(place.placeName);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_profile);
+        db_handle = QUpApp.getInstance().getDBHandler();
+        usernameText = (TextView) findViewById(R.id.textView);
+        usernameText.setText(currentUser.userName);
+        currentPlace = (TextView) findViewById(R.id.textViewQueuePlace);
+        currentPlace.setText("aa");
+
+        //setPlaceOnProfile();
+
+       /*
+        db_handle.placesUnlock();*/
+        //currentPlace.setText(setPlaceOnProfile());
 
         Button buttonMap =(Button) findViewById(R.id.buttonMap);
         buttonMap.setRotation(270);
