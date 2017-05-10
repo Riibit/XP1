@@ -14,23 +14,30 @@ public class PlaceDetails extends Activity{
 
     String id, title;
     DatabaseHandler db_handle;
+    private Button ButtonLike;
+    private Button ButtonDislike;
 
     public void LikeDislike()
     {
-        Button ButtonLike = (Button) findViewById(R.id.buttonlike);
+        ButtonLike = (Button) findViewById(R.id.buttonlike);
         ButtonLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 db_handle.votePlacePositive(id);
+                ButtonLike.setEnabled(false);
+                ButtonDislike.setEnabled(false);
+                //ButtonLike.setVisibility(View.INVISIBLE);
 
             }
         });
 
-        Button ButtonDislike = (Button) findViewById(R.id.buttondislike);
+        ButtonDislike = (Button) findViewById(R.id.buttondislike);
         ButtonDislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 db_handle.votePlaceNegative(id);
+                ButtonLike.setEnabled(false);
+                ButtonDislike.setEnabled(false);
 
             }
         });
@@ -104,7 +111,6 @@ public class PlaceDetails extends Activity{
     public void NumberQUP(int number)
     {
         String text;
-
         switch (number)
         {
 
@@ -125,8 +131,6 @@ public class PlaceDetails extends Activity{
         txtViewNumberQUP.setText(text);
 
     }
-
-
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
