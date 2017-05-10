@@ -37,10 +37,12 @@ public class PlaceViewList extends Activity {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
 
         // fill list with places from DB
+        db_handle.placesLock();
         for (Place p : db_handle.getPlacesList()) {
             places_to_show.add(p.placeName);
             place_ids.add(p.placeId);
         }
+        db_handle.placesUnlock();
 
         ListAdapter myAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, places_to_show);
         ListView list = (ListView) findViewById(R.id.list);

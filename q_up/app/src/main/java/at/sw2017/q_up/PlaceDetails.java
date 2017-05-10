@@ -88,12 +88,14 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                 id  = bundle.getString("id");
                                 db_handle = QUpApp.getInstance().getDBHandler();
                                 Place place = new Place();
+                                db_handle.placesLock();
                                 for (Place p : db_handle.getPlacesList()) {
                                     if (p.placeId.equals(id)) {
                                         place = p;
                                         break;
                                     }
                                 }
+                                db_handle.placesUnlock();
 
                                 TextView txtViewtitle = (TextView) findViewById(R.id.txtview_title);
                                 TextView txtViewlike = (TextView) findViewById(R.id.txt_like);
@@ -164,7 +166,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
 
         ToggleButton clicked = (ToggleButton)v;
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-        List<User> users = db_handle.getUsersList();
         String Username = (MainActivity.currentUser.userName);
         Bundle bundle = getIntent().getExtras();
         placeid  = bundle.getString("id");
@@ -172,11 +173,13 @@ public class PlaceDetails extends Activity implements OnClickListener {
 
 
             if(clicked.isChecked() == true) {
-                for (User u : users) {
+                db_handle.usersLock();
+                for (User u : db_handle.getUsersList()) {
                     if (u.userName.equals(Username)) {
                         userid = u.userId;
                     }
                 }
+                db_handle.usersUnlock();
                 db_handle.checkUserIntoPlace(userid, placeid);
                 Toast.makeText(getApplicationContext(),
                         "User checked in..", Toast.LENGTH_SHORT).show();

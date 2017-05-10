@@ -24,15 +24,15 @@ public class InfoActivity extends AppCompatActivity {
         txtViewTitle.setText(title);
 
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-        Place place = new Place();
+        db_handle.placesLock();
         for (Place p : db_handle.getPlacesList()) {
             if (p.placeId.equals(id)) {
-                place = p;
+                txtViewLongtitude.setText(p.longitude);
+                txtViewlatitude.setText(p.latitude);
                 break;
             }
         }
-        txtViewLongtitude.setText(place.longitude);
-        txtViewlatitude.setText(place.latitude);
+        db_handle.placesUnlock();
     }
 }
 
