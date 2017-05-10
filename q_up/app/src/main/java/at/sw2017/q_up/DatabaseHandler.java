@@ -296,14 +296,14 @@ public class DatabaseHandler {
         for (Place p : placesList) {
             if (p.placeId.equals(id)) {
                 found = true;
-                rating = Integer.parseInt(p.ratingPos);
+                rating = Integer.parseInt(p.ratingNeg);
             }
         }
         // invalid id - return!
         if (found == false)
             return;
 
-        rating -= 1;
+        rating += 1;
         modifyPlaceAttribute(id, "ratingNeg", Integer.toString(rating));
     }
 
