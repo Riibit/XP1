@@ -9,15 +9,32 @@ import android.widget.TextView;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    DatabaseHandler db_handle;
+    User currentUser = MainActivity.getUser();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
         TextView usernameText = (TextView) findViewById(R.id.textView);
-        usernameText.setText(MainActivity.getUsername());
+        TextView currentPlace = (TextView) findViewById(R.id.textViewQueuePlace);
+
+        usernameText.setText(currentUser.userName);
+
+        db_handle = QUpApp.getInstance().getDBHandler();
+        Place place;
+        for (Place p : db_handle.getPlacesList()) {
+            if (p.placeId.equals(currentUser.idCheckInPlace)) {
+                place = p;
+                currentPlace.setText(place.placeName);
+                break;
+            }
+        }
 
         Button buttonMap =(Button) findViewById(R.id.buttonMap);
+        buttonMap.setRotation(270);
+
         buttonMap.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {

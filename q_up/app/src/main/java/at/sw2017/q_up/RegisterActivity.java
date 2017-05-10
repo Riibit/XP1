@@ -22,9 +22,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     EditText inputPassword;
     EditText confirmPassword;
     EditText inputUsername;
-    EditText inputEmail;
-    List<User> userList;
-
 
 
     OnKeyListener myKeyListener = new View.OnKeyListener() {
@@ -138,6 +135,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                     db_handle.addUser(inputUsername.getText().toString(), inputPassword.getText().toString());
                     Toast.makeText(getApplicationContext(),
                             "User created..", Toast.LENGTH_SHORT).show();
+                    clearText();
                 }
 
                 // check texfield is already in db
@@ -147,5 +145,11 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
             default:
                 break;
         }
+    }
+
+    public void clearText() {
+        inputUsername.setText("");
+        inputPassword.setText("");
+        confirmPassword.setText("");
     }
 }

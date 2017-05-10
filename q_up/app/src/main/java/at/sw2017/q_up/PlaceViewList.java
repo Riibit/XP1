@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * Created by fanconng on 05/04/2017.
  */
 
-public class PlaceViewList extends Activity{
+public class PlaceViewList extends Activity {
 
 
     public void mapsGoDetails(String id) {
@@ -41,8 +41,6 @@ public class PlaceViewList extends Activity{
             places_to_show.add(p.placeName);
             place_ids.add(p.placeId);
         }
-
-
 
         ListAdapter myAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, places_to_show);
         ListView list = (ListView) findViewById(R.id.list);

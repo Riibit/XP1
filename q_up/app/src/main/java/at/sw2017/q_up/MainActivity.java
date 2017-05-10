@@ -97,8 +97,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         startActivity(registerIntent);
     }
 
-    public static String getUsername() {
-        return currentUser.userName;
+    public static User getUser() {
+        return currentUser;
     }
 
     @Override
