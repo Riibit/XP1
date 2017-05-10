@@ -2,6 +2,7 @@ package at.sw2017.q_up;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.icu.text.IDNA;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,7 +12,7 @@ import android.widget.Toast;
 
 public class PlaceDetails extends Activity{
 
-    static String id;
+    String id;
     DatabaseHandler db_handle;
 
     public void LikeDislike()
@@ -33,6 +34,23 @@ public class PlaceDetails extends Activity{
 
             }
         });
+    }
+
+
+
+    public void InfoButton()
+    {
+           Button ButtonInfo = (Button) findViewById(R.id.buttoninfo);
+        ButtonInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PlaceDetails.this, InfoActivity.class);
+                intent.putExtra("title", id);
+                startActivity(intent);
+
+            }
+        });
+
     }
     public void EvaluationOnTime()
     {
@@ -64,8 +82,10 @@ public class PlaceDetails extends Activity{
                                 txtViewlike.setText(place.ratingPos);
                                 txtViewdislike.setText(place.ratingNeg);
                                 LikeDislike();
-                                int number = db_handle.getQueuedUserCountFromPlace(place.placeId);
-                                NumberQUP(number);
+                                NumberQUP(db_handle.getQueuedUserCountFromPlace(place.placeId));
+                                id = place.placeName;
+                                InfoButton();
+
                             }
                         });
                     }
@@ -86,21 +106,21 @@ public class PlaceDetails extends Activity{
         {
 
             case 0:
-                text= "And be the first in the Q!";
+                text= "Be the first in the Q!";
                 break;
             case 1:
-                number++;
-                text = "And be the second in the Q!";
+                text = "Be the second in the Q!";
                 break;
             case 2:
-                text = "And be the third in the Q!";
+                text = "Be the third in the Q!";
                 break;
             default:
-                text = "And be the " + Integer.toString(number+1) + "th in the Q!";
+                text = "Be the " + Integer.toString(number+1) + "th in the Q!";
                 break;
         }
         TextView txtViewNumberQUP = (TextView) findViewById(R.id.txtView_numberqup);
         txtViewNumberQUP.setText(text);
+
     }
 
 
@@ -109,6 +129,7 @@ public class PlaceDetails extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
         EvaluationOnTime();
+
 
 
 
