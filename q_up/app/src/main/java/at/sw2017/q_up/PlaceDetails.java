@@ -20,8 +20,6 @@ public class PlaceDetails extends Activity{
         ButtonLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),
-                        "Like" + id, Toast.LENGTH_SHORT).show();
                 db_handle.votePlacePositive(id);
 
             }
@@ -31,12 +29,53 @@ public class PlaceDetails extends Activity{
         ButtonDislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),
-                        "Dislike" + id, Toast.LENGTH_SHORT).show();
                 db_handle.votePlaceNegative(id);
 
             }
         });
+    }
+    public void EvaluationOnTime()
+    {
+        Thread t = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(10);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                Bundle bundle = getIntent().getExtras();
+                                id  = bundle.getString("id");
+                                db_handle = QUpApp.getInstance().getDBHandler();
+                                Place place = new Place();
+                                for (Place p : db_handle.getPlacesList()) {
+                                    if (p.placeId.equals(id)) {
+                                        place = p;
+                                        break;
+                                    }
+                                }
+                                TextView txtViewtitle = (TextView) findViewById(R.id.txtview_title);
+                                TextView txtViewlike = (TextView) findViewById(R.id.txt_like);
+                                TextView txtViewdislike = (TextView) findViewById(R.id.txt_dislike);
+
+                                txtViewtitle.setText(place.placeName);
+                                txtViewlike.setText(place.ratingPos);
+                                txtViewdislike.setText(place.ratingNeg);
+
+                                LikeDislike();
+
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+
+        t.start();
     }
 
 
@@ -44,35 +83,12 @@ public class PlaceDetails extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
+        EvaluationOnTime();
 
 
-        Bundle bundle = getIntent().getExtras();
-        id  = bundle.getString("id");
-        db_handle = QUpApp.getInstance().getDBHandler();
-        Place place = new Place();
-        for (Place p : db_handle.getPlacesList()) {
-            if (p.placeId.equals(id)) {
-                place = p;
-                break;
-            }
-        }
-
-
-
-        //TextView getlatitude = (TextView) findViewById(R.id.txtview_getlatitude);
-        //TextView getlongtitude = (TextView) findViewById(R.id.txtview_getlongtitude);
-        TextView txtViewtitle = (TextView) findViewById(R.id.txtview_title);
-        TextView txtViewlike = (TextView) findViewById(R.id.txt_like);
-        TextView txtViewdislike = (TextView) findViewById(R.id.txt_dislike);
-
-        //getlongtitude.setText(place.longitude);
-        //getlatitude.setText(place.latitude);
-        txtViewtitle.setText(place.placeName);
-        txtViewlike.setText(place.ratingPos);
-        txtViewdislike.setText(place.ratingNeg);
 
         //
-        LikeDislike();
+
     }
 
 
