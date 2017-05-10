@@ -18,6 +18,9 @@ public class InfoActivity extends AppCompatActivity {
         String title  =  "Information of " + bundle.getString("title");
         String id = bundle.getString("id");
         TextView txtViewTitle = (TextView) findViewById(R.id.txtView_title_info);
+        TextView txtViewLongtitude = (TextView) findViewById(R.id.txtView_longtitude);
+        TextView txtViewlatitude = (TextView) findViewById(R.id.txtViewlatitude);
+
         txtViewTitle.setText(title);
 
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
@@ -28,8 +31,13 @@ public class InfoActivity extends AppCompatActivity {
                 break;
             }
         }
+        txtViewLongtitude.setText(place.longitude);
+        txtViewlatitude.setText(place.latitude);
+
 
 
 
     }
 }
+
+

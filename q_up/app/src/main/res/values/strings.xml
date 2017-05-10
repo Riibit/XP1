@@ -21,6 +21,7 @@
     <string name="my_placesOFF">Show My Places</string>
     <string name="my_placesON">Hide My Places</string>
     <string name="username">"Username"</string>
+    <string name="myprofile">"My Profile"</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="section_format">Hello World from section: %1$d</string>
 

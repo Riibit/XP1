@@ -30,6 +30,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     Button loginNavigationButton;
     EditText editTextUsername;
     EditText editTextPassword;
+    static User currentUser;
 
 
 
@@ -96,6 +97,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
         startActivity(registerIntent);
     }
 
+    public static User getUser() {
+        return currentUser;
+    }
+
     @Override
     public void onClick(View v) {
         Button clickedButton = (Button) v;
@@ -132,6 +137,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
                             Toast.makeText(getApplicationContext(),
                                     "Login successful!", Toast.LENGTH_SHORT).show();
+                            currentUser = u;
 
                             switchActivities();
                             return;
