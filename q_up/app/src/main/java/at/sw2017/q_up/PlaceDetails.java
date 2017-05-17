@@ -22,7 +22,8 @@ public class PlaceDetails extends Activity implements OnClickListener {
     static String userid;
     static String placeid;
     DatabaseHandler db_handle;
-
+    String outplace;
+    String decision = "YES";
     private Button ButtonLike;
     private Button ButtonDislike;
 
@@ -154,12 +155,12 @@ public class PlaceDetails extends Activity implements OnClickListener {
         setContentView(R.layout.activity_place_details);
         ButtonQ = (ToggleButton) findViewById(R.id.btn_qup);
         ButtonQ.setOnClickListener(this);
-        ButtonQ.setChecked(getDefaults("togglekey",this));
-        setDefaults("togglekey",ButtonQ.isChecked(),this);
+       // ButtonQ.setChecked(getDefaults("togglekey",this));
+        //setDefaults("togglekey",ButtonQ.isChecked(),this);
         EvaluationOnTime();
         InfoButton();
     }
-
+/*
     public static void setDefaults(String key,Boolean value,Context context)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -176,6 +177,16 @@ public class PlaceDetails extends Activity implements OnClickListener {
     public void onStart(){
         super.onStart();
         ButtonQ.setChecked(getDefaults("togglekey",this));
+        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+        String Username = (MainActivity.currentUser.userName);
+        db_handle.usersLock();
+        for (Place p : db_handle.getPlacesList()) {
+            p.placeId
+                Toast.makeText(getApplicationContext(),
+                        p.idCheckInPlace, Toast.LENGTH_SHORT).show();
+
+        }
+        db_handle.usersUnlock();
 
     }
     @Override
@@ -183,9 +194,10 @@ public class PlaceDetails extends Activity implements OnClickListener {
         super.onStop();
         setDefaults("togglekey",ButtonQ.isChecked(),this);
 
+
     }
 
-
+*/
     @Override
     public void onClick(View v) {
 
@@ -208,6 +220,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
                 db_handle.checkUserIntoPlace(userid, placeid);
                 Toast.makeText(getApplicationContext(),
                         "User checked in..", Toast.LENGTH_SHORT).show();
+                decision = "NO";
             }
 
          else
@@ -215,9 +228,23 @@ public class PlaceDetails extends Activity implements OnClickListener {
                 db_handle.checkOutOfPlace(userid);
             Toast.makeText(getApplicationContext(),
                     "User checked out..", Toast.LENGTH_SHORT).show();
+                decision = "YES";
             }
 
 
 
     }
+    @Override
+    public void onBackPressed() {
+
+        if (decision.equals("NO")) {
+            Toast.makeText(getApplicationContext(),
+                    "You have to exit the queue first !", Toast.LENGTH_SHORT).show();
+        } else {
+            super.onBackPressed(); // Process Back key  default behavior.
+        }
+
+    }
 }
+
+
