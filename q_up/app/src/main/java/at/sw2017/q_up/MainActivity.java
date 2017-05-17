@@ -46,22 +46,38 @@ public class MainActivity extends Activity implements View.OnClickListener {
         registerNavigationButton.setOnClickListener(this);
         loginNavigationButton = (Button) findViewById(R.id.loginNavigationButton);
         editTextUsername = (EditText) findViewById(R.id.inputName);
-        editTextUsername.requestFocus();
         editTextPassword = (EditText) findViewById(R.id.editTextPasswort);
         editTextPassword.setOnKeyListener(myKeyListener);
         editTextUsername.requestFocus();
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
+
         //QUpApp.getInstance().getDBHandler().addAuthStListener();
+    }
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        editTextUsername.requestFocus();
         //QUpApp.getInstance().getDBHandler().removeAuthStListener();
     }
 
