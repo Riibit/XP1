@@ -58,7 +58,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
 
     public void InfoButton()
     {
-           Button ButtonInfo = (Button) findViewById(R.id.buttoninfo);
+        Button ButtonInfo = (Button) findViewById(R.id.buttoninfo);
         ButtonInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
