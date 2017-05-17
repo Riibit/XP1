@@ -1,6 +1,5 @@
 package at.sw2017.q_up;
 
-import android.app.Activity;
 import android.graphics.Rect;
 import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
@@ -9,7 +8,6 @@ import android.support.test.espresso.intent.Intents;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.test.uiautomator.BySelector;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiObjectNotFoundException;
@@ -25,8 +23,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
-
-import java.lang.reflect.Field;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -51,7 +47,7 @@ public class PlaceDetailsTest {
     private SimpleIdlingResource usersIdlingResource;
 
     private UiDevice device;
-    String testplace_id = "";
+    private String testplace_id = "";
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
@@ -144,7 +140,7 @@ public class PlaceDetailsTest {
     }
 
     @After
-    public void zunregisterIntentServiceIdlingResource() {
+    public void unregisterIntentServiceIdlingResource() {
         Log.d("TestPD", "After");
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         db_handle.removePlace(testplace_id);
@@ -158,8 +154,57 @@ public class PlaceDetailsTest {
         Intents.init();
         String resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.buttoninfo);
         device.findObject(new UiSelector().resourceId(resName)).click();
-        //SystemClock.sleep(500);
         intended(hasComponent(InfoActivity.class.getName()));
         Intents.release();
+    }
+
+    @Test
+    public void testVotePositiveWithoutQueue() throws Exception {
+        Log.d("TestPD", "testVotePositiveWithoutQueue");
+        String resName;
+
+        // get count before click
+        resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.txt_like);
+        String oldnum = device.findObject(new UiSelector().resourceId(resName)).getText();
+        assertNotEquals(oldnum, "");
+
+        // click rating
+        resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.buttonlike);
+        device.findObject(new UiSelector().resourceId(resName)).click();
+
+        SystemClock.sleep(1000);
+
+        // check count again
+        resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.txt_like);
+        String newnum = device.findObject(new UiSelector().resourceId(resName)).getText();
+        assertNotEquals(newnum, "");
+
+        // number should stay the same without queuing up
+        assertEquals(Integer.parseInt(oldnum), Integer.parseInt(newnum));
+    }
+
+    @Test
+    public void testVoteNegativeWithoutQueue() throws Exception {
+        Log.d("TestPD", "testVoteNegativeWithoutQueue");
+        String resName;
+
+        // get count before click
+        resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.txt_dislike);
+        String oldnum = device.findObject(new UiSelector().resourceId(resName)).getText();
+        assertNotEquals(oldnum, "");
+
+        // click rating
+        resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.buttondislike);
+        device.findObject(new UiSelector().resourceId(resName)).click();
+
+        SystemClock.sleep(1000);
+
+        // check count again
+        resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.txt_dislike);
+        String newnum = device.findObject(new UiSelector().resourceId(resName)).getText();
+        assertNotEquals(newnum, "");
+
+        // number should stay the same without queuing up
+        assertEquals(Integer.parseInt(oldnum), Integer.parseInt(newnum));
     }
 }
