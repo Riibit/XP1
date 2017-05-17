@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
@@ -22,6 +23,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
     static String id, title;
     static String userid;
     static String placeid;
+
     private DatabaseHandler db_handle;
     private String outplace;
     private boolean decision ;
@@ -29,6 +31,12 @@ public class PlaceDetails extends Activity implements OnClickListener {
     private Button ButtonDislike;
     TextView peopleInQueue;
     boolean QdUP;
+    Calendar cal;
+    int start;
+    int end;
+    int time;
+    TextView time_1;
+
 
 
 
@@ -53,7 +61,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
 
             }
         });
-
         ButtonDislike = (Button) findViewById(R.id.buttondislike);
         ButtonDislike.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,9 +68,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
                 db_handle.votePlaceNegative(id);
                      ButtonLike.setEnabled(false);
                 ButtonDislike.setEnabled(false);
-
-
-
             }
         });
     }
@@ -126,10 +130,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                 else
                                     NumberQUP(db_handle.getQueuedUserCountFromPlace(place.placeId));
                                 title = place.placeName;
-
-
-
-
                             }
                         });
                     }
@@ -139,7 +139,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
         };
         t.start();
     }
-
 
 
     public void NumberQUP(int number)
@@ -172,10 +171,15 @@ public class PlaceDetails extends Activity implements OnClickListener {
         setContentView(R.layout.activity_place_details);
         ButtonQ = (ToggleButton) findViewById(R.id.btn_qup);
         peopleInQueue = (TextView)findViewById(R.id.UserNr);
+        time_1 = (TextView) findViewById(R.id.time8);
         ButtonQ.setOnClickListener(this);
+        time_1.setText("");
         decision = false;
        // ButtonQ.setChecked(getDefaults("togglekey",this));
         //setDefaults("togglekey",ButtonQ.isChecked(),this);
+        start = 0;
+        end = 0;
+        time = 0;
 
         EvaluationOnTime();
         InfoButton();
@@ -189,7 +193,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
         placeid  = bundle.getString("id");
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         peopleInQueue.setText(Integer.toString(db_handle.getQueuedUserCountFromPlace(placeid)));
-
     }
 /*
     public static void setDefaults(String key,Boolean value,Context context)
@@ -227,6 +230,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
     @Override
     public void onClick(View v) {
 
+
         ToggleButton clicked = (ToggleButton) v;
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         String Username = (MainActivity.currentUser.userName);
@@ -247,9 +251,11 @@ public class PlaceDetails extends Activity implements OnClickListener {
         db_handle.checkUserIntoPlace(userid, placeid);
         QdUP = true;
         decision = true;
+            cal = Calendar.getInstance();
+            start = cal.get(Calendar.SECOND);
+            time_1.setText("");
+
         }
-
-
         else
             {
             db_handle.checkOutOfPlace(userid);
@@ -257,21 +263,39 @@ public class PlaceDetails extends Activity implements OnClickListener {
                 decision = false;
             ButtonLike.setEnabled(true);
             ButtonDislike.setEnabled(true);
+                cal = Calendar.getInstance();
+                end = cal.get(Calendar.SECOND);
+
+                if(end < start)
+                {
+                    end += 60;
+                    time = end - start;
+                    if(time < 0)
+                    time = time * (-1);
+
+                    time_1.setText(Integer.toString(time));
+
+                }
+                else
+                {
+                    time = start - end;
+                    if(time < 0)
+                        time = time * (-1);
+
+                    time_1.setText(Integer.toString(time));
+
+                }
 
         }
-
     }
-
-
     @Override
     public void onBackPressed() {
 
-        if (!decision) {
+        if (decision) {
             Toast.makeText(getApplicationContext(),
                     "You have to exit the queue first !", Toast.LENGTH_SHORT).show();
         } else {
             super.onBackPressed(); // Process Back key  default behavior.
         }
-
     }
 }
