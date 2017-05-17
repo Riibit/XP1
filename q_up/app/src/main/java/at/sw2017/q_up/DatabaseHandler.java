@@ -97,9 +97,10 @@ public class DatabaseHandler {
     /**
      * add listener on start
      */
-    public void addAuthStListener() {
-        mAuth.addAuthStateListener(mAuthListener);
-    }
+    /* unused
+        public void addAuthStListener() {
+            mAuth.addAuthStateListener(mAuthListener);
+        }*/
 
     /**
      * remove listener on stop

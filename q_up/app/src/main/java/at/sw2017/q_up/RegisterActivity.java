@@ -2,7 +2,6 @@ package at.sw2017.q_up;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -10,10 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.List;
 import android.view.View.OnKeyListener;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 
 public class RegisterActivity extends Activity implements View.OnClickListener {
 
@@ -84,7 +80,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
             if (!db_handle.isUsersListEmpty())
                 data_ready = true;
         }
-        if (data_ready != true) {
+        if (!data_ready) {
             Toast.makeText(getApplicationContext(),
                     "Server timeout!", Toast.LENGTH_SHORT).show();
             return;
@@ -96,7 +92,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
             case R.id.registerButton:
 
                 if (!inputPassword.getText().toString().equals(confirmPassword.getText().toString()) ||
-                        inputPassword.getText().toString() == "")
+                        inputPassword.getText().toString().equals(""))
                 {
                     Toast.makeText(getApplicationContext(),
                             "Passwords don't match / are too weak!", Toast.LENGTH_SHORT).show();
