@@ -9,18 +9,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.List;
 import java.util.ArrayList;
 
-/**
- * Created by fanconng on 05/04/2017.
- */
-
 public class PlaceViewList extends Activity {
-
-
+    
     public void mapsGoDetails(String id) {
         Intent intent2 = new Intent(PlaceViewList.this, PlaceDetails.class);
         intent2.putExtra("id", id);
@@ -32,8 +26,8 @@ public class PlaceViewList extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_places);
 
-        final List<String> places_to_show = new ArrayList<String>();
-        final List<String> place_ids = new ArrayList<String>();
+        final List<String> places_to_show = new ArrayList<>();
+        final List<String> place_ids = new ArrayList<>();
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
 
         // fill list with places from DB
@@ -44,7 +38,7 @@ public class PlaceViewList extends Activity {
         }
         db_handle.placesUnlock();
 
-        ListAdapter myAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, places_to_show);
+        ListAdapter myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, places_to_show);
         ListView list = (ListView) findViewById(R.id.list);
         list.setAdapter(myAdapter);
 
