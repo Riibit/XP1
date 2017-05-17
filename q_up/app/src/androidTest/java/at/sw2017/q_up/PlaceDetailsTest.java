@@ -27,9 +27,11 @@ import org.junit.runners.MethodSorters;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -206,5 +208,38 @@ public class PlaceDetailsTest {
 
         // number should stay the same without queuing up
         assertEquals(Integer.parseInt(oldnum), Integer.parseInt(newnum));
+    }
+
+    @Test
+    public void testQUpButton() throws Exception {
+        Log.d("TestPD", "testQUpButton");
+        onView(withId(R.id.btn_qup)).check(matches(withText("Q UP!")));
+        onView(withId(R.id.btn_qup)).perform(click());
+        onView(withId(R.id.btn_qup)).check(matches(withText("EXIT Q")));
+    }
+
+    @Test
+    public void testVotePositive() throws Exception {
+        Log.d("TestPD", "testVotePositive");
+
+        // queue and exit queue
+        onView(withId(R.id.btn_qup)).check(matches(withText("Q UP!")));
+        onView(withId(R.id.btn_qup)).perform(click());
+        onView(withId(R.id.btn_qup)).check(matches(withText("EXIT Q")));
+        SystemClock.sleep(500);
+        onView(withId(R.id.btn_qup)).perform(click());
+        onView(withId(R.id.btn_qup)).check(matches(withText("Q UP!")));
+
+        // get count before click
+
+
+        // click rating
+
+
+        // check count again
+
+
+        // number should stay the same without queuing up
+        //assertEquals(Integer.parseInt(oldnum), Integer.parseInt(newnum));
     }
 }
