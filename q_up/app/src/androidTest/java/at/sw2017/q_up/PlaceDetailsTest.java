@@ -154,8 +154,9 @@ public class PlaceDetailsTest {
     public void testClickInfo() throws Exception {
         Log.d("TestPD", "testClickInfo");
         Intents.init();
-        String resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.buttoninfo);
-        device.findObject(new UiSelector().resourceId(resName)).click();
+        onView( withId(R.id.buttoninfo)).perform(click());
+        //String resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.buttoninfo);
+        //device.findObject(new UiSelector().resourceId(resName)).click();
         intended(hasComponent(InfoActivity.class.getName()));
         Intents.release();
     }
@@ -163,51 +164,48 @@ public class PlaceDetailsTest {
     @Test
     public void testVotePositiveWithoutQueue() throws Exception {
         Log.d("TestPD", "testVotePositiveWithoutQueue");
-        String resName;
-
-        // get count before click
-        resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.txt_like);
-        String oldnum = device.findObject(new UiSelector().resourceId(resName)).getText();
-        assertNotEquals(oldnum, "");
-
-        // click rating
-        resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.buttonlike);
-        device.findObject(new UiSelector().resourceId(resName)).click();
-
-        SystemClock.sleep(1000);
-
-        // check count again
-        resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.txt_like);
-        String newnum = device.findObject(new UiSelector().resourceId(resName)).getText();
-        assertNotEquals(newnum, "");
-
-        // number should stay the same without queuing up
-        assertEquals(Integer.parseInt(oldnum), Integer.parseInt(newnum));
+        onView(withId(R.id.txt_like)).check(matches(withText("0")));
+        onView( withId(R.id.buttonlike)).perform(click());
+        onView(withId(R.id.txt_like)).check(matches(withText("0")));
     }
 
     @Test
     public void testVoteNegativeWithoutQueue() throws Exception {
         Log.d("TestPD", "testVoteNegativeWithoutQueue");
-        String resName;
+        //String resName;
 
         // get count before click
-        resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.txt_dislike);
-        String oldnum = device.findObject(new UiSelector().resourceId(resName)).getText();
-        assertNotEquals(oldnum, "");
+        //resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.txt_dislike);
+        //String oldnum = onView( withId(R.id.txt_dislike)).toString();
+
+
+        onView(withId(R.id.txt_dislike)).check(matches(withText("0")));
+
+
+                //device.findObject(new UiSelector().resourceId(resName)).getText();
+       // assertNotEquals(oldnum, "");
 
         // click rating
-        resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.buttondislike);
-        device.findObject(new UiSelector().resourceId(resName)).click();
+       // resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.buttondislike);
+       // device.findObject(new UiSelector().resourceId(resName)).click();
 
-        SystemClock.sleep(1000);
+
+        onView( withId(R.id.buttondislike)).perform(click());
+
+        //SystemClock.sleep(1000);
 
         // check count again
-        resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.txt_dislike);
-        String newnum = device.findObject(new UiSelector().resourceId(resName)).getText();
-        assertNotEquals(newnum, "");
+        //resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.txt_dislike);
+        //String newnum = device.findObject(new UiSelector().resourceId(resName)).getText();
+      //  String newnum = onView( withId(R.id.txt_dislike)).toString();
+
+
+
+        onView(withId(R.id.txt_dislike)).check(matches(withText("0")));
+       // assertNotEquals(newnum, "");
 
         // number should stay the same without queuing up
-        assertEquals(Integer.parseInt(oldnum), Integer.parseInt(newnum));
+       // assertEquals(Integer.parseInt(oldnum), Integer.parseInt(newnum));
     }
 
     @Test
