@@ -20,8 +20,8 @@ import java.util.concurrent.TimeoutException;
 public class PlaceDetails extends Activity implements OnClickListener {
 
     static String id, title;
-    static String userid;
-    static String placeid;
+    static String user_id;
+    static String place_id;
 
     private DatabaseHandler db_handle;
     private String outplace;
