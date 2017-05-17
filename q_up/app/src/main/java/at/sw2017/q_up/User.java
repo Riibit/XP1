@@ -8,7 +8,7 @@ public class User {
     public String userId;
     public String userName;
     public String password;
-    public String idCheckInPlace;
+    public String idCheckInPlace; // ID of place where user is checked in
 
     public User() {
 

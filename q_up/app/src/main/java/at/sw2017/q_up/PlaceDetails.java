@@ -62,7 +62,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
 
     public void InfoButton()
     {
-           Button ButtonInfo = (Button) findViewById(R.id.buttoninfo);
+        Button ButtonInfo = (Button) findViewById(R.id.buttoninfo);
         ButtonInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,32 +209,27 @@ public class PlaceDetails extends Activity implements OnClickListener {
         String text = (String) clicked.getText();
 
 
-            if(clicked.isChecked() == true) {
-                db_handle.usersLock();
-                for (User u : db_handle.getUsersList()) {
-                    if (u.userName.equals(Username)) {
-                        userid = u.userId;
-                    }
+        if(clicked.isChecked() == true) {
+            db_handle.usersLock();
+            for (User u : db_handle.getUsersList()) {
+                if (u.userName.equals(Username)) {
+                    userid = u.userId;
                 }
-                db_handle.usersUnlock();
-                db_handle.checkUserIntoPlace(userid, placeid);
-                Toast.makeText(getApplicationContext(),
-                        "User checked in..", Toast.LENGTH_SHORT).show();
-                decision = "NO";
             }
-
-         else
-            {
-                db_handle.checkOutOfPlace(userid);
+            db_handle.usersUnlock();
+            db_handle.checkUserIntoPlace(userid, placeid);
+            Toast.makeText(getApplicationContext(),
+                    "User checked in..", Toast.LENGTH_SHORT).show();
+                decision = "NO";
+        }
+        else {
+            db_handle.checkOutOfPlace(userid);
             Toast.makeText(getApplicationContext(),
                     "User checked out..", Toast.LENGTH_SHORT).show();
                 decision = "YES";
-            }
-
-
-
+        }
     }
-    @Override
+      @Override
     public void onBackPressed() {
 
         if (decision.equals("NO")) {
@@ -246,5 +241,3 @@ public class PlaceDetails extends Activity implements OnClickListener {
 
     }
 }
-
-

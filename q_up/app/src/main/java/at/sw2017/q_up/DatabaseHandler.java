@@ -372,6 +372,23 @@ public class DatabaseHandler {
     }
 
     /**
+     * get the name of a place by it's ID
+     * @param id place id
+     * @return name of place
+     */
+    public String getPlaceNameFromId(String id) {
+        placesLock();
+        for (Place p : placesList) {
+            if (p.placeId.equals(id)) {
+                placesUnlock();
+                return p.placeName;
+            }
+        }
+        placesUnlock();
+        return "";
+    }
+
+    /**
      * read users table - this should only be ran once
      * @return 0 = OK ; <0 = error
      */
