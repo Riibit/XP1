@@ -14,15 +14,46 @@
         completions."
     </string>
     <string name="title_activity_maps">Map</string>
+    <string name="login">Login</string>
+    <string name="loginpassword">Password</string>
+    <string name="username1">Username</string>
+    <string name="register">Register</string>
+    <string name="loginbutton">Login</string>
 
     <!-- Strings related to User profile -->
     <string name="action_settings">Settings</string>
     <string name="logout">Log Out</string>
     <string name="my_placesOFF">Show My Places</string>
     <string name="my_placesON">Hide My Places</string>
-    <string name="username">"Username"</string>
-    <string name="myprofile">"My Profile"</string>
+    <string name="username">Username</string>
+    <string name="myprofile">My Profile</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="mapbutton">Map</string>
+    <string name="queuedupin">Queued up in:</string>
+    <string name="notinq">I am not in any queue</string>
+
+
+    <!-- String related to Place details-->
+    <string name="placedetails">Place Details</string>
+    <string name="latitude">Latitude:</string>
+    <string name="like">Like</string>
+    <string name="dislike">Dislike</string>
+    <string name="texton">Q UP!</string>
+    <string name="textoff">EXIT Q</string>
+    <string name="textview">TextView</string>
+
+
+
+    <!-- String related to Map-->
+    <string name="myprofilebutton">My Profile</string>
+    <string name="placesbutton">Places</string>
+    <string name="longitude">Longtitude:</string>
+
+    <!-- String related to Registration-->
+    <string name="registration">Registration</string>
+    <string name="regpassword">Password</string>
+    <string name="confirmation">Confirm password</string>
+
 
 </resources>
