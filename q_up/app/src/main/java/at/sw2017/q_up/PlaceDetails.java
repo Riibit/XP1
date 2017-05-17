@@ -28,6 +28,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
     private Button ButtonLike;
     private Button ButtonDislike;
     TextView peopleInQueue;
+    boolean QdUP;
 
 
 
@@ -112,7 +113,13 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                 txtViewlike.setText(place.ratingPos);
                                 txtViewdislike.setText(place.ratingNeg);
                                 LikeDislike();
-                                NumberQUP(db_handle.getQueuedUserCountFromPlace(place.placeId));
+                                getNumberOfUsers();
+                                if(QdUP == true) {
+                                    TextView txtViewNumberQUP = (TextView) findViewById(R.id.txtView_numberqup);
+                                    txtViewNumberQUP.setText("You are queued up");
+                                }
+                                else
+                                    NumberQUP(db_handle.getQueuedUserCountFromPlace(place.placeId));
                                 title = place.placeName;
 
 
@@ -166,7 +173,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
         EvaluationOnTime();
         InfoButton();
         getNumberOfUsers();
-        
+
     }
 
     public  void getNumberOfUsers()
@@ -230,9 +237,10 @@ public class PlaceDetails extends Activity implements OnClickListener {
                 }
                 db_handle.usersUnlock();
                 db_handle.checkUserIntoPlace(userid, placeid);
-                Toast.makeText(getApplicationContext(),
-                        "User checked in..", Toast.LENGTH_SHORT).show();
                 decision = "NO";
+                QdUP = true;
+
+
             }
 
          else
@@ -241,9 +249,10 @@ public class PlaceDetails extends Activity implements OnClickListener {
             Toast.makeText(getApplicationContext(),
                     "User checked out..", Toast.LENGTH_SHORT).show();
                 decision = "YES";
+                QdUP = false;
             }
 
-
+        //
 
 
     }
