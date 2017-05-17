@@ -5,10 +5,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
-import at.sw2017.q_up.PlaceDetails.*;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -22,10 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener  {
-
-    private GoogleMap mMap;
-
-    private List<Marker> marker_list = new ArrayList<Marker>();
 
     public void mapsGoBack() {
         Intent intent = new Intent(this, ProfileActivity.class);
@@ -87,7 +80,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+
+        List<Marker> marker_list = new ArrayList<>();
 
         // load places from DB
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
@@ -96,7 +90,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLng ll = new LatLng(Double.parseDouble(p.latitude), Double.parseDouble(p.longitude));
 
             // add marker for place
-            Marker m = mMap.addMarker(new MarkerOptions().position(ll).title(p.placeName));
+            Marker m = googleMap.addMarker(new MarkerOptions().position(ll).title(p.placeName));
             m.setTag(p);
 
             // count the number of people in the queue
@@ -118,14 +112,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         googleMap.setOnInfoWindowClickListener(this);
 
         // move the camera to Graz
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.0707, 15.4395), 14));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.0707, 15.4395), 14));
     }
-
 
     @Override
     public void onInfoWindowClick(Marker marker) {
         Place p = (Place)marker.getTag();
-        mapsGoDetails(p.placeId);
+        if (p != null) {
+            mapsGoDetails(p.placeId);
+        }
     }
 
     @Override
@@ -145,7 +140,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         }
-
 
         // Return false to indicate that we have not consumed the event and that we wish
         // for the default behavior to occur (which is for the camera to move such that the

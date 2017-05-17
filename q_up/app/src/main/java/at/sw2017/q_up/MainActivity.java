@@ -35,7 +35,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +48,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         editTextUsername = (EditText) findViewById(R.id.inputName);
         editTextUsername.requestFocus();
         editTextPassword = (EditText) findViewById(R.id.editTextPasswort);
-
         editTextPassword.setOnKeyListener(myKeyListener);
         editTextUsername.requestFocus();
     }
