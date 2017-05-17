@@ -1,9 +1,5 @@
 package at.sw2017.q_up;
 
-/**
- * Created by PS on 10.05.17.
- */
-
 import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.support.test.espresso.IdlingResource;

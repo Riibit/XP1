@@ -1,8 +1,5 @@
 package at.sw2017.q_up;
 
-/**
- * Created by tinag on 29.3.2017..
- */
 
 public class User {
     public String userId;

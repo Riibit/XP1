@@ -3,9 +3,6 @@ package at.sw2017.q_up;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by tinag on 29.3.2017..
- */
 
 public class UsernameValidator {
     private Pattern pattern;
