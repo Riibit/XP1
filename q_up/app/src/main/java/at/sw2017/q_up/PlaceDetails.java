@@ -13,18 +13,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.util.Calendar;
+import java.util.List;
+import java.util.concurrent.TimeoutException;
+
 public class PlaceDetails extends Activity implements OnClickListener {
 
     static String id, title;
-    static String user_id;
-    static String place_id;
-    DatabaseHandler db_handle;
+    static String userid;
+    static String placeid;
+
+    private DatabaseHandler db_handle;
     private String outplace;
     private boolean decision ;
     private Button ButtonLike;
     private Button ButtonDislike;
     TextView peopleInQueue;
     boolean QdUP;
+    Calendar cal;
+    int start;
+    int end;
+    int time;
+    TextView time_1;
+
 
 
 
@@ -101,12 +112,12 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                 }
                                 db_handle.placesUnlock();
 
-                                TextView txt_View_title = (TextView) findViewById(R.id.txtview_title);
-                                TextView txt_View_like = (TextView) findViewById(R.id.txt_like);
-                                TextView txt_View_dislike = (TextView) findViewById(R.id.txt_dislike);
-                                txt_View_title.setText(place.placeName);
-                                txt_View_like.setText(place.ratingPos);
-                                txt_View_dislike.setText(place.ratingNeg);
+                                TextView txtViewtitle = (TextView) findViewById(R.id.txtview_title);
+                                TextView txtViewlike = (TextView) findViewById(R.id.txt_like);
+                                TextView txtViewdislike = (TextView) findViewById(R.id.txt_dislike);
+                                txtViewtitle.setText(place.placeName);
+                                txtViewlike.setText(place.ratingPos);
+                                txtViewdislike.setText(place.ratingNeg);
                                 LikeDislike();
                                 getNumberOfUsers();
                                 if(QdUP == true) {
@@ -116,10 +127,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                 else
                                     NumberQUP(db_handle.getQueuedUserCountFromPlace(place.placeId));
                                 title = place.placeName;
-
-
-
-
                             }
                         });
                     }
@@ -130,6 +137,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
         };
         t.start();
     }
+
 
     public void NumberQUP(int number)
     {
@@ -160,7 +168,9 @@ public class PlaceDetails extends Activity implements OnClickListener {
 
         ButtonQ = (ToggleButton) findViewById(R.id.btn_qup);
         peopleInQueue = (TextView)findViewById(R.id.UserNr);
+        time_1 = (TextView) findViewById(R.id.time8);
         ButtonQ.setOnClickListener(this);
+        time_1.setText("");
         decision = false;
        // ButtonQ.setChecked(getDefaults("togglekey",this));
         //setDefaults("togglekey",ButtonQ.isChecked(),this);
@@ -168,6 +178,10 @@ public class PlaceDetails extends Activity implements OnClickListener {
         ButtonDislike = (Button) findViewById(R.id.buttondislike);
         ButtonLike.setEnabled(false);
         ButtonDislike.setEnabled(false);
+        start = 0;
+        end = 0;
+        time = 0;
+
         EvaluationOnTime();
         InfoButton();
         getNumberOfUsers();
@@ -186,27 +200,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        QUpApp.getInstance().setCurrentActivity(this);
     }
-
-    @Override
-    protected void onPause() {
-        clearReferences();
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        clearReferences();
-        super.onDestroy();
-    }
-
-    private void clearReferences(){
-        Activity currActivity = QUpApp.getInstance().getCurrentActivity();
-        if (this.equals(currActivity))
-            QUpApp.getInstance().setCurrentActivity(null);
-    }
-
 /*
     public static void setDefaults(String key,Boolean value,Context context)
     {
@@ -263,8 +257,10 @@ public class PlaceDetails extends Activity implements OnClickListener {
             db_handle.checkUserIntoPlace(user_id, place_id);
             QdUP = true;
             decision = true;
-            Toast.makeText(getApplicationContext(),
-                    CHECKED_IN_MSG, Toast.LENGTH_SHORT).show();
+            cal = Calendar.getInstance();
+            start = cal.get(Calendar.SECOND);
+            time_1.setText("");
+
         }
         else {
             db_handle.checkOutOfPlace(user_id);
@@ -272,8 +268,39 @@ public class PlaceDetails extends Activity implements OnClickListener {
             decision = false;
             ButtonLike.setEnabled(true);
             ButtonDislike.setEnabled(true);
+                cal = Calendar.getInstance();
+                end = cal.get(Calendar.SECOND);
+
+                if(end < start)
+                {
+                    end += 60;
+                    time = end - start;
+                    if(time < 0)
+                    time = time * (-1);
+
+                    time_1.setText(Integer.toString(time));
+
+                }
+                else
+                {
+                    time = start - end;
+                    if(time < 0)
+                        time = time * (-1);
+
+                    time_1.setText(Integer.toString(time));
+
+                }
+
+        }
+    }
+    @Override
+    public void onBackPressed() {
+
+        if (decision) {
             Toast.makeText(getApplicationContext(),
-                    CHECKED_OUT_MSG, Toast.LENGTH_SHORT).show();
+                    "You have to exit the queue first !", Toast.LENGTH_SHORT).show();
+        } else {
+            super.onBackPressed(); // Process Back key  default behavior.
         }
     }
 }
