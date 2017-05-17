@@ -75,6 +75,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     public void onStop() {
         super.onStop();
+        editTextUsername.requestFocus();
         //QUpApp.getInstance().getDBHandler().removeAuthStListener();
     }
 
@@ -98,7 +99,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         Button clickedButton = (Button) v;
-
+        editTextUsername.requestFocus();
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
 
         // check for DB timeout
@@ -143,6 +144,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
                 Toast.makeText(getApplicationContext(),
                         "Wrong username or password!", Toast.LENGTH_SHORT).show();
+                editTextUsername.setText("");
+                editTextPassword.setText("");
+                editTextUsername.requestFocus();
+
                 break;
             case R.id.registerNavigationButton:
                 switchLoginRegister();
