@@ -201,7 +201,7 @@ public class PlaceDetailsTest {
     }
 
     @Test
-    public void testClickInfo() throws Exception {
+    public void a_testClickInfo() throws Exception {
         Log.d("TestPD", "testClickInfo");
         Intents.init();
         onView(withId(R.id.buttoninfo)).perform(click());
@@ -212,7 +212,7 @@ public class PlaceDetailsTest {
     }
 
     @Test
-    public void testVotePositiveWithoutQueue() throws Exception {
+    public void b_testVotePositiveWithoutQueue() throws Exception {
         Log.d("TestPD", "testVotePositiveWithoutQueue");
         onView(withId(R.id.txt_like)).check(matches(withText("0")));
         onView(withId(R.id.buttonlike)).perform(click());
@@ -220,7 +220,7 @@ public class PlaceDetailsTest {
     }
 
     @Test
-    public void testVoteNegativeWithoutQueue() throws Exception {
+    public void b_testVoteNegativeWithoutQueue() throws Exception {
         Log.d("TestPD", "testVoteNegativeWithoutQueue");
         //String resName;
         // get count before click
@@ -252,7 +252,7 @@ public class PlaceDetailsTest {
     }
 
     @Test
-    public void testQUpButton() throws Exception {
+    public void g_testQUpButton() throws Exception {
         Log.d("TestPD", "testQUpButton");
         onView(withId(R.id.btn_qup)).check(matches(withText("Q UP!")));
         onView(withId(R.id.btn_qup)).perform(click());
@@ -260,7 +260,7 @@ public class PlaceDetailsTest {
     }
 
     @Test
-    public void testVotePositive() throws Exception {
+    public void y_testVotePositive() throws Exception {
         Log.d("TestPD", "testVotePositive");
 
         // queue and exit queue
@@ -276,14 +276,14 @@ public class PlaceDetailsTest {
 
         // click rating
         onView(withId(R.id.buttonlike)).perform(click());
-        SystemClock.sleep(1000);
+        SystemClock.sleep(1500);
 
         // check count again
         onView(withId(R.id.txt_like)).check(matches(withText("1")));
     }
 
     @Test
-    public void testVoteNegative() throws Exception {
+    public void z_testVoteNegative() throws Exception {
         Log.d("TestPD", "testVoteNegative");
 
         // queue and exit queue
@@ -299,7 +299,7 @@ public class PlaceDetailsTest {
 
         // click rating
         onView(withId(R.id.buttondislike)).perform(click());
-        SystemClock.sleep(1000);
+        SystemClock.sleep(1500);
 
         // check count again
         onView(withId(R.id.txt_dislike)).check(matches(withText("1")));
