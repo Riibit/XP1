@@ -1,9 +1,12 @@
 package at.sw2017.q_up;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.icu.text.IDNA;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -151,12 +154,34 @@ public class PlaceDetails extends Activity implements OnClickListener {
         setContentView(R.layout.activity_place_details);
         ButtonQ = (ToggleButton) findViewById(R.id.btn_qup);
         ButtonQ.setOnClickListener(this);
+        ButtonQ.setChecked(getDefaults("togglekey",this));
+        setDefaults("togglekey",ButtonQ.isChecked(),this);
         EvaluationOnTime();
         InfoButton();
+    }
 
+    public static void setDefaults(String key,Boolean value,Context context)
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(key,value);
+        editor.commit();
+    }
+    public static Boolean getDefaults(String key,Context context)
+    {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getBoolean(key,true);
+    }
+    @Override
+    public void onStart(){
+        super.onStart();
+        ButtonQ.setChecked(getDefaults("togglekey",this));
 
-
-
+    }
+    @Override
+    public void onStop(){
+        super.onStop();
+        setDefaults("togglekey",ButtonQ.isChecked(),this);
 
     }
 
