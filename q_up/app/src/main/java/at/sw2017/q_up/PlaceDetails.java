@@ -35,7 +35,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
 
     public void LikeDislike()
     {
-        ButtonLike = (Button) findViewById(R.id.buttonlike);
+
         ButtonLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,7 +47,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
             }
         });
 
-        ButtonDislike = (Button) findViewById(R.id.buttondislike);
+
         ButtonDislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,7 +164,10 @@ public class PlaceDetails extends Activity implements OnClickListener {
         decision = false;
        // ButtonQ.setChecked(getDefaults("togglekey",this));
         //setDefaults("togglekey",ButtonQ.isChecked(),this);
-
+        ButtonLike = (Button) findViewById(R.id.buttonlike);
+        ButtonDislike = (Button) findViewById(R.id.buttondislike);
+        ButtonLike.setEnabled(false);
+        ButtonDislike.setEnabled(false);
         EvaluationOnTime();
         InfoButton();
         getNumberOfUsers();
