@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.icu.text.IDNA;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -14,15 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import java.util.List;
-import java.util.concurrent.TimeoutException;
-
 public class PlaceDetails extends Activity implements OnClickListener {
 
     static String id, title;
-    static String userid;
-    static String placeid;
-    private DatabaseHandler db_handle;
+    static String user_id;
+    static String place_id;
+    DatabaseHandler db_handle;
     private String outplace;
     private boolean decision ;
     private Button ButtonLike;
@@ -44,11 +40,8 @@ public class PlaceDetails extends Activity implements OnClickListener {
             @Override
             public void onClick(View v) {
                 db_handle.votePlacePositive(id);
-
                 ButtonLike.setEnabled(false);
                 ButtonDislike.setEnabled(false);
-
-
                 //ButtonLike.setVisibility(View.INVISIBLE);
 
             }
@@ -59,11 +52,8 @@ public class PlaceDetails extends Activity implements OnClickListener {
             @Override
             public void onClick(View v) {
                 db_handle.votePlaceNegative(id);
-                     ButtonLike.setEnabled(false);
+                ButtonLike.setEnabled(false);
                 ButtonDislike.setEnabled(false);
-
-
-
             }
         });
     }
@@ -111,12 +101,12 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                 }
                                 db_handle.placesUnlock();
 
-                                TextView txtViewtitle = (TextView) findViewById(R.id.txtview_title);
-                                TextView txtViewlike = (TextView) findViewById(R.id.txt_like);
-                                TextView txtViewdislike = (TextView) findViewById(R.id.txt_dislike);
-                                txtViewtitle.setText(place.placeName);
-                                txtViewlike.setText(place.ratingPos);
-                                txtViewdislike.setText(place.ratingNeg);
+                                TextView txt_View_title = (TextView) findViewById(R.id.txtview_title);
+                                TextView txt_View_like = (TextView) findViewById(R.id.txt_like);
+                                TextView txt_View_dislike = (TextView) findViewById(R.id.txt_dislike);
+                                txt_View_title.setText(place.placeName);
+                                txt_View_like.setText(place.ratingPos);
+                                txt_View_dislike.setText(place.ratingNeg);
                                 LikeDislike();
                                 getNumberOfUsers();
                                 if(QdUP == true) {
@@ -134,20 +124,18 @@ public class PlaceDetails extends Activity implements OnClickListener {
                         });
                     }
                 } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         };
         t.start();
     }
 
-
-
     public void NumberQUP(int number)
     {
         String text;
         switch (number)
         {
-
             case 0:
                 text= "Be the first in the Q!";
                 break;
@@ -163,7 +151,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
         }
         TextView txtViewNumberQUP = (TextView) findViewById(R.id.txtView_numberqup);
         txtViewNumberQUP.setText(text);
-
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,9 +173,9 @@ public class PlaceDetails extends Activity implements OnClickListener {
     public  void getNumberOfUsers()
     {
         Bundle bundle = getIntent().getExtras();
-        placeid  = bundle.getString("id");
+        place_id  = bundle.getString("id");
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-        peopleInQueue.setText(Integer.toString(db_handle.getQueuedUserCountFromPlace(placeid)));
+        peopleInQueue.setText(Integer.toString(db_handle.getQueuedUserCountFromPlace(place_id)));
 
     }
 /*
@@ -197,7 +184,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(key,value);
-        editor.commit();
+        editor.apply();
     }
     public static Boolean getDefaults(String key,Context context)
     {
@@ -226,52 +213,38 @@ public class PlaceDetails extends Activity implements OnClickListener {
 */
     @Override
     public void onClick(View v) {
-
-        ToggleButton clicked = (ToggleButton) v;
+        final String CHECKED_IN_MSG = "User checked in..";
+        final String CHECKED_OUT_MSG = "User checked out..";
+        ToggleButton clicked = (ToggleButton)v;
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         String Username = (MainActivity.currentUser.userName);
         Bundle bundle = getIntent().getExtras();
-        placeid = bundle.getString("id");
-        String text = (String) clicked.getText();
+        place_id  = bundle.getString("id");
+        //String text = (String) clicked.getText();
 
 
-        if (clicked.isChecked())
-        {
+        if(clicked.isChecked()) {
             db_handle.usersLock();
             for (User u : db_handle.getUsersList()) {
                 if (u.userName.equals(Username)) {
-                    userid = u.userId;
+                    user_id = u.userId;
                 }
             }
             db_handle.usersUnlock();
-        db_handle.checkUserIntoPlace(userid, placeid);
-        QdUP = true;
-        decision = true;
+            db_handle.checkUserIntoPlace(user_id, place_id);
+            QdUP = true;
+            decision = true;
+            Toast.makeText(getApplicationContext(),
+                    CHECKED_IN_MSG, Toast.LENGTH_SHORT).show();
         }
-
-
-        else
-            {
-            db_handle.checkOutOfPlace(userid);
-                QdUP = false;
-                decision = false;
+        else {
+            db_handle.checkOutOfPlace(user_id);
+            QdUP = false;
+            decision = false;
             ButtonLike.setEnabled(true);
             ButtonDislike.setEnabled(true);
-
-        }
-
-    }
-
-
-    @Override
-    public void onBackPressed() {
-
-        if (!decision) {
             Toast.makeText(getApplicationContext(),
-                    "You have to exit the queue first !", Toast.LENGTH_SHORT).show();
-        } else {
-            super.onBackPressed(); // Process Back key  default behavior.
+                    CHECKED_OUT_MSG, Toast.LENGTH_SHORT).show();
         }
-
     }
 }

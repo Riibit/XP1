@@ -1,9 +1,5 @@
 package at.sw2017.q_up;
 
-/**
- * Created by PS on 29.03.17.
- */
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,14 +11,14 @@ public class DatabaseConfig {
     InputStream inputStream;
 
     // these must be filled from config file:
-    private String server_url;
-    private String server_dbname;
+    //private String server_url;
+    //private String server_dbname;
     private String server_user;
     private String server_pw;
 
     public DatabaseConfig() {
-        server_url = "";
-        server_dbname = "";
+        //server_url = "";
+        //server_dbname = "";
         server_user = "";
         server_pw = "";
     }
@@ -41,8 +37,8 @@ public class DatabaseConfig {
             }
 
             // get the property value and print it out
-            server_url = prop.getProperty("url");
-            server_dbname = prop.getProperty("database");
+            //server_url = prop.getProperty("url");
+            //server_dbname = prop.getProperty("database");
             server_user = prop.getProperty("user");
             server_pw = prop.getProperty("pw");
             /*
@@ -54,7 +50,9 @@ public class DatabaseConfig {
         } catch (Exception e) {
             System.out.println("Exception: " + e);
         } finally {
-            inputStream.close();
+            if (inputStream != null) {
+                inputStream.close();
+            }
         }
         return result;
     }

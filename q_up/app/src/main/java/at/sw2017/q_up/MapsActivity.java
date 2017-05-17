@@ -8,8 +8,6 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 import at.sw2017.q_up.PlaceDetails.*;
 
@@ -27,10 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener  {
-
-    private GoogleMap mMap;
-    private List<Marker> marker_list = new ArrayList<Marker>();
-    private LocationManager locationManager;
 
     public void mapsGoBack() {
         Intent intent = new Intent(this, ProfileActivity.class);
@@ -122,7 +116,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+
+        List<Marker> marker_list = new ArrayList<>();
 
         // load places from DB
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
@@ -131,7 +126,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLng ll = new LatLng(Double.parseDouble(p.latitude), Double.parseDouble(p.longitude));
 
             // add marker for place
-            Marker m = mMap.addMarker(new MarkerOptions().position(ll).title(p.placeName));
+            Marker m = googleMap.addMarker(new MarkerOptions().position(ll).title(p.placeName));
             m.setTag(p);
 
             // count the number of people in the queue
@@ -153,17 +148,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         googleMap.setOnInfoWindowClickListener(this);
 
         // move the camera to Graz
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.0707, 15.4395), 14));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.0707, 15.4395), 14));
     }
-/*
-    @Override
-    public void onLocationChanged(Location location) {
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
-        mMap.animateCamera(cameraUpdate);
-        locationManager.removeUpdates(this);
-    }
-*/
 
     @Override
     public void onInfoWindowClick(Marker marker) {
@@ -186,10 +172,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     marker.getPosition() +
                             " has been clicked " + clickCount + " times.",
                     Toast.LENGTH_SHORT).show();
-
-
         }
-
 
         // Return false to indicate that we have not consumed the event and that we wish
         // for the default behavior to occur (which is for the camera to move such that the
@@ -197,15 +180,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return false;
 
     }
-/*
-    public void zoomToPosition(double lat, double lng) {
-        if (mMap != null) {
-            LatLng coord = new LatLng(lat, lng);
-            CameraUpdate camupd = CameraUpdateFactory.newLatLngZoom(coord, 14);
-            mMap.animateCamera(camupd, 4000, null);
-        }
-            //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 14));
-    }
-*/
 }
 

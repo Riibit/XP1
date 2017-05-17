@@ -1,15 +1,8 @@
 package at.sw2017.q_up;
 
-/**
- * Created by PS on 29.03.17.
- */
-
-import android.os.Bundle;
-import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
-import android.support.test.espresso.IdlingResource;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,32 +20,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
-import at.sw2017.q_up.Place;
-
-
 public class DatabaseHandler {
 
-    private boolean dbreader_users_active = false;
-    private boolean dbreader_places_active = false;
+    private boolean db_reader_users_active = false;
+    private boolean db_reader_places_active = false;
 
     private DatabaseConfig db_config;
-    private String server_table_users;
-    private String server_table_places;
+    // private String server_table_users;
+    // private String server_table_places;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseDatabase database;
     private DatabaseReference mDatabase;
 
     // variables to cache server data
-    ReentrantLock placesListLock = new ReentrantLock();
-    List<Place> placesList = new ArrayList<Place>();
-    ReentrantLock usersListLock = new ReentrantLock();
-    List<User> usersList = new ArrayList<User>();
+    private ReentrantLock placesListLock = new ReentrantLock();
+    private List<Place> placesList = new ArrayList<>();
+    private ReentrantLock usersListLock = new ReentrantLock();
+    private List<User> usersList = new ArrayList<>();
 
     public void placesLock() { placesListLock.lock(); }
     public void usersLock() { usersListLock.lock(); }
@@ -116,11 +104,12 @@ public class DatabaseHandler {
     /**
      * remove listener on stop
      */
-    public void removeAuthStListener() {
+    // unused
+    /*public void removeAuthStListener() {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
-    }
+    }*/
 
     /**
      * constructor
@@ -177,12 +166,10 @@ public class DatabaseHandler {
                         if (!task.isSuccessful()) {
                             Log.w("FB", "signInWithEmail:failed", task.getException());
                         }
-                        else {
-                        }
                         signInLatch.countDown();
                     }
                 });
-
+        FirebaseDatabase database;
         database = FirebaseDatabase.getInstance();
         mDatabase = database.getReference();
 
@@ -195,18 +182,18 @@ public class DatabaseHandler {
      * read places table
      * @return 0 = OK ; <0 = error
      */
-    public Integer readPlacesFromDB() {
+    private Integer readPlacesFromDB() {
 
         // only call the function once
-        if (dbreader_places_active == true)
+        if (db_reader_places_active)
             return 0;
-        dbreader_places_active = true;
+        db_reader_places_active = true;
 
         getPlacesLatch = new CountDownLatch(1);
 
-        final DatabaseReference placesref = mDatabase.child("places");
+        final DatabaseReference places_reference = mDatabase.child("places");
 
-        placesref.addValueEventListener(new ValueEventListener() {
+        places_reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("FB", "read places from DB");
@@ -223,7 +210,9 @@ public class DatabaseHandler {
 
                 // signal, that we are finished
                 getPlacesLatch.countDown();
-                placesIdlingResource.setIdleState(true);
+                if (placesIdlingResource != null) {
+                    placesIdlingResource.setIdleState(true);
+                }
             }
 
             @Override
@@ -246,60 +235,66 @@ public class DatabaseHandler {
     }
 
     public boolean isPlacesListEmpty() {
-        boolean retval = false;
+        boolean return_value = false;
         placesLock();
         if (placesList.isEmpty())
-            retval = true;
+            return_value = true;
         placesUnlock();
-        return retval;
+        return return_value;
     }
 
     /**
      * add a new place to the database
      * @return 0 if OK
      */
-    public Integer addPlace(String name, String lat, String lon, String rating_pos, String rating_neg, String proct) {
+    public Integer addPlace(String name, String lat, String lon, String rating_pos, String rating_neg, String processing_time) {
 
-        DatabaseReference placeref = FirebaseDatabase.getInstance().getReference("places");
+        DatabaseReference place_reference = FirebaseDatabase.getInstance().getReference("places");
 
-        String placeId = placeref.push().getKey();
-        Place place = new Place(placeId, name, lat, lon, rating_pos, rating_neg, proct);
+        String placeId = place_reference.push().getKey();
+        Place place = new Place(placeId, name, lat, lon, rating_pos, rating_neg, processing_time);
 
         getPlacesLatch = new CountDownLatch(1);
-        placesIdlingResource.setIdleState(false);
-        placeref.child(placeId).setValue(place);
+        if (placesIdlingResource != null) {
+            placesIdlingResource.setIdleState(false);
+        }
+        place_reference.child(placeId).setValue(place);
         return 0;
     }
 
     /**
      * remove a place
-     * @param id
+     * @param id String
      * @return 0 if OK
      */
     public int removePlace(String id) {
 
-        DatabaseReference placeref = FirebaseDatabase.getInstance().getReference("places");
+        DatabaseReference place_reference = FirebaseDatabase.getInstance().getReference("places");
 
         getPlacesLatch = new CountDownLatch(1);
-        placesIdlingResource.setIdleState(false);
-        placeref.child(id).removeValue();
+        if (placesIdlingResource != null) {
+            placesIdlingResource.setIdleState(false);
+        }
+        place_reference.child(id).removeValue();
         return 0;
     }
 
     /**
      * change some attribute of a user
-     * @param id
-     * @param attribute
-     * @param value
+     * @param id String
+     * @param attribute String
+     * @param value String
      * @return 0 if successful
      */
-    public int modifyPlaceAttribute(String id, String attribute, String value) {
+    private int modifyPlaceAttribute(String id, String attribute, String value) {
 
-        DatabaseReference placesref = FirebaseDatabase.getInstance().getReference("places");
+        DatabaseReference places_reference = FirebaseDatabase.getInstance().getReference("places");
 
         getPlacesLatch = new CountDownLatch(1);
-        placesIdlingResource.setIdleState(false);
-        placesref.child(id).child(attribute).setValue(value);
+        if (placesIdlingResource != null) {
+            placesIdlingResource.setIdleState(false);
+        }
+        places_reference.child(id).child(attribute).setValue(value);
         return 0;
     }
 
@@ -322,7 +317,7 @@ public class DatabaseHandler {
         placesUnlock();
 
         // invalid id - return!
-        if (found == false)
+        if (!found)
             return;
 
         rating += 1;
@@ -348,7 +343,7 @@ public class DatabaseHandler {
         placesUnlock();
 
         // invalid id - return!
-        if (found == false)
+        if (!found)
             return;
 
         rating += 1;
@@ -392,18 +387,18 @@ public class DatabaseHandler {
      * read users table - this should only be ran once
      * @return 0 = OK ; <0 = error
      */
-    public Integer readUsersFromDB() {
+    private Integer readUsersFromDB() {
 
         // only call the function once
-        if (dbreader_users_active == true)
+        if (db_reader_users_active)
             return 0;
-        dbreader_users_active = true;
+        db_reader_users_active = true;
 
         getUsersLatch = new CountDownLatch(1);
 
-        final DatabaseReference usersref = mDatabase.child("users");
+        final DatabaseReference users_reference = mDatabase.child("users");
 
-        usersref.addValueEventListener(new ValueEventListener() {
+        users_reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("FB", "read users from DB");
@@ -420,7 +415,9 @@ public class DatabaseHandler {
 
                 // signal, that we are finished
                 getUsersLatch.countDown();
-                usersIdlingResource.setIdleState(true);
+                if (usersIdlingResource != null) {
+                    usersIdlingResource.setIdleState(true);
+                }
             }
 
             @Override
@@ -443,12 +440,12 @@ public class DatabaseHandler {
     }
 
     public boolean isUsersListEmpty() {
-        boolean retval = false;
+        boolean return_value = false;
         usersLock();
         if (usersList.isEmpty())
-            retval = true;
+            return_value = true;
         usersUnlock();
-        return retval;
+        return return_value;
     }
 
     /**
@@ -459,14 +456,16 @@ public class DatabaseHandler {
      */
     public int addUser(String name, String pw) {
 
-        DatabaseReference userref = FirebaseDatabase.getInstance().getReference("users");
+        DatabaseReference user_reference = FirebaseDatabase.getInstance().getReference("users");
 
-        String userId = userref.push().getKey();
+        String userId = user_reference.push().getKey();
         User user = new User(userId, name, pw, "0");
 
         getUsersLatch = new CountDownLatch(1);
-        usersIdlingResource.setIdleState(false);
-        userref.child(userId).setValue(user);
+        if (usersIdlingResource != null) {
+            usersIdlingResource.setIdleState(false);
+        }
+        user_reference.child(userId).setValue(user);
         return 0;
     }
 
@@ -477,28 +476,32 @@ public class DatabaseHandler {
      */
     public int removeUser(String id) {
 
-        DatabaseReference userref = FirebaseDatabase.getInstance().getReference("users");
+        DatabaseReference user_reference = FirebaseDatabase.getInstance().getReference("users");
 
         getUsersLatch = new CountDownLatch(1);
-        usersIdlingResource.setIdleState(false);
-        userref.child(id).removeValue();
+        if (usersIdlingResource != null) {
+            usersIdlingResource.setIdleState(false);
+        }
+        user_reference.child(id).removeValue();
         return 0;
     }
 
     /**
      * change some attribute of a user
-     * @param id
-     * @param attribute
-     * @param value
+     * @param id String
+     * @param attribute String
+     * @param value String
      * @return 0 if successful
      */
     public int modifyUserAttribute(String id, String attribute, String value) {
 
-        DatabaseReference usersref = FirebaseDatabase.getInstance().getReference("users");
+        DatabaseReference users_reference = FirebaseDatabase.getInstance().getReference("users");
 
         getUsersLatch = new CountDownLatch(1);
-        usersIdlingResource.setIdleState(false);
-        usersref.child(id).child(attribute).setValue(value);
+        if (usersIdlingResource != null) {
+            usersIdlingResource.setIdleState(false);
+        }
+        users_reference.child(id).child(attribute).setValue(value);
         return 0;
     }
 
@@ -520,7 +523,7 @@ public class DatabaseHandler {
         usersUnlock();
 
         // invalid user id - return!
-        if (found == false)
+        if (!found)
             return;
 
         // reset flag
@@ -535,7 +538,7 @@ public class DatabaseHandler {
         placesUnlock();
 
         // invalid place id - return!
-        if (found == false)
+        if (!found)
             return;
 
         modifyUserAttribute(userID, "idCheckInPlace" ,placeID);
@@ -557,7 +560,7 @@ public class DatabaseHandler {
         usersUnlock();
 
         // invalid user id - return!
-        if (found == false)
+        if (!found)
             return;
 
         modifyUserAttribute(userID, "idCheckInPlace" , "");
