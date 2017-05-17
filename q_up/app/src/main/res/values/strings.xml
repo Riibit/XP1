@@ -24,5 +24,7 @@
     <string name="myprofile">"My Profile"</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="info">Info</string>
+    <string name="PlaceDetails">Details</string>
 
 </resources>
