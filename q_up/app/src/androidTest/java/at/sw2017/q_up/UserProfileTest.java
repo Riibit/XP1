@@ -70,11 +70,13 @@ public class UserProfileTest {
         // prepare UiAutomator
         this.device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
+        // set up idling resources
         placesIdlingResource = QUpApp.getInstance().getDBHandler().getPlacesIdlingResource();
         Espresso.registerIdlingResources(placesIdlingResource);
         usersIdlingResource = QUpApp.getInstance().getDBHandler().getUsersIdlingResource();
         Espresso.registerIdlingResources(usersIdlingResource);
 
+        // log in
         Intents.init();
         onView( withId(R.id.inputName)).perform(click());
         onView( withId(R.id.inputName)).perform(typeText("hans"));
@@ -84,12 +86,10 @@ public class UserProfileTest {
 
         onView( withId(R.id.buttonLogin)).perform(click());
         intended(hasComponent(MapsActivity.class.getName()));
-
         Intents.release();
 
+        // go to my profile
         Intents.init();
-//        onView( withText("My Profile")).perform(click());
-//        onView( withId(R.id.buttonMapsBack)).perform(click());
         device.findObject(new UiSelector().text("My Profile")).click();
         intended(hasComponent(ProfileActivity.class.getName()));
         Intents.release();
@@ -110,42 +110,20 @@ public class UserProfileTest {
         Intents.release();
     }
 
-    @Test
-    public void testLogoutSwitch() {
-        Instrumentation.ActivityMonitor activityMonitor = getInstrumentation().addMonitor(MainActivity.class.getName(), null, false);
-
-        onView(withText("Log Out")).perform(click());
-
-        Activity nextActivity = getInstrumentation().waitForMonitorWithTimeout(activityMonitor, 5000);
-        assertNotNull(nextActivity);
-        nextActivity .finish();
-
-    }
-
+/*
     @Test
     public void testToggleButton() throws Exception {
         onView(withText("Show My Places")).perform(click());
-
     }
+*/
 
     @Test
     public void testMapButton() throws Exception {
-        onView(withText("Map")).perform(click());
-
+        Intents.init();
+        device.findObject(new UiSelector().text("Map")).click();
+        intended(hasComponent(MapsActivity.class.getName()));
+        Intents.release();
     }
-
-    @Test
-    public void testMapSwitch() {
-        Instrumentation.ActivityMonitor activityMonitor = getInstrumentation().addMonitor(MapsActivity.class.getName(), null, false);
-
-        onView(withText("Map")).perform(click());
-
-        Activity nextActivity = getInstrumentation().waitForMonitorWithTimeout(activityMonitor, 5000);
-        assertNotNull(nextActivity);
-        nextActivity .finish();
-
-    }
-
 }
 
 
