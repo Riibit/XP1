@@ -459,7 +459,7 @@ public class DatabaseHandler {
         DatabaseReference user_reference = FirebaseDatabase.getInstance().getReference("users");
 
         String userId = user_reference.push().getKey();
-        User user = new User(userId, name, pw, "0");
+        User user = new User(userId, name, pw, "");
 
         getUsersLatch = new CountDownLatch(1);
         if (usersIdlingResource != null) {

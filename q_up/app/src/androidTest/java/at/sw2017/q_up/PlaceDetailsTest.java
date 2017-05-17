@@ -9,6 +9,7 @@ import android.support.test.espresso.intent.Intents;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.test.uiautomator.BySelector;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiObjectNotFoundException;
@@ -24,6 +25,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+
+import java.lang.reflect.Field;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -135,12 +138,13 @@ public class PlaceDetailsTest {
         clickY -= 114;
         device.click(clickX, clickY);
 
+        SystemClock.sleep(500);
         intended(hasComponent(PlaceDetails.class.getName()));
         Intents.release();
     }
 
     @After
-    public void unregisterIntentServiceIdlingResource() {
+    public void zunregisterIntentServiceIdlingResource() {
         Log.d("TestPD", "After");
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         db_handle.removePlace(testplace_id);
@@ -149,7 +153,13 @@ public class PlaceDetailsTest {
     }
 
     @Test
-    public void testClickMarker() {
-
+    public void testClickInfo() throws Exception {
+        Log.d("TestPD", "testClickInfo");
+        Intents.init();
+        String resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.buttoninfo);
+        device.findObject(new UiSelector().resourceId(resName)).click();
+        //SystemClock.sleep(500);
+        intended(hasComponent(InfoActivity.class.getName()));
+        Intents.release();
     }
 }

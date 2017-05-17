@@ -154,9 +154,10 @@ public class PlaceDetails extends Activity implements OnClickListener {
     }
 
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
+        QUpApp.getInstance().setCurrentActivity(this);
+
         ButtonQ = (ToggleButton) findViewById(R.id.btn_qup);
         peopleInQueue = (TextView)findViewById(R.id.UserNr);
         ButtonQ.setOnClickListener(this);
@@ -178,6 +179,31 @@ public class PlaceDetails extends Activity implements OnClickListener {
         peopleInQueue.setText(Integer.toString(db_handle.getQueuedUserCountFromPlace(place_id)));
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        QUpApp.getInstance().setCurrentActivity(this);
+    }
+
+    @Override
+    protected void onPause() {
+        clearReferences();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        clearReferences();
+        super.onDestroy();
+    }
+
+    private void clearReferences(){
+        Activity currActivity = QUpApp.getInstance().getCurrentActivity();
+        if (this.equals(currActivity))
+            QUpApp.getInstance().setCurrentActivity(null);
+    }
+
 /*
     public static void setDefaults(String key,Boolean value,Context context)
     {
