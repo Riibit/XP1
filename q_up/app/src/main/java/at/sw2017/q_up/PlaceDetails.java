@@ -15,6 +15,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 public class PlaceDetails extends Activity implements OnClickListener {
 
@@ -26,6 +27,9 @@ public class PlaceDetails extends Activity implements OnClickListener {
     String decision = "YES";
     private Button ButtonLike;
     private Button ButtonDislike;
+    TextView peopleInQueue;
+
+
 
     ToggleButton ButtonQ;
 
@@ -154,11 +158,24 @@ public class PlaceDetails extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
         ButtonQ = (ToggleButton) findViewById(R.id.btn_qup);
+        peopleInQueue = (TextView)findViewById(R.id.UserNr);
         ButtonQ.setOnClickListener(this);
        // ButtonQ.setChecked(getDefaults("togglekey",this));
         //setDefaults("togglekey",ButtonQ.isChecked(),this);
+
         EvaluationOnTime();
         InfoButton();
+        getNumberOfUsers();
+        
+    }
+
+    public  void getNumberOfUsers()
+    {
+        Bundle bundle = getIntent().getExtras();
+        placeid  = bundle.getString("id");
+        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+        peopleInQueue.setText(Integer.toString(db_handle.getQueuedUserCountFromPlace(placeid)));
+
     }
 /*
     public static void setDefaults(String key,Boolean value,Context context)
@@ -184,19 +201,14 @@ public class PlaceDetails extends Activity implements OnClickListener {
             p.placeId
                 Toast.makeText(getApplicationContext(),
                         p.idCheckInPlace, Toast.LENGTH_SHORT).show();
-
         }
         db_handle.usersUnlock();
-
     }
     @Override
     public void onStop(){
         super.onStop();
         setDefaults("togglekey",ButtonQ.isChecked(),this);
-
-
     }
-
 */
     @Override
     public void onClick(View v) {
@@ -230,6 +242,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
                     "User checked out..", Toast.LENGTH_SHORT).show();
                 decision = "YES";
             }
+
 
 
 
