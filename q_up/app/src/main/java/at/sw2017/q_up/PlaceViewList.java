@@ -15,11 +15,11 @@ import java.util.ArrayList;
 
 public class PlaceViewList extends Activity {
 
-    public void mapsGoDetails(String id) {
+   /* public void mapsGoDetails(String id) {
         Intent intent2 = new Intent(PlaceViewList.this, PlaceDetails.class);
         intent2.putExtra("id", id);
         startActivity(intent2);
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

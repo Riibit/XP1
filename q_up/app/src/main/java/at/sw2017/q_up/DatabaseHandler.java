@@ -316,7 +316,7 @@ public class DatabaseHandler {
         for (Place p : placesList) {
             if (p.placeId.equals(id)) {
                 found = true;
-                rating = Integer.parseInt(p.ratingPos);
+                rating = Integer.parseInt(p.ratingPositive);
             }
         }
         placesUnlock();
@@ -342,7 +342,7 @@ public class DatabaseHandler {
         for (Place p : placesList) {
             if (p.placeId.equals(id)) {
                 found = true;
-                rating = Integer.parseInt(p.ratingNeg);
+                rating = Integer.parseInt(p.ratingNegative);
             }
         }
         placesUnlock();
