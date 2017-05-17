@@ -101,8 +101,8 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                 TextView txt_View_like = (TextView) findViewById(R.id.txt_like);
                                 TextView txt_View_dislike = (TextView) findViewById(R.id.txt_dislike);
                                 txt_View_title.setText(place.placeName);
-                                txt_View_like.setText(place.ratingPositive);
-                                txt_View_dislike.setText(place.ratingNegative);
+                                txt_View_like.setText(place.ratingPos);
+                                txt_View_dislike.setText(place.ratingNeg);
                                 LikeDislike();
                                 NumberQUP(db_handle.getQueuedUserCountFromPlace(place.placeId));
                                 title = place.placeName;
