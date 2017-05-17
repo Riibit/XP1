@@ -21,9 +21,9 @@ public class PlaceDetails extends Activity implements OnClickListener {
     static String id, title;
     static String userid;
     static String placeid;
-    DatabaseHandler db_handle;
-    String outplace;
-    String decision = "YES";
+    private DatabaseHandler db_handle;
+    private String outplace;
+    private boolean decision ;
     private Button ButtonLike;
     private Button ButtonDislike;
 
@@ -39,8 +39,11 @@ public class PlaceDetails extends Activity implements OnClickListener {
             @Override
             public void onClick(View v) {
                 db_handle.votePlacePositive(id);
+
                 ButtonLike.setEnabled(false);
                 ButtonDislike.setEnabled(false);
+
+
                 //ButtonLike.setVisibility(View.INVISIBLE);
 
             }
@@ -51,8 +54,10 @@ public class PlaceDetails extends Activity implements OnClickListener {
             @Override
             public void onClick(View v) {
                 db_handle.votePlaceNegative(id);
-                ButtonLike.setEnabled(false);
+                     ButtonLike.setEnabled(false);
                 ButtonDislike.setEnabled(false);
+
+
 
             }
         });
@@ -113,6 +118,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
 
 
 
+
                             }
                         });
                     }
@@ -155,6 +161,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
         setContentView(R.layout.activity_place_details);
         ButtonQ = (ToggleButton) findViewById(R.id.btn_qup);
         ButtonQ.setOnClickListener(this);
+        decision = false;
        // ButtonQ.setChecked(getDefaults("togglekey",this));
         //setDefaults("togglekey",ButtonQ.isChecked(),this);
         EvaluationOnTime();
@@ -220,19 +227,23 @@ public class PlaceDetails extends Activity implements OnClickListener {
             db_handle.checkUserIntoPlace(userid, placeid);
             Toast.makeText(getApplicationContext(),
                     "User checked in..", Toast.LENGTH_SHORT).show();
-                decision = "NO";
+                decision = false;
+
         }
         else {
             db_handle.checkOutOfPlace(userid);
             Toast.makeText(getApplicationContext(),
                     "User checked out..", Toast.LENGTH_SHORT).show();
-                decision = "YES";
+            decision = true;
+            ButtonLike.setEnabled(true);
+            ButtonDislike.setEnabled(true);
+
         }
     }
       @Override
     public void onBackPressed() {
 
-        if (decision.equals("NO")) {
+        if (!decision) {
             Toast.makeText(getApplicationContext(),
                     "You have to exit the queue first !", Toast.LENGTH_SHORT).show();
         } else {
