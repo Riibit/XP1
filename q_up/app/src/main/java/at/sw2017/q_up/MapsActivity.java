@@ -30,7 +30,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private List<Marker> marker_list = new ArrayList<Marker>();
-    private LocationManager locationManager;
 
     public void mapsGoBack() {
         Intent intent = new Intent(this, ProfileActivity.class);
