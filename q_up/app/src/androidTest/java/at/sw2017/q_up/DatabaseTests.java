@@ -224,7 +224,7 @@ public class DatabaseTests {
         assertNotNull(db_handle);
 
         // try to remove all testplaces
-        List<String> oldtestplaces_to_remove = new ArrayList<String>();
+        List<String> oldtestplaces_to_remove = new ArrayList<>();
         db_handle.placesLock();
         for (Place p : db_handle.getPlacesList()) {
             if (p.placeName.equals("testplace")) {
@@ -237,12 +237,15 @@ public class DatabaseTests {
         }
 
         long startTime = System.currentTimeMillis(); //fetch starting time
-        boolean finished = true;
+        boolean finished = false;
         while(!finished && (System.currentTimeMillis()-startTime) < 5000) {
             db_handle.placesLock();
+            finished = true;
             for (Place p : db_handle.getPlacesList()) {
-                if (p.placeName.equals("testplace"))
+                if (p.placeName.equals("testplace")) {
                     finished = false;
+                    break;
+                }
             }
             db_handle.placesUnlock();
         }
@@ -268,7 +271,7 @@ public class DatabaseTests {
         // clear out existing testplaces from db
         startTime = System.currentTimeMillis(); //fetch starting time
         finished = false;
-        List<String> testplaces_to_remove = new ArrayList<String>();
+        List<String> testplaces_to_remove = new ArrayList<>();
         while(!finished && (System.currentTimeMillis()-startTime) < 10000) {
             db_handle.placesLock();
             for (Place p : db_handle.getPlacesList()) {
@@ -286,7 +289,7 @@ public class DatabaseTests {
 
         //=== ADD TESTPLACES FOR DATABASE HERE =====================================================
 
-        List<Place> testplaces = new ArrayList<Place>();
+        List<Place> testplaces = new ArrayList<>();
         testplaces.add(new Place("", "Pail Coffee", "47.06", "15.4639", "0", "0", "10"));
         testplaces.add(new Place("", "Spar Market", "47.0608", "15.4682", "0", "0", "15"));
         testplaces.add(new Place("", "McDonalds", "47.055496", "15.448409", "0", "0", "15"));
@@ -296,7 +299,7 @@ public class DatabaseTests {
         //==========================================================================================
 
         // go through all places in the database
-        List<String> places_to_remove = new ArrayList<String>();
+        List<String> places_to_remove = new ArrayList<>();
         db_handle.placesLock();
         for (Place dbP : db_handle.getPlacesList()) {
             // for each place in the database - look through our local testplaces

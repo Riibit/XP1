@@ -24,6 +24,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
@@ -50,6 +53,7 @@ public class PlaceDetailsTest {
 
     private UiDevice device;
     private String testplace_id = "";
+    private String testuser_id = "";
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
@@ -75,7 +79,6 @@ public class PlaceDetailsTest {
         usersIdlingResource = QUpApp.getInstance().getDBHandler().getUsersIdlingResource();
         Espresso.registerIdlingResources(usersIdlingResource);
 
-        // create testplace
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         assertNotNull(db_handle);
 
@@ -86,6 +89,21 @@ public class PlaceDetailsTest {
                 break;
         }
         assertEquals(false, db_handle.isPlacesListEmpty());
+
+        // try to remove all old testplaces
+        List<String> oldtestplaces_to_remove = new ArrayList<>();
+        db_handle.placesLock();
+        for (Place p : db_handle.getPlacesList()) {
+            if (p.placeName.equals("testplace")) {
+                oldtestplaces_to_remove.add(p.placeId);
+            }
+        }
+        db_handle.placesUnlock();
+        for (String id : oldtestplaces_to_remove) {
+            db_handle.removePlace(id);
+        }
+
+        // create new testplace
 
         // add a place at center of camera: 47.0707, 15.4395
         db_handle.addPlace("testplace", "47.0707", "15.4395", "0", "0", "10");
@@ -104,15 +122,46 @@ public class PlaceDetailsTest {
         }
         assertNotEquals("", testplace_id);
 
+        // try to remove all old testusers
+        List<String> oldtestusers_to_remove = new ArrayList<>();
+        db_handle.usersLock();
+        for (User u : db_handle.getUsersList()) {
+            if (u.userName.equals("testCaseUser")) {
+                oldtestusers_to_remove.add(u.userId);
+            }
+        }
+        db_handle.usersUnlock();
+        for (String id : oldtestusers_to_remove) {
+            db_handle.removeUser(id);
+        }
+
+        // create testuser
+        db_handle.addUser("testCaseUser", "lalala");
+
+        startTime = System.currentTimeMillis(); //fetch starting time
+        boolean finished = false;
+        while(!finished && (System.currentTimeMillis()-startTime) < 5000) {
+            db_handle.usersLock();
+            for (User u : db_handle.getUsersList()) {
+                if (u.userName.equals("testCaseUser")) {
+                    finished = true;
+                    testuser_id = u.userId;
+                    break;
+                }
+            }
+            db_handle.usersUnlock();
+        }
+        assertEquals(true, finished);
+
         // log in
         Intents.init();
-        onView( withId(R.id.inputName)).perform(click());
-        onView( withId(R.id.inputName)).perform(typeText("hans"));
+        onView(withId(R.id.inputName)).perform(click());
+        onView(withId(R.id.inputName)).perform(typeText("testCaseUser"));
 
-        onView( withId(R.id.editTextPasswort)).perform(click());
-        onView( withId(R.id.editTextPasswort)).perform(typeText("password"));
+        onView(withId(R.id.editTextPasswort)).perform(click());
+        onView(withId(R.id.editTextPasswort)).perform(typeText("lalala"));
 
-        onView( withId(R.id.buttonLogin)).perform(click());
+        onView(withId(R.id.buttonLogin)).perform(click());
         intended(hasComponent(MapsActivity.class.getName()));
         Intents.release();
 
@@ -146,6 +195,7 @@ public class PlaceDetailsTest {
         Log.d("TestPD", "After");
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         db_handle.removePlace(testplace_id);
+        db_handle.removeUser(testuser_id);
         Espresso.unregisterIdlingResources(placesIdlingResource);
         Espresso.unregisterIdlingResources(usersIdlingResource);
     }
@@ -154,7 +204,7 @@ public class PlaceDetailsTest {
     public void testClickInfo() throws Exception {
         Log.d("TestPD", "testClickInfo");
         Intents.init();
-        onView( withId(R.id.buttoninfo)).perform(click());
+        onView(withId(R.id.buttoninfo)).perform(click());
         //String resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.buttoninfo);
         //device.findObject(new UiSelector().resourceId(resName)).click();
         intended(hasComponent(InfoActivity.class.getName()));
@@ -165,7 +215,7 @@ public class PlaceDetailsTest {
     public void testVotePositiveWithoutQueue() throws Exception {
         Log.d("TestPD", "testVotePositiveWithoutQueue");
         onView(withId(R.id.txt_like)).check(matches(withText("0")));
-        onView( withId(R.id.buttonlike)).perform(click());
+        onView(withId(R.id.buttonlike)).perform(click());
         onView(withId(R.id.txt_like)).check(matches(withText("0")));
     }
 
@@ -173,39 +223,32 @@ public class PlaceDetailsTest {
     public void testVoteNegativeWithoutQueue() throws Exception {
         Log.d("TestPD", "testVoteNegativeWithoutQueue");
         //String resName;
-
         // get count before click
         //resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.txt_dislike);
         //String oldnum = onView( withId(R.id.txt_dislike)).toString();
 
-
         onView(withId(R.id.txt_dislike)).check(matches(withText("0")));
 
-
-                //device.findObject(new UiSelector().resourceId(resName)).getText();
-       // assertNotEquals(oldnum, "");
+        //device.findObject(new UiSelector().resourceId(resName)).getText();
+        //assertNotEquals(oldnum, "");
 
         // click rating
-       // resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.buttondislike);
-       // device.findObject(new UiSelector().resourceId(resName)).click();
+        //resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.buttondislike);
+        //device.findObject(new UiSelector().resourceId(resName)).click();
 
-
-        onView( withId(R.id.buttondislike)).perform(click());
+        onView(withId(R.id.buttondislike)).perform(click());
 
         //SystemClock.sleep(1000);
-
         // check count again
         //resName = QUpApp.getInstance().getCurrentActivity().getResources().getResourceName(R.id.txt_dislike);
         //String newnum = device.findObject(new UiSelector().resourceId(resName)).getText();
-      //  String newnum = onView( withId(R.id.txt_dislike)).toString();
-
-
+        //String newnum = onView( withId(R.id.txt_dislike)).toString();
 
         onView(withId(R.id.txt_dislike)).check(matches(withText("0")));
-       // assertNotEquals(newnum, "");
+        //assertNotEquals(newnum, "");
 
         // number should stay the same without queuing up
-       // assertEquals(Integer.parseInt(oldnum), Integer.parseInt(newnum));
+        //assertEquals(Integer.parseInt(oldnum), Integer.parseInt(newnum));
     }
 
     @Test
@@ -228,16 +271,37 @@ public class PlaceDetailsTest {
         onView(withId(R.id.btn_qup)).perform(click());
         onView(withId(R.id.btn_qup)).check(matches(withText("Q UP!")));
 
-        // get count before click
-
+        // check count before click
+        onView(withId(R.id.txt_like)).check(matches(withText("0")));
 
         // click rating
-
+        onView(withId(R.id.buttonlike)).perform(click());
+        SystemClock.sleep(1000);
 
         // check count again
+        onView(withId(R.id.txt_like)).check(matches(withText("1")));
+    }
 
+    @Test
+    public void testVoteNegative() throws Exception {
+        Log.d("TestPD", "testVoteNegative");
 
-        // number should stay the same without queuing up
-        //assertEquals(Integer.parseInt(oldnum), Integer.parseInt(newnum));
+        // queue and exit queue
+        onView(withId(R.id.btn_qup)).check(matches(withText("Q UP!")));
+        onView(withId(R.id.btn_qup)).perform(click());
+        onView(withId(R.id.btn_qup)).check(matches(withText("EXIT Q")));
+        SystemClock.sleep(500);
+        onView(withId(R.id.btn_qup)).perform(click());
+        onView(withId(R.id.btn_qup)).check(matches(withText("Q UP!")));
+
+        // check count before click
+        onView(withId(R.id.txt_dislike)).check(matches(withText("0")));
+
+        // click rating
+        onView(withId(R.id.buttondislike)).perform(click());
+        SystemClock.sleep(1000);
+
+        // check count again
+        onView(withId(R.id.txt_dislike)).check(matches(withText("1")));
     }
 }
