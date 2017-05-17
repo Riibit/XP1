@@ -2,32 +2,23 @@ package at.sw2017.q_up;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnKeyListener;
+import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import android.view.View.OnKeyListener;
-import android.view.KeyEvent;
-
-
-import static junit.framework.Assert.assertEquals;
-
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
-    ViewPager viewPager;
     Button buttonLogin;
     Button registerNavigationButton;
     Button loginNavigationButton;
     EditText editTextUsername;
     EditText editTextPassword;
     static User currentUser;
-
-
-
 
     OnKeyListener myKeyListener = new OnKeyListener() {
         @Override
@@ -50,7 +41,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         buttonLogin = (Button) findViewById(R.id.buttonLogin);
         buttonLogin.setOnClickListener(this);
         registerNavigationButton = (Button) findViewById(R.id.registerNavigationButton);
@@ -62,8 +52,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         editTextPassword.setOnKeyListener(myKeyListener);
         editTextUsername.requestFocus();
-
-
     }
 
     @Override
@@ -79,10 +67,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         //QUpApp.getInstance().getDBHandler().removeAuthStListener();
     }
 
-
     public void switchActivities() {
-
-
         Intent mapIntent = new Intent(this, MapsActivity.class);
         startActivity(mapIntent);
     }
@@ -98,28 +83,30 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        final int DATABASE_TIMEOUT_TIME_IN_MS = 4000;
+        final String SERVER_TIMEOUT_ERROR = "Server timeout!";
+        final String LOGIN_SUCCESSFUL_MESSAGE = "Login successful!";
+        final String WRONG_LOGIN_DATA_ERROR = "Wrong username or password!";
+
         Button clickedButton = (Button) v;
         editTextUsername.requestFocus();
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-
         // check for DB timeout
-        int timeout = 4 * 1000;
         long startTime = System.currentTimeMillis(); //fetch starting time
         boolean data_ready = false;
 
-        while (!data_ready && (System.currentTimeMillis() - startTime) < timeout) {
+        while (!data_ready && (System.currentTimeMillis() - startTime) < DATABASE_TIMEOUT_TIME_IN_MS) {
             if (!db_handle.isUsersListEmpty())
                 data_ready = true;
         }
-        if (data_ready != true) {
+        if (!data_ready) {
             Toast.makeText(getApplicationContext(),
-                    "Server timeout!", Toast.LENGTH_SHORT).show();
+                    SERVER_TIMEOUT_ERROR, Toast.LENGTH_SHORT).show();
             return;
         }
 
         switch (clickedButton.getId()) {
             case R.id.buttonLogin:
-
                 // look for username in our list
                 db_handle.usersLock();
                 for (User u : db_handle.getUsersList()) {
@@ -130,9 +117,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                             // given password matches entry in database
 
                             Toast.makeText(getApplicationContext(),
-                                    "Login successful!", Toast.LENGTH_SHORT).show();
+                                    LOGIN_SUCCESSFUL_MESSAGE, Toast.LENGTH_SHORT).show();
                             currentUser = u;
-
                             switchActivities();
                             db_handle.usersUnlock();
                             return;
@@ -143,11 +129,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 db_handle.usersUnlock();
 
                 Toast.makeText(getApplicationContext(),
-                        "Wrong username or password!", Toast.LENGTH_SHORT).show();
+                        WRONG_LOGIN_DATA_ERROR, Toast.LENGTH_SHORT).show();
                 editTextUsername.setText("");
                 editTextPassword.setText("");
                 editTextUsername.requestFocus();
-
                 break;
             case R.id.registerNavigationButton:
                 switchLoginRegister();
