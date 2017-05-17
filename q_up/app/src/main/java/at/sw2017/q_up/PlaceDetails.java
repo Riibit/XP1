@@ -15,6 +15,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 public class PlaceDetails extends Activity implements OnClickListener {
 
@@ -26,6 +27,10 @@ public class PlaceDetails extends Activity implements OnClickListener {
     private boolean decision ;
     private Button ButtonLike;
     private Button ButtonDislike;
+    TextView peopleInQueue;
+    boolean QdUP;
+
+
 
     ToggleButton ButtonQ;
 
@@ -113,7 +118,13 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                 txtViewlike.setText(place.ratingPos);
                                 txtViewdislike.setText(place.ratingNeg);
                                 LikeDislike();
-                                NumberQUP(db_handle.getQueuedUserCountFromPlace(place.placeId));
+                                getNumberOfUsers();
+                                if(QdUP == true) {
+                                    TextView txtViewNumberQUP = (TextView) findViewById(R.id.txtView_numberqup);
+                                    txtViewNumberQUP.setText("You are queued up");
+                                }
+                                else
+                                    NumberQUP(db_handle.getQueuedUserCountFromPlace(place.placeId));
                                 title = place.placeName;
 
 
@@ -160,12 +171,25 @@ public class PlaceDetails extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
         ButtonQ = (ToggleButton) findViewById(R.id.btn_qup);
+        peopleInQueue = (TextView)findViewById(R.id.UserNr);
         ButtonQ.setOnClickListener(this);
         decision = false;
        // ButtonQ.setChecked(getDefaults("togglekey",this));
         //setDefaults("togglekey",ButtonQ.isChecked(),this);
+
         EvaluationOnTime();
         InfoButton();
+        getNumberOfUsers();
+
+    }
+
+    public  void getNumberOfUsers()
+    {
+        Bundle bundle = getIntent().getExtras();
+        placeid  = bundle.getString("id");
+        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+        peopleInQueue.setText(Integer.toString(db_handle.getQueuedUserCountFromPlace(placeid)));
+
     }
 /*
     public static void setDefaults(String key,Boolean value,Context context)
@@ -191,19 +215,14 @@ public class PlaceDetails extends Activity implements OnClickListener {
             p.placeId
                 Toast.makeText(getApplicationContext(),
                         p.idCheckInPlace, Toast.LENGTH_SHORT).show();
-
         }
         db_handle.usersUnlock();
-
     }
     @Override
     public void onStop(){
         super.onStop();
         setDefaults("togglekey",ButtonQ.isChecked(),this);
-
-
     }
-
 */
     @Override
     public void onClick(View v) {
@@ -222,19 +241,17 @@ public class PlaceDetails extends Activity implements OnClickListener {
                 if (u.userName.equals(Username)) {
                     userid = u.userId;
                 }
+                }
+                db_handle.usersUnlock();
             }
             db_handle.usersUnlock();
             db_handle.checkUserIntoPlace(userid, placeid);
-            Toast.makeText(getApplicationContext(),
-                    "User checked in..", Toast.LENGTH_SHORT).show();
-                decision = false;
+                QdUP = true;
 
         }
         else {
             db_handle.checkOutOfPlace(userid);
-            Toast.makeText(getApplicationContext(),
-                    "User checked out..", Toast.LENGTH_SHORT).show();
-            decision = true;
+                QdUP = false;
             ButtonLike.setEnabled(true);
             ButtonDislike.setEnabled(true);
 
