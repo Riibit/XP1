@@ -227,37 +227,43 @@ public class PlaceDetails extends Activity implements OnClickListener {
     @Override
     public void onClick(View v) {
 
-        ToggleButton clicked = (ToggleButton)v;
+        ToggleButton clicked = (ToggleButton) v;
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         String Username = (MainActivity.currentUser.userName);
         Bundle bundle = getIntent().getExtras();
-        placeid  = bundle.getString("id");
+        placeid = bundle.getString("id");
         String text = (String) clicked.getText();
 
 
-        if(clicked.isChecked() == true) {
+        if (clicked.isChecked())
+        {
             db_handle.usersLock();
             for (User u : db_handle.getUsersList()) {
                 if (u.userName.equals(Username)) {
                     userid = u.userId;
                 }
-                }
-                db_handle.usersUnlock();
             }
             db_handle.usersUnlock();
-            db_handle.checkUserIntoPlace(userid, placeid);
-                QdUP = true;
-
+        db_handle.checkUserIntoPlace(userid, placeid);
+        QdUP = true;
+        decision = true;
         }
-        else {
+
+
+        else
+            {
             db_handle.checkOutOfPlace(userid);
                 QdUP = false;
+                decision = false;
             ButtonLike.setEnabled(true);
             ButtonDislike.setEnabled(true);
 
         }
+
     }
-      @Override
+
+
+    @Override
     public void onBackPressed() {
 
         if (!decision) {
