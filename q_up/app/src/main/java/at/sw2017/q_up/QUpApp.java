@@ -1,5 +1,6 @@
 package at.sw2017.q_up;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
@@ -12,6 +13,7 @@ import android.content.Context;
 public class QUpApp extends Application {
     private static QUpApp instance;
     private DatabaseHandler dbHandler;
+    private Activity mCurrentActivity = null;
 
     public static QUpApp getInstance() {
         return instance;
@@ -28,5 +30,13 @@ public class QUpApp extends Application {
         instance = this;
         super.onCreate();
         dbHandler = new DatabaseHandler();
+    }
+
+    public Activity getCurrentActivity(){
+        return mCurrentActivity;
+    }
+
+    public void setCurrentActivity(Activity mCurrentActivity){
+        this.mCurrentActivity = mCurrentActivity;
     }
 }
