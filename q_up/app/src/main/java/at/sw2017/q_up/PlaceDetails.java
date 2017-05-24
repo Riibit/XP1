@@ -2,10 +2,12 @@ package at.sw2017.q_up;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.Rating;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -18,11 +20,13 @@ public class PlaceDetails extends Activity implements OnClickListener {
     static String user_id;
     static String place_id;
 
+
     private DatabaseHandler db_handle;
     private String peopleinQ,Qtime;
     private boolean decision ;
     private Button ButtonLike;
     private Button ButtonDislike;
+    private RatingBar ratingbar;
     TextView peopleInQueue;
     boolean QdUP;
     Calendar cal;
@@ -128,15 +132,34 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                         ButtonDislike.setVisibility(View.VISIBLE);
                                         txtViewlike.setVisibility(View.VISIBLE);
                                         txtViewdislike.setVisibility(View.VISIBLE);
+                                        ratingbar.setVisibility(View.GONE);
                                         TextView txtViewNumberQUP = (TextView) findViewById(R.id.txtView_numberqup);
                                         txtViewNumberQUP.setText("You are queued up");
                                     }
                                     else {
+                                        int like = Integer.valueOf(txtViewlike.getText().toString());
+                                        int dislike = Integer.valueOf(txtViewdislike.getText().toString());
+                                        float stern = (((float)like) / ((float)like+(float)dislike))*100;
+                                        ratingbar.setVisibility(View.VISIBLE);
+                                        if((int)stern >=90)
+                                            ratingbar.setRating(5);
+                                        else if((int)stern >=75)
+                                            ratingbar.setRating(4);
+                                        else if((int)stern >=60)
+                                            ratingbar.setRating(3);
+                                        else if((int)stern >=45)
+                                            ratingbar.setRating(2);
+                                        else if((int)stern >=30)
+                                            ratingbar.setRating(1);
+                                        else
+                                            ratingbar.setRating(0);
                                         NumberQUP(db_handle.getQueuedUserCountFromPlace(id));
                                         ButtonLike.setVisibility(View.GONE);
                                         ButtonDislike.setVisibility(View.GONE);
                                         txtViewlike.setVisibility(View.GONE);
                                         txtViewdislike.setVisibility(View.GONE);
+
+
                                     }
                                     title = place.placeName;
                                 }
@@ -180,6 +203,8 @@ public class PlaceDetails extends Activity implements OnClickListener {
         QUpApp.getInstance().setCurrentActivity(this);
 
         ButtonQ = (ToggleButton) findViewById(R.id.btn_qup);
+        ratingbar = (RatingBar)findViewById(R.id.ratingBar);
+        ratingbar.setFocusable(false);
         peopleInQueue = (TextView)findViewById(R.id.UserNr);
         time_1 = (TextView) findViewById(R.id.time8);
         ButtonQ.setOnClickListener(this);

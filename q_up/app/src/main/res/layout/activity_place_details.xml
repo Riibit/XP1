@@ -150,5 +150,18 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttondislike" />
 
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:rating="5"
+        android:isIndicator="true"
+        android:focusable="false"
+        android:clickable="false"
+        app:layout_constraintTop_toBottomOf="@+id/txt_like"
+        app:layout_constraintRight_toLeftOf="@+id/buttondislike"
+        android:layout_marginRight="-162dp" />
+
 
 </android.support.constraint.ConstraintLayout>
