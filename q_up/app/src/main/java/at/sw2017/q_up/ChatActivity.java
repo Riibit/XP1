@@ -37,8 +37,6 @@ public class ChatActivity extends AppCompatActivity {
 
                     // Clear the input
                     input.setText("");
-                    
-                    // TODO - scroll to bottom!
                 }
             }
         });
