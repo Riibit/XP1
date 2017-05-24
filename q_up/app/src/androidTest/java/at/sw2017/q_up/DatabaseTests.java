@@ -290,10 +290,10 @@ public class DatabaseTests {
         //=== ADD TESTPLACES FOR DATABASE HERE =====================================================
 
         List<Place> testplaces = new ArrayList<>();
-        testplaces.add(new Place("", "Pail Coffee", "47.06", "15.4639", "0", "0", "300", "www.pailcoffee.at", "Mo-Fr: 08.00 - 16.00", "Klosterwiesgasse 5"));
+        testplaces.add(new Place("", "Pail Coffee", "47.06", "15.4639", "0", "0", "300", "www.facebook.com/pages/Cafe-Pail/224103501023336", "Mo-Fr: 08.00 - 16.00", "Klosterwiesgasse 5"));
         testplaces.add(new Place("", "Spar Market", "47.0608", "15.4682", "0", "0", "150", "www.spar.at", "Mo-Sa 07.00 - 19.30", "Friedrichgasse 15"));
         testplaces.add(new Place("", "McDonalds", "47.055496", "15.448409", "0", "0", "200", "www.mcdonalds.at", "Mo-So 06.00 - 24.00", "Jakominiplatz 10"));
-        testplaces.add(new Place("", "Davinci", "47.054160", "15.444241", "0", "0", "220", "www.davinic.at", "Mo-Fr 09.00 - 24.00", "Fröhlichgasse 10"));
+        testplaces.add(new Place("", "Davinci", "47.054160", "15.444241", "0", "0", "220", "www.davinci-pizza.at", "Mo-Fr 09.00 - 24.00", "Fröhlichgasse 10"));
         testplaces.add(new Place("", "Hofer", "47.055717", "15.441392", "0", "0", "150", "www.hofer.at", "Mo-Fr 08.00 - 19.00", "Lendplatz 10"));
 
         //==========================================================================================

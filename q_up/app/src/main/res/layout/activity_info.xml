@@ -73,7 +73,8 @@
         app:layout_constraintHorizontal_bias="0.239"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtView_title_latitude" />
+        app:layout_constraintTop_toBottomOf="@+id/txtView_title_latitude"
+        android:autoLink="web" />
 
     <TextView
         android:id="@+id/txtview_opening"
