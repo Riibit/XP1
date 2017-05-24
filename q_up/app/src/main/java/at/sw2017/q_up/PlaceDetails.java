@@ -17,6 +17,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
     static String id, title;
     static String user_id;
     static String place_id;
+    static Place current_place;
 
     private DatabaseHandler db_handle;
     private String peopleinQ,Qtime;
@@ -36,7 +37,9 @@ public class PlaceDetails extends Activity implements OnClickListener {
 
     ToggleButton ButtonQ;
 
-
+    public static Place getCurrentPlace() {
+        return current_place;
+    }
 
 
     private void LikeDislike()
@@ -114,6 +117,8 @@ public class PlaceDetails extends Activity implements OnClickListener {
 
                                 if (place != null)
                                 {
+                                    current_place = place;
+
                                     TextView txtViewtitle = (TextView) findViewById(R.id.txtview_title);
                                     TextView txtViewlike = (TextView) findViewById(R.id.txt_like);
                                     TextView txtViewdislike = (TextView) findViewById(R.id.txt_dislike);
