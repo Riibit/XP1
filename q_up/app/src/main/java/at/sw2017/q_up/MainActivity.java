@@ -26,7 +26,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
     EditText editTextPassword;
     RelativeLayout waitingAnimation;
     TextView waitingText;
-    Handler mainHandler;
 
     static User currentUser;
     private static MainActivity instance;
@@ -45,28 +44,31 @@ public class MainActivity extends Activity implements View.OnClickListener {
     };
 
     public void serverReady() {
-        //if(SaveSharedPreference.getUserName(QUpApp.getContext()).length() != 0)
-        //{
-        //    DatabaseHandler db_handler = QUpApp.getInstance().getDBHandler();
-        //    currentUser = db_handler.getUserFromName(SaveSharedPreference.getUserName(QUpApp.getContext()));
-        //    waitingAnimation = (RelativeLayout)findViewById(R.id.waitingAnimation);
-        //    waitingAnimation.setVisibility(RelativeLayout.GONE);
-        //    waitingText = (TextView)findViewById(R.id.waitingText);
-        //    waitingText.setVisibility(TextView.GONE);
-        //    switchActivities();
-        //}
-        //else
+        waitingAnimation = (RelativeLayout)findViewById(R.id.waitingAnimation);
+        waitingAnimation.setVisibility(RelativeLayout.GONE);
+        waitingText = (TextView)findViewById(R.id.waitingText);
+        waitingText.setVisibility(TextView.GONE);
+
+        if (SaveSharedPreference.getUserName(QUpApp.getContext()).length() != 0)
+        {
+            DatabaseHandler db_handler = QUpApp.getInstance().getDBHandler();
+            currentUser = db_handler.getUserFromName(SaveSharedPreference.getUserName(QUpApp.getContext()));
+        }
+        else
+            currentUser = null;
+
+        if (currentUser != null) {
+            switchActivities();
+        }
+        else
         {
             //setContentView(R.layout.activity_main);
-            waitingAnimation = (RelativeLayout)findViewById(R.id.waitingAnimation);
-            waitingAnimation.setVisibility(RelativeLayout.GONE);
-            waitingText = (TextView)findViewById(R.id.waitingText);
-            waitingText.setVisibility(TextView.GONE);
             buttonLogin.setVisibility(Button.VISIBLE);
             registerNavigationButton.setVisibility(Button.VISIBLE);
             loginNavigationButton.setVisibility(Button.VISIBLE);
             editTextUsername.setVisibility(EditText.VISIBLE);
             editTextPassword.setVisibility(EditText.VISIBLE);
+            editTextUsername.requestFocus();
         }
     }
 
@@ -84,7 +86,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         editTextUsername = (EditText) findViewById(R.id.inputName);
         editTextPassword = (EditText) findViewById(R.id.editTextPasswort);
         editTextPassword.setOnKeyListener(myKeyListener);
-        editTextUsername.requestFocus();
 
         EvaluationOnTime();
     }
@@ -102,7 +103,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                             @Override
                             public void run() {
                                 DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-                                if (db_handle.getInitDone())
+                                if (db_handle.getInitDone() && findViewById(R.id.waitingAnimation).getVisibility() == VISIBLE)
                                 {
                                     findViewById(R.id.waitingAnimation).post(new Runnable()
                                     {
@@ -112,6 +113,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                                             serverReady();
                                         }
                                     });
+                                    Thread.currentThread().interrupt();
                                 }
                             }
                         });
@@ -160,7 +162,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     public void switchActivities() {
-        Intent mapIntent = new Intent(this, MapsActivity.class);
+        Intent mapIntent = new Intent(MainActivity.this, MapsActivity.class);
         startActivity(mapIntent);
     }
 
