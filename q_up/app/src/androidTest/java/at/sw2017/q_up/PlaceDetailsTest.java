@@ -295,7 +295,7 @@ public class PlaceDetailsTest {
         onView(withId(R.id.btn_qup)).perform(click());
         onView(withId(R.id.btn_qup)).check(matches(withText("EXIT Q")));
         SystemClock.sleep(100);
-        
+
         // check count before click
         onView(withId(R.id.txt_dislike)).check(matches(withText("0")));
 
