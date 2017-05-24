@@ -26,19 +26,20 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 EditText input = (EditText) findViewById(R.id.input);
 
-                Place p = PlaceDetails.getCurrentPlace();
-                // Read the input field and push a new instance
-                // of ChatMessage to the Firebase database
-                FirebaseDatabase.getInstance()
-                        .getReference("chats")
-                        .child(p.placeId)
-                        .push()
-                        .setValue(new ChatMessage(input.getText().toString(),
-                                MainActivity.getUser().userName)
-                        );
+                // avoid sending empty messages
+                if (!input.getText().toString().equals("")) {
+                    Place p = PlaceDetails.getCurrentPlace();
+                    // Read the input field and push a new instance
+                    // of ChatMessage to the Firebase database
+                    FirebaseDatabase.getInstance().getReference("chats").child(p.placeId).push()
+                            .setValue(new ChatMessage(input.getText().toString(), MainActivity.getUser().userName)
+                            );
 
-                // Clear the input
-                input.setText("");
+                    // Clear the input
+                    input.setText("");
+                    
+                    // TODO - scroll to bottom!
+                }
             }
         });
     }
@@ -46,9 +47,10 @@ public class ChatActivity extends AppCompatActivity {
 
     private void displayChatMessages() {
         ListView listOfMessages = (ListView) findViewById(R.id.list_of_messages);
+        Place p = PlaceDetails.getCurrentPlace();
 
         adapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class,
-                R.layout.message, FirebaseDatabase.getInstance().getReference()) {
+                R.layout.message, FirebaseDatabase.getInstance().getReference("chats").child(p.placeId)) {
             @Override
             protected void populateView(View v, ChatMessage model, int position) {
                 // Get references to the views of message.xml
