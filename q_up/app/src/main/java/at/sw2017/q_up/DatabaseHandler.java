@@ -383,6 +383,23 @@ public class DatabaseHandler {
         return "";
     }
 
+    /**
+     * get average processing time (seconds) for a place
+     * @param id id of place
+     * @return -1 if place was not found, seconds otherwise
+     */
+    public int getPlaceAvgProcessingSecsFromId(String id) {
+        placesLock();
+        for (Place p : placesList) {
+            if (p.placeId.equals(id)) {
+                placesUnlock();
+                return Integer.parseInt(p.avgProcessingSecs);
+            }
+        }
+        placesUnlock();
+        return -1;
+    }
+
     public Place getPlaceFromId(String id) {
         placesLock();
         for (Place p : placesList) {
