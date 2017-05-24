@@ -259,12 +259,13 @@ public class DatabaseHandler {
      * add a new place to the database
      * @return 0 if OK
      */
-    public Integer addPlace(String name, String lat, String lon, String rating_pos, String rating_neg, String processing_time) {
+    public Integer addPlace(String name, String lat, String lon, String rating_pos, String rating_neg, String processing_time, String link,
+                            String op_hours, String address) {
 
         DatabaseReference place_reference = FirebaseDatabase.getInstance().getReference("places");
 
         String placeId = place_reference.push().getKey();
-        Place place = new Place(placeId, name, lat, lon, rating_pos, rating_neg, processing_time);
+        Place place = new Place(placeId, name, lat, lon, rating_pos, rating_neg, processing_time, link, op_hours, address);
 
         getPlacesLatch = new CountDownLatch(1);
         if (placesIdlingResource != null) {
