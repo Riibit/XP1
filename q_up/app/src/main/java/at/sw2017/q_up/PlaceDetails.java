@@ -102,7 +102,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                 Bundle bundle = getIntent().getExtras();
                                 id  = bundle.getString("id");
                                 db_handle = QUpApp.getInstance().getDBHandler();
-                                Place place = new Place();
+                                Place place = null;
                                 db_handle.placesLock();
                                 for (Place p : db_handle.getPlacesList()) {
                                     if (p.placeId.equals(id)) {
@@ -112,21 +112,24 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                 }
                                 db_handle.placesUnlock();
 
-                                TextView txtViewtitle = (TextView) findViewById(R.id.txtview_title);
-                                TextView txtViewlike = (TextView) findViewById(R.id.txt_like);
-                                TextView txtViewdislike = (TextView) findViewById(R.id.txt_dislike);
-                                txtViewtitle.setText(place.placeName);
-                                txtViewlike.setText(place.ratingPos);
-                                txtViewdislike.setText(place.ratingNeg);
-                                LikeDislike();
-                                getNumberOfUsers();
-                                if(QdUP == true) {
-                                    TextView txtViewNumberQUP = (TextView) findViewById(R.id.txtView_numberqup);
-                                    txtViewNumberQUP.setText("You are queued up");
+                                if (place != null)
+                                {
+                                    TextView txtViewtitle = (TextView) findViewById(R.id.txtview_title);
+                                    TextView txtViewlike = (TextView) findViewById(R.id.txt_like);
+                                    TextView txtViewdislike = (TextView) findViewById(R.id.txt_dislike);
+                                    txtViewtitle.setText(place.placeName);
+                                    txtViewlike.setText(place.ratingPos);
+                                    txtViewdislike.setText(place.ratingNeg);
+                                    LikeDislike();
+                                    getNumberOfUsers();
+                                    if(QdUP == true) {
+                                        TextView txtViewNumberQUP = (TextView) findViewById(R.id.txtView_numberqup);
+                                        txtViewNumberQUP.setText("You are queued up");
+                                    }
+                                    else
+                                        NumberQUP(db_handle.getQueuedUserCountFromPlace(place.placeId));
+                                    title = place.placeName;
                                 }
-                                else
-                                    NumberQUP(db_handle.getQueuedUserCountFromPlace(place.placeId));
-                                title = place.placeName;
                             }
                         });
                     }
