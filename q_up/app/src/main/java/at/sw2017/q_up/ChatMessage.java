@@ -13,11 +13,10 @@ public class ChatMessage {
         this.messageUser = messageUser;
 
         // Initialize to current time
-        messageTime = new Date().getTime();
+        this.messageTime = new Date().getTime();
     }
 
-    public ChatMessage(){
-
+    public ChatMessage() {
     }
 
     public String getMessageText() {
