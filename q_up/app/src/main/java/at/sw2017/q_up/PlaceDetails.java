@@ -1,11 +1,8 @@
 package at.sw2017.q_up;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -14,8 +11,6 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.Calendar;
-import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 public class PlaceDetails extends Activity implements OnClickListener {
 
@@ -24,7 +19,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
     static String place_id;
 
     private DatabaseHandler db_handle;
-    private String outplace;
     private boolean decision ;
     private Button ButtonLike;
     private Button ButtonDislike;
@@ -115,32 +109,27 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                 Bundle bundle = getIntent().getExtras();
                                 id  = bundle.getString("id");
                                 db_handle = QUpApp.getInstance().getDBHandler();
-                                Place place = new Place();
-                                db_handle.placesLock();
-                                for (Place p : db_handle.getPlacesList()) {
-                                    if (p.placeId.equals(id)) {
-                                        place = p;
-                                        break;
-                                    }
-                                }
-                                db_handle.placesUnlock();
+                                Place place = db_handle.getPlaceFromId(id);
 
-                                TextView txtViewtitle = (TextView) findViewById(R.id.txtview_title);
-                                TextView txtViewlike = (TextView) findViewById(R.id.txt_like);
-                                TextView txtViewdislike = (TextView) findViewById(R.id.txt_dislike);
-                                txtViewtitle.setText(place.placeName);
-                                txtViewlike.setText(place.ratingPos);
-                                txtViewdislike.setText(place.ratingNeg);
-                                LikeDislike();
-                                Chat();
-                                getNumberOfUsers();
-                                if(QdUP == true) {
-                                    TextView txtViewNumberQUP = (TextView) findViewById(R.id.txtView_numberqup);
-                                    txtViewNumberQUP.setText("You are queued up");
+                                if (place != null)
+                                {
+                                    TextView txtViewtitle = (TextView) findViewById(R.id.txtview_title);
+                                    TextView txtViewlike = (TextView) findViewById(R.id.txt_like);
+                                    TextView txtViewdislike = (TextView) findViewById(R.id.txt_dislike);
+                                    txtViewtitle.setText(place.placeName);
+                                    txtViewlike.setText(place.ratingPos);
+                                    txtViewdislike.setText(place.ratingNeg);
+                                    LikeDislike();
+                                    Chat();
+                                    getNumberOfUsers();
+                                    if(QdUP == true) {
+                                        TextView txtViewNumberQUP = (TextView) findViewById(R.id.txtView_numberqup);
+                                        txtViewNumberQUP.setText("You are queued up");
+                                    }
+                                    else
+                                        NumberQUP(db_handle.getQueuedUserCountFromPlace(id));
+                                    title = place.placeName;
                                 }
-                                else
-                                    NumberQUP(db_handle.getQueuedUserCountFromPlace(place.placeId));
-                                title = place.placeName;
                             }
                         });
                     }
@@ -251,8 +240,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
 */
     @Override
     public void onClick(View v) {
-        final String CHECKED_IN_MSG = "User checked in..";
-        final String CHECKED_OUT_MSG = "User checked out..";
         ToggleButton clicked = (ToggleButton)v;
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         String Username = (MainActivity.currentUser.userName);

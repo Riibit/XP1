@@ -96,7 +96,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
             case R.id.registerButton:
 
                 if (!inputPassword.getText().toString().equals(confirmPassword.getText().toString()) ||
-                        inputPassword.getText().toString() == "")
+                        inputPassword.getText().toString().equals(""))
                 {
                     Toast.makeText(getApplicationContext(),
                             "Passwords don't match / are too weak!", Toast.LENGTH_SHORT).show();

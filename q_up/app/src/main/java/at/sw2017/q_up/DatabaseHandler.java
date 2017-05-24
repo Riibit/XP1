@@ -383,6 +383,18 @@ public class DatabaseHandler {
         return "";
     }
 
+    public Place getPlaceFromId(String id) {
+        placesLock();
+        for (Place p : placesList) {
+            if (p.placeId.equals(id)) {
+                placesUnlock();
+                return p;
+            }
+        }
+        placesUnlock();
+        return null;
+    }
+
     /**
      * read users table - this should only be ran once
      * @return 0 = OK ; <0 = error
