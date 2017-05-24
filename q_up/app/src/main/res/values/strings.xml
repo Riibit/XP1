@@ -27,4 +27,6 @@
     <string name="info">Info</string>
     <string name="PlaceDetails">Details</string>
 
+    <string name="chatButton">Chat!</string>
+
 </resources>

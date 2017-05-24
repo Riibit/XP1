@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    DatabaseHandler db_handle;
     User currentUser = MainActivity.getUser();
 
     @Override
@@ -18,15 +17,8 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         TextView usernameText = (TextView) findViewById(R.id.textView);
-        TextView currentPlace = (TextView) findViewById(R.id.textViewQueuePlace);
 
         usernameText.setText(currentUser.userName);
-
-        db_handle = QUpApp.getInstance().getDBHandler();
-        Place p = db_handle.getPlaceFromId(currentUser.idCheckInPlace);
-        if (p != null) {
-            currentPlace.setText(p.placeName);
-        }
 
         Button buttonMap =(Button) findViewById(R.id.buttonMap);
         buttonMap.setRotation(270);
