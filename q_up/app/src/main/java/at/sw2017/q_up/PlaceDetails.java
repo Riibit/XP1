@@ -198,7 +198,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
         Bundle bundle = getIntent().getExtras();
         place_id  = bundle.getString("id");
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-        peopleinQ = "Peope in queue:" + Integer.toString(db_handle.getQueuedUserCountFromPlace(placeid));
+        peopleinQ = "Peope in queue:" + Integer.toString(db_handle.getQueuedUserCountFromPlace(place_id));
         peopleInQueue.setText(peopleinQ);
 
     }
