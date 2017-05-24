@@ -18,6 +18,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
     static String user_id;
     static String place_id;
     static Place current_place;
+    private Bundle bundle;
 
     private DatabaseHandler db_handle;
     private String peopleinQ,Qtime;
@@ -31,6 +32,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
     int end;
     int time;
     TextView time_1;
+    private Intent intent;
 
 
 
@@ -88,7 +90,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
         ButtonInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PlaceDetails.this, InfoActivity.class);
+                intent = new Intent(PlaceDetails.this, InfoActivity.class);
                 intent.putExtra("title", title);
                 intent.putExtra("id", id);
                 startActivity(intent);
@@ -110,7 +112,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
                             @Override
                             public void run() {
 
-                                Bundle bundle = getIntent().getExtras();
+                                bundle = getIntent().getExtras();
                                 id  = bundle.getString("id");
                                 db_handle = QUpApp.getInstance().getDBHandler();
                                 Place place = db_handle.getPlaceFromId(id);
@@ -134,7 +136,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                     }
                                     else
                                         NumberQUP(db_handle.getQueuedUserCountFromPlace(id));
-                                    title = place.placeName;
+                                    //title = place.placeName;
                                 }
                             }
                         });
@@ -198,9 +200,10 @@ public class PlaceDetails extends Activity implements OnClickListener {
 
     }
 
+
     public  void getNumberOfUsers()
     {
-        Bundle bundle = getIntent().getExtras();
+        bundle = getIntent().getExtras();
         place_id  = bundle.getString("id");
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         peopleinQ = "Peope in queue:" + Integer.toString(db_handle.getQueuedUserCountFromPlace(place_id));
@@ -211,6 +214,13 @@ public class PlaceDetails extends Activity implements OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
+        bundle = getIntent().getExtras();
+        id  = bundle.getString("id");
+        db_handle = QUpApp.getInstance().getDBHandler();
+        current_place = db_handle.getPlaceFromId(id);
+        NumberQUP(db_handle.getQueuedUserCountFromPlace(id));
+        title = current_place.placeName;
+
     }
 /*
     public static void setDefaults(String key,Boolean value,Context context)
@@ -250,7 +260,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
         ToggleButton clicked = (ToggleButton)v;
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         String Username = (MainActivity.currentUser.userName);
-        Bundle bundle = getIntent().getExtras();
+        bundle = getIntent().getExtras();
         place_id  = bundle.getString("id");
         //String text = (String) clicked.getText();
 
