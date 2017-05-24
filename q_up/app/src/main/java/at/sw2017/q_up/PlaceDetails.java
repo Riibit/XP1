@@ -102,15 +102,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                 Bundle bundle = getIntent().getExtras();
                                 id  = bundle.getString("id");
                                 db_handle = QUpApp.getInstance().getDBHandler();
-                                Place place = null;
-                                db_handle.placesLock();
-                                for (Place p : db_handle.getPlacesList()) {
-                                    if (p.placeId.equals(id)) {
-                                        place = p;
-                                        break;
-                                    }
-                                }
-                                db_handle.placesUnlock();
+                                Place place = db_handle.getPlaceFromId(id);
 
                                 if (place != null)
                                 {
@@ -127,7 +119,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                         txtViewNumberQUP.setText("You are queued up");
                                     }
                                     else
-                                        NumberQUP(db_handle.getQueuedUserCountFromPlace(place.placeId));
+                                        NumberQUP(db_handle.getQueuedUserCountFromPlace(id));
                                     title = place.placeName;
                                 }
                             }
