@@ -6,9 +6,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 
-public class DatabaseConfig {
-    String result = "";
-    InputStream inputStream;
+class DatabaseConfig {
+    private InputStream inputStream;
 
     // these must be filled from config file:
     //private String server_url;
@@ -16,14 +15,14 @@ public class DatabaseConfig {
     private String server_user;
     private String server_pw;
 
-    public DatabaseConfig() {
+    DatabaseConfig() {
         //server_url = "";
         //server_dbname = "";
         server_user = "";
         server_pw = "";
     }
 
-    public String loadConfigValues() throws IOException {
+    void loadConfigValues() throws IOException {
         try {
             Properties prop = new Properties();
             String propFileName = "dbconfig.properties";
@@ -54,7 +53,6 @@ public class DatabaseConfig {
                 inputStream.close();
             }
         }
-        return result;
     }
 /* unused
     public String getUrl() {
