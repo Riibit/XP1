@@ -70,11 +70,11 @@ public class LoginTest {
         Intents.init();
         onView( withId(R.id.inputName)).perform(click());
         onView( withId(R.id.inputName)).perform(typeText("hans"));
+        Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.editTextPasswort)).perform(click());
         onView( withId(R.id.editTextPasswort)).perform(typeText("password"));
-
-        //Espresso.closeSoftKeyboard();
+        Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.buttonLogin)).perform(click());
         intended(hasComponent(MapsActivity.class.getName()));
@@ -87,9 +87,11 @@ public class LoginTest {
         Intents.init();
         onView( withId(R.id.inputName)).perform(click());
         onView( withId(R.id.inputName)).perform(typeText("admin"));
+        Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.editTextPasswort)).perform(click());
         onView( withId(R.id.editTextPasswort)).perform(typeText("password"));
+        Espresso.closeSoftKeyboard();
 
         //Espresso.closeSoftKeyboard();
         onView( withId(R.id.buttonLogin)).perform(click());
