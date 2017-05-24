@@ -290,11 +290,11 @@ public class DatabaseTests {
         //=== ADD TESTPLACES FOR DATABASE HERE =====================================================
 
         List<Place> testplaces = new ArrayList<>();
-        testplaces.add(new Place("", "Pail Coffee", "47.06", "15.4639", "0", "0", "10"));
-        testplaces.add(new Place("", "Spar Market", "47.0608", "15.4682", "0", "0", "15"));
-        testplaces.add(new Place("", "McDonalds", "47.055496", "15.448409", "0", "0", "15"));
-        testplaces.add(new Place("", "Davinci", "47.054160", "15.444241", "0", "0", "15"));
-        testplaces.add(new Place("", "Hofer", "47.055717", "15.441392", "0", "0", "15"));
+        testplaces.add(new Place("", "Pail Coffee", "47.06", "15.4639", "0", "0", "300"));
+        testplaces.add(new Place("", "Spar Market", "47.0608", "15.4682", "0", "0", "150"));
+        testplaces.add(new Place("", "McDonalds", "47.055496", "15.448409", "0", "0", "200"));
+        testplaces.add(new Place("", "Davinci", "47.054160", "15.444241", "0", "0", "220"));
+        testplaces.add(new Place("", "Hofer", "47.055717", "15.441392", "0", "0", "150"));
 
         //==========================================================================================
 

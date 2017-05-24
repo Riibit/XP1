@@ -49,7 +49,8 @@
         <activity android:name=".PlaceDetails"
             android:parentActivityName=".PlaceDetails"
             android:label="@string/PlaceDetails"/>
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".ProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".InfoActivity"
             android:label="@string/info"
             android:parentActivityName="at.sw2017.q_up.PlaceDetails">

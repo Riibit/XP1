@@ -157,9 +157,11 @@ public class PlaceDetailsTest {
         Intents.init();
         onView(withId(R.id.inputName)).perform(click());
         onView(withId(R.id.inputName)).perform(typeText("testCaseUser"));
+        Espresso.closeSoftKeyboard();
 
         onView(withId(R.id.editTextPasswort)).perform(click());
         onView(withId(R.id.editTextPasswort)).perform(typeText("lalala"));
+        Espresso.closeSoftKeyboard();
 
         onView(withId(R.id.buttonLogin)).perform(click());
         intended(hasComponent(MapsActivity.class.getName()));
@@ -210,7 +212,7 @@ public class PlaceDetailsTest {
         intended(hasComponent(InfoActivity.class.getName()));
         Intents.release();
     }
-
+/*
     @Test
     public void b_testVotePositiveWithoutQueue() throws Exception {
         Log.d("TestPD", "testVotePositiveWithoutQueue");
@@ -250,7 +252,7 @@ public class PlaceDetailsTest {
         // number should stay the same without queuing up
         //assertEquals(Integer.parseInt(oldnum), Integer.parseInt(newnum));
     }
-
+*/
     @Test
     public void g_testQUpButton() throws Exception {
         Log.d("TestPD", "testQUpButton");
@@ -263,13 +265,11 @@ public class PlaceDetailsTest {
     public void y_testVotePositive() throws Exception {
         Log.d("TestPD", "testVotePositive");
 
-        // queue and exit queue
+        // queue
         onView(withId(R.id.btn_qup)).check(matches(withText("Q UP!")));
         onView(withId(R.id.btn_qup)).perform(click());
         onView(withId(R.id.btn_qup)).check(matches(withText("EXIT Q")));
-        SystemClock.sleep(500);
-        onView(withId(R.id.btn_qup)).perform(click());
-        onView(withId(R.id.btn_qup)).check(matches(withText("Q UP!")));
+        SystemClock.sleep(100);
 
         // check count before click
         onView(withId(R.id.txt_like)).check(matches(withText("0")));
@@ -280,20 +280,22 @@ public class PlaceDetailsTest {
 
         // check count again
         onView(withId(R.id.txt_like)).check(matches(withText("1")));
+
+        // exit queue
+        onView(withId(R.id.btn_qup)).perform(click());
+        onView(withId(R.id.btn_qup)).check(matches(withText("Q UP!")));
     }
 
     @Test
     public void z_testVoteNegative() throws Exception {
         Log.d("TestPD", "testVoteNegative");
 
-        // queue and exit queue
+        // queue
         onView(withId(R.id.btn_qup)).check(matches(withText("Q UP!")));
         onView(withId(R.id.btn_qup)).perform(click());
         onView(withId(R.id.btn_qup)).check(matches(withText("EXIT Q")));
-        SystemClock.sleep(500);
-        onView(withId(R.id.btn_qup)).perform(click());
-        onView(withId(R.id.btn_qup)).check(matches(withText("Q UP!")));
-
+        SystemClock.sleep(100);
+        
         // check count before click
         onView(withId(R.id.txt_dislike)).check(matches(withText("0")));
 
@@ -303,5 +305,9 @@ public class PlaceDetailsTest {
 
         // check count again
         onView(withId(R.id.txt_dislike)).check(matches(withText("1")));
+
+        // exit queue
+        onView(withId(R.id.btn_qup)).perform(click());
+        onView(withId(R.id.btn_qup)).check(matches(withText("Q UP!")));
     }
 }
