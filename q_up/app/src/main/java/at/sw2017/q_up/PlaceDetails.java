@@ -244,6 +244,13 @@ public class PlaceDetails extends Activity implements OnClickListener {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         peopleinQ = "People in queue:" + Integer.toString(db_handle.getQueuedUserCountFromPlace(place_id));
         peopleInQueue.setText(peopleinQ);
+        int timee = db_handle.getQueuedUserCountFromPlace(place_id)* db_handle.getPlaceAvgProcessingSecsFromId(place_id);
+        int Minutes = timee /60;
+        int Seconds = timee % 60;
+
+        Qtime = "Queue Time:" + Integer.toString(Minutes) + ":" + Integer.toString(Seconds);
+        time_1.setText(Qtime);
+
 
     }
 
@@ -334,8 +341,8 @@ public class PlaceDetails extends Activity implements OnClickListener {
                     time = end - start;
                     if(time < 0)
                     time = time * (-1);
-                    Qtime = "Queue Time:" + Integer.toString(time);
-                    time_1.setText(Qtime);
+                   // Qtime = "Queue Time:" + Integer.toString(time);
+               //     time_1.setText(Qtime);
 
                 }
                 else
@@ -343,8 +350,8 @@ public class PlaceDetails extends Activity implements OnClickListener {
                     time = start - end;
                     if(time < 0)
                         time = time * (-1);
-                    Qtime = "Queue Time:" + Integer.toString(time);
-                    time_1.setText(Qtime);
+                 //   Qtime = "Queue Time:" + Integer.toString(time);
+                    //time_1.setText(Qtime);
 
                 }
 
