@@ -124,11 +124,20 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                     Chat();
                                     getNumberOfUsers();
                                     if(QdUP == true) {
+                                        ButtonLike.setVisibility(View.VISIBLE);
+                                        ButtonDislike.setVisibility(View.VISIBLE);
+                                        txtViewlike.setVisibility(View.VISIBLE);
+                                        txtViewdislike.setVisibility(View.VISIBLE);
                                         TextView txtViewNumberQUP = (TextView) findViewById(R.id.txtView_numberqup);
                                         txtViewNumberQUP.setText("You are queued up");
                                     }
-                                    else
+                                    else {
                                         NumberQUP(db_handle.getQueuedUserCountFromPlace(id));
+                                        ButtonLike.setVisibility(View.GONE);
+                                        ButtonDislike.setVisibility(View.GONE);
+                                        txtViewlike.setVisibility(View.GONE);
+                                        txtViewdislike.setVisibility(View.GONE);
+                                    }
                                     title = place.placeName;
                                 }
                             }
@@ -180,8 +189,14 @@ public class PlaceDetails extends Activity implements OnClickListener {
         //setDefaults("togglekey",ButtonQ.isChecked(),this);
         ButtonLike = (Button) findViewById(R.id.buttonlike);
         ButtonDislike = (Button) findViewById(R.id.buttondislike);
+        TextView txtViewlike = (TextView) findViewById(R.id.txt_like);
+        TextView txtViewdislike = (TextView) findViewById(R.id.txt_dislike);
         ButtonLike.setEnabled(false);
         ButtonDislike.setEnabled(false);
+        ButtonLike.setVisibility(View.GONE);
+        ButtonDislike.setVisibility(View.GONE);
+        txtViewlike.setVisibility(View.GONE);
+        txtViewdislike.setVisibility(View.GONE);
         start = 0;
         end = 0;
         time = 0;
@@ -198,7 +213,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
         Bundle bundle = getIntent().getExtras();
         place_id  = bundle.getString("id");
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-        peopleinQ = "Peope in queue:" + Integer.toString(db_handle.getQueuedUserCountFromPlace(placeid));
+        peopleinQ = "People in queue:" + Integer.toString(db_handle.getQueuedUserCountFromPlace(place_id));
         peopleInQueue.setText(peopleinQ);
 
     }
@@ -263,6 +278,8 @@ public class PlaceDetails extends Activity implements OnClickListener {
             decision = true;
             cal = Calendar.getInstance();
             start = cal.get(Calendar.SECOND);
+            ButtonLike.setEnabled(true);
+            ButtonDislike.setEnabled(true);
             time_1.setText("");
 
         }
@@ -270,8 +287,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
             db_handle.checkOutOfPlace(user_id);
             QdUP = false;
             decision = false;
-            ButtonLike.setEnabled(true);
-            ButtonDislike.setEnabled(true);
                 cal = Calendar.getInstance();
                 end = cal.get(Calendar.SECOND);
 
