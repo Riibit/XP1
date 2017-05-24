@@ -297,7 +297,7 @@ public class DatabaseTests {
         testplaces.add(new Place("", "Hofer", "47.055717", "15.441392", "0", "0", "150"));
 
         //==========================================================================================
-
+/*
         // go through all places in the database
         List<String> places_to_remove = new ArrayList<>();
         db_handle.placesLock();
@@ -322,7 +322,7 @@ public class DatabaseTests {
         for (Place p : testplaces) {
             db_handle.addPlace(p.placeName, p.latitude, p.longitude, p.ratingPos, p.ratingNeg, p.avgProcessingSecs);
         }
-
+*/
         startTime = System.currentTimeMillis(); //fetch starting time
         while(!testplaces.isEmpty() && (System.currentTimeMillis()-startTime) < 10000) {
             db_handle.placesLock();

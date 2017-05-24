@@ -74,12 +74,15 @@ public class RegisterTest {
 
         onView( withId(R.id.inputUsername)).perform(click());
         onView( withId(R.id.inputUsername)).perform(typeText("Testhannes"));
+        Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.inputPassword)).perform(click());
         onView( withId(R.id.inputPassword)).perform(typeText("password"));
+        Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.confirmPassword)).perform(click());
         onView( withId(R.id.confirmPassword)).perform(typeText("password"));
+        Espresso.closeSoftKeyboard();
 
         Espresso.closeSoftKeyboard();
         onView( withId(R.id.registerButton)).perform(click());
@@ -112,13 +115,15 @@ public class RegisterTest {
         Intents.init();
         onView( withId(R.id.inputUsername)).perform(click());
         onView( withId(R.id.inputUsername)).perform(typeText("Testhannes"));
+        Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.inputPassword)).perform(click());
         onView( withId(R.id.inputPassword)).perform(typeText("password"));
+        Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.confirmPassword)).perform(click());
         onView( withId(R.id.confirmPassword)).perform(typeText("password"));
-
+        Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.loginNavigationButton)).perform(click());
         intended(hasComponent(MainActivity.class.getName()));
@@ -130,12 +135,15 @@ public class RegisterTest {
 
         onView( withId(R.id.inputUsername)).perform(click());
         onView( withId(R.id.inputUsername)).perform(typeText("Failhannes"));
+        Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.inputPassword)).perform(click());
         onView( withId(R.id.inputPassword)).perform(typeText("password"));
+        Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.confirmPassword)).perform(click());
         onView( withId(R.id.confirmPassword)).perform(typeText("passwrd"));
+        Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.registerButton)).perform(click());
     }
@@ -146,12 +154,15 @@ public class RegisterTest {
 
         onView( withId(R.id.inputUsername)).perform(click());
         onView( withId(R.id.inputUsername)).perform(typeText("franz"));
+        Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.inputPassword)).perform(click());
         onView( withId(R.id.inputPassword)).perform(typeText("password"));
+        Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.confirmPassword)).perform(click());
         onView( withId(R.id.confirmPassword)).perform(typeText("password"));
+        Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.registerButton)).perform(click());
     }

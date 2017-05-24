@@ -80,9 +80,11 @@ public class UserProfileTest {
         Intents.init();
         onView( withId(R.id.inputName)).perform(click());
         onView( withId(R.id.inputName)).perform(typeText("hans"));
+        Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.editTextPasswort)).perform(click());
         onView( withId(R.id.editTextPasswort)).perform(typeText("password"));
+        Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.buttonLogin)).perform(click());
         intended(hasComponent(MapsActivity.class.getName()));
@@ -109,13 +111,6 @@ public class UserProfileTest {
         intended(hasComponent(MainActivity.class.getName()));
         Intents.release();
     }
-
-/*
-    @Test
-    public void testToggleButton() throws Exception {
-        onView(withText("Show My Places")).perform(click());
-    }
-*/
 
     @Test
     public void testMapButton() throws Exception {
