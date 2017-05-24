@@ -44,7 +44,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
 
 
 
-    public void LikeDislike()
+    private void LikeDislike()
     {
 
         ButtonLike.setOnClickListener(new View.OnClickListener() {
@@ -70,8 +70,21 @@ public class PlaceDetails extends Activity implements OnClickListener {
     }
 
 
+    private void Chat()
+    {
+        Button ButtonChat = (Button) findViewById(R.id.btn_chat);
+        ButtonChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PlaceDetails.this, ChatActivity.class);
+                startActivity(intent);
 
-    public void InfoButton()
+            }
+        });
+    }
+
+
+    private void InfoButton()
     {
         Button ButtonInfo = (Button) findViewById(R.id.buttoninfo);
         ButtonInfo.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +132,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                 txtViewlike.setText(place.ratingPos);
                                 txtViewdislike.setText(place.ratingNeg);
                                 LikeDislike();
+                                Chat();
                                 getNumberOfUsers();
                                 if(QdUP == true) {
                                     TextView txtViewNumberQUP = (TextView) findViewById(R.id.txtView_numberqup);
@@ -185,6 +199,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
         EvaluationOnTime();
         InfoButton();
         getNumberOfUsers();
+
 
     }
 
