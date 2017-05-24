@@ -122,7 +122,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                     LikeDislike();
                                     Chat();
                                     getNumberOfUsers();
-                                    if(QdUP == true) {
+                                    if(QdUP) {
                                         TextView txtViewNumberQUP = (TextView) findViewById(R.id.txtView_numberqup);
                                         txtViewNumberQUP.setText("You are queued up");
                                     }
@@ -262,14 +262,15 @@ public class PlaceDetails extends Activity implements OnClickListener {
             cal = Calendar.getInstance();
             start = cal.get(Calendar.SECOND);
             time_1.setText("");
+            ButtonLike.setEnabled(true);
+            ButtonDislike.setEnabled(true);
 
         }
         else {
             db_handle.checkOutOfPlace(user_id);
             QdUP = false;
             decision = false;
-            ButtonLike.setEnabled(true);
-            ButtonDislike.setEnabled(true);
+
                 cal = Calendar.getInstance();
                 end = cal.get(Calendar.SECOND);
 
