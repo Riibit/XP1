@@ -55,7 +55,8 @@ public class InfoActivity extends AppCompatActivity {
             txtviewOpening.setText(place.opening_hours);
             txtViewAdress.setText(place.address);
             txtViewLink.setText(place.link);
-            //txtViewLink.setMovementMethod(LinkMovementMethod.getInstance());
+
+
 
         }
     }

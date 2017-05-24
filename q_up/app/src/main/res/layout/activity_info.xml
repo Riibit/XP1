@@ -67,7 +67,6 @@
         android:layout_marginLeft="97dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="48dp"
-        android:text="Homepage"
         android:textColor="@color/common_google_signin_btn_text_dark_focused"
         android:textSize="22sp"
         app:layout_constraintHorizontal_bias="0.239"
