@@ -113,14 +113,11 @@ public class PlaceDetails extends Activity implements OnClickListener {
                             public void run() {
 
                                 bundle = getIntent().getExtras();
-                                id  = bundle.getString("id");
                                 db_handle = QUpApp.getInstance().getDBHandler();
                                 Place place = db_handle.getPlaceFromId(id);
 
                                 if (place != null)
                                 {
-                                    current_place = place;
-
                                     TextView txtViewtitle = (TextView) findViewById(R.id.txtview_title);
                                     TextView txtViewlike = (TextView) findViewById(R.id.txt_like);
                                     TextView txtViewdislike = (TextView) findViewById(R.id.txt_dislike);
@@ -145,7 +142,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                         txtViewlike.setVisibility(View.GONE);
                                         txtViewdislike.setVisibility(View.GONE);
                                     }
-                                    title = place.placeName;
                                 }
                             }
                         });
