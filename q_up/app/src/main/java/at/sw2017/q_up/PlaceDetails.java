@@ -19,6 +19,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
     static String place_id;
 
     private DatabaseHandler db_handle;
+    private String peopleinQ,Qtime;
     private boolean decision ;
     private Button ButtonLike;
     private Button ButtonDislike;
@@ -197,7 +198,8 @@ public class PlaceDetails extends Activity implements OnClickListener {
         Bundle bundle = getIntent().getExtras();
         place_id  = bundle.getString("id");
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-        peopleInQueue.setText(Integer.toString(db_handle.getQueuedUserCountFromPlace(place_id)));
+        peopleinQ = "Peope in queue:" + Integer.toString(db_handle.getQueuedUserCountFromPlace(placeid));
+        peopleInQueue.setText(peopleinQ);
 
     }
 
@@ -279,8 +281,8 @@ public class PlaceDetails extends Activity implements OnClickListener {
                     time = end - start;
                     if(time < 0)
                     time = time * (-1);
-
-                    time_1.setText(Integer.toString(time));
+                    Qtime = "Queue Time:" + Integer.toString(time);
+                    time_1.setText(Qtime);
 
                 }
                 else
@@ -288,8 +290,8 @@ public class PlaceDetails extends Activity implements OnClickListener {
                     time = start - end;
                     if(time < 0)
                         time = time * (-1);
-
-                    time_1.setText(Integer.toString(time));
+                    Qtime = "Queue Time:" + Integer.toString(time);
+                    time_1.setText(Qtime);
 
                 }
 
