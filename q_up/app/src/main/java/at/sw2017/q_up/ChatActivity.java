@@ -27,6 +27,7 @@ public class ChatActivity extends AppCompatActivity {
                     (actionID == KeyEvent.KEYCODE_ENTER)) {
                 FloatingActionButton click = (FloatingActionButton)findViewById(R.id.fab);
                 click.performClick();
+                inputView.setSingleLine(true);
 
             }
             return false;
@@ -54,10 +55,39 @@ public class ChatActivity extends AppCompatActivity {
 
                     // Clear the input
                     input.setText("");
+
                 }
             }
         });
     }
+
+public void UpdateInput()
+{
+
+
+    Thread t = new Thread() {
+
+        @Override
+        public void run() {
+            try {
+                while (!isInterrupted()) {
+                    Thread.sleep(10);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            inputView.setSingleLine(false);
+
+                        }
+                    });
+                }
+            } catch (InterruptedException e) {
+            }
+        }
+    };
+        t.start();
+
+}
+
 
 
     private void displayChatMessages() {
@@ -96,5 +126,6 @@ public class ChatActivity extends AppCompatActivity {
         displayChatMessages();
         inputView = (TextView) findViewById(R.id.input);
         inputView.setOnKeyListener(myKeyListener);
+        UpdateInput();
     }
 }
