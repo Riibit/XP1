@@ -136,6 +136,10 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                     Toast.makeText(getApplicationContext(),
                             "User created..", Toast.LENGTH_SHORT).show();
                     clearText();
+
+                    // go back to login screen
+                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                    startActivity(intent);
                 }
 
                 // check texfield is already in db

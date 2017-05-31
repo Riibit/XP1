@@ -15,6 +15,8 @@ import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.UiSelector;
 import android.util.Log;
 
+import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -52,6 +54,8 @@ public class UserProfileTest {
 
     private UiDevice device;
 
+    private TestHelperUtils test_utils;
+
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
@@ -68,8 +72,8 @@ public class UserProfileTest {
     @Before
     public void registerIntentServiceIdlingResource() throws UiObjectNotFoundException {
         Log.d("TestUP", "Before");
-        // forget about logged in users
-        SaveSharedPreference.setUserName(QUpApp.getContext(), "");
+
+        this.test_utils = new TestHelperUtils();
 
         // prepare UiAutomator
         this.device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -80,14 +84,18 @@ public class UserProfileTest {
         usersIdlingResource = QUpApp.getInstance().getDBHandler().getUsersIdlingResource();
         Espresso.registerIdlingResources(usersIdlingResource);
 
+        // initialize DB
+        assertNotNull(this.test_utils.db_handle);
+        Assert.assertEquals(true, this.test_utils.beforeEachTest());
+
         // log in
         Intents.init();
         onView( withId(R.id.inputName)).perform(click());
-        onView( withId(R.id.inputName)).perform(typeText("hans"));
+        onView( withId(R.id.inputName)).perform(typeText(TestHelperUtils.TESTUSER_NAME));
         Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.editTextPasswort)).perform(click());
-        onView( withId(R.id.editTextPasswort)).perform(typeText("password"));
+        onView( withId(R.id.editTextPasswort)).perform(typeText(TestHelperUtils.TESTUSER_PW));
         Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.buttonLogin)).perform(click());
@@ -104,6 +112,9 @@ public class UserProfileTest {
     @After
     public void unregisterIntentServiceIdlingResource() {
         Log.d("TestUP", "After");
+
+        Assert.assertEquals(true, test_utils.afterEachTest());
+
         Espresso.unregisterIdlingResources(placesIdlingResource);
         Espresso.unregisterIdlingResources(usersIdlingResource);
     }

@@ -6,6 +6,7 @@ import android.media.Rating;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewDebug;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -21,8 +22,8 @@ public class PlaceDetails extends Activity implements OnClickListener {
     static String place_id;
     static Place current_place;
     private Bundle bundle;
-
-
+    private int positionInQ;
+    private int Minutes,Seconds;
     private DatabaseHandler db_handle;
     private String peopleinQ,Qtime;
     private boolean decision ;
@@ -38,15 +39,11 @@ public class PlaceDetails extends Activity implements OnClickListener {
     TextView time_1;
     private Intent intent;
 
-
-
-
     ToggleButton ButtonQ;
 
     public static Place getCurrentPlace() {
         return current_place;
     }
-
 
     private void LikeDislike()
     {
@@ -62,7 +59,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
             }
         });
 
-
         ButtonDislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,7 +68,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
             }
         });
     }
-
 
     private void Chat()
     {
@@ -131,6 +126,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                     LikeDislike();
                                     Chat();
                                     getNumberOfUsers();
+                                    getAverageWaitingTime();
                                     if(QdUP == true) {
                                         ButtonLike.setVisibility(View.VISIBLE);
                                         ButtonDislike.setVisibility(View.VISIBLE);
@@ -141,6 +137,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                         txtViewNumberQUP.setText("You are queued up");
                                     }
                                     else {
+                                        positionInQ = db_handle.getQueuedUserCountFromPlace(place_id);
                                         int like = Integer.valueOf(txtViewlike.getText().toString());
                                         int dislike = Integer.valueOf(txtViewdislike.getText().toString());
                                         float stern = (((float)like) / ((float)like+(float)dislike))*100;
@@ -162,7 +159,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                         ButtonDislike.setVisibility(View.GONE);
                                         txtViewlike.setVisibility(View.GONE);
                                         txtViewdislike.setVisibility(View.GONE);
-
 
                                     }
                                 }
@@ -234,9 +230,30 @@ public class PlaceDetails extends Activity implements OnClickListener {
         getNumberOfUsers();
 
 
+
     }
 
+    public void getAverageWaitingTime()
+    {
+        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+        // int timee = db_handle.getQueuedUserCountFromPlace(place_id)* db_handle.getPlaceAvgProcessingSecsFromId(place_id);
+        if(db_handle.getQueuedUserCountFromPlace(place_id) == 0 )
+        {
 
+            Qtime = "Queue Time: 00:00";
+            time_1.setText(Qtime);
+        }
+
+        else
+        {
+            int timee = positionInQ* db_handle.getPlaceAvgProcessingSecsFromId(place_id);
+            Minutes = timee /60;
+            Seconds = timee % 60;
+            Qtime = "Queue Time:" + Integer.toString(Minutes) + ":" + Integer.toString(Seconds);
+            time_1.setText(Qtime);
+        }
+
+    }
     public  void getNumberOfUsers()
     {
         bundle = getIntent().getExtras();
@@ -251,7 +268,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
         Qtime = "Queue Time: \n" + Integer.toString(Minutes) + ":" + Integer.toString(Seconds);
         time_1.setText(Qtime);
 
-
     }
 
     @Override
@@ -263,6 +279,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
         current_place = db_handle.getPlaceFromId(id);
         NumberQUP(db_handle.getQueuedUserCountFromPlace(id));
         title = current_place.placeName;
+
 
     }
     /*
