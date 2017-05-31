@@ -1,14 +1,24 @@
 package at.sw2017.q_up;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.View.OnKeyListener;
 import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import static android.view.View.VISIBLE;
 
 
 public class MainActivity extends Activity implements View.OnClickListener {
@@ -18,7 +28,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
     Button loginNavigationButton;
     EditText editTextUsername;
     EditText editTextPassword;
+    RelativeLayout waitingAnimation;
+    TextView waitingText;
+
     static User currentUser;
+    private static MainActivity instance;
 
     OnKeyListener myKeyListener = new OnKeyListener() {
         @Override
@@ -28,12 +42,55 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     (actionID == KeyEvent.KEYCODE_ENTER)) {
                 Button click = (Button)findViewById(R.id.buttonLogin);
                 click.performClick();
-
-
             }
             return false;
         }
     };
+
+    @TargetApi(21)
+    public static boolean isConnectingToInternet(Context context) {
+        ConnectivityManager connectivity =
+                (ConnectivityManager) context.getSystemService(
+                        Context.CONNECTIVITY_SERVICE);
+        Network[] network = connectivity.getAllNetworks();
+        if (connectivity != null) {
+            for (int i = 0; i < network.length; i++) {
+                if (connectivity.getNetworkInfo(network[i]).getState() == NetworkInfo.State.CONNECTED) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void serverReady() {
+        waitingAnimation = (RelativeLayout)findViewById(R.id.waitingAnimation);
+        waitingAnimation.setVisibility(RelativeLayout.GONE);
+        waitingText = (TextView)findViewById(R.id.waitingText);
+        waitingText.setVisibility(TextView.GONE);
+
+        if (SaveSharedPreference.getUserName(QUpApp.getContext()).length() != 0)
+        {
+            DatabaseHandler db_handler = QUpApp.getInstance().getDBHandler();
+            currentUser = db_handler.getUserFromName(SaveSharedPreference.getUserName(QUpApp.getContext()));
+        }
+        else
+            currentUser = null;
+
+        if (currentUser != null) {
+            switchActivities();
+        }
+        else
+        {
+            //setContentView(R.layout.activity_main);
+            buttonLogin.setVisibility(Button.VISIBLE);
+            registerNavigationButton.setVisibility(Button.VISIBLE);
+            loginNavigationButton.setVisibility(Button.VISIBLE);
+            editTextUsername.setVisibility(EditText.VISIBLE);
+            editTextPassword.setVisibility(EditText.VISIBLE);
+            editTextUsername.requestFocus();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +101,54 @@ public class MainActivity extends Activity implements View.OnClickListener {
         buttonLogin.setOnClickListener(this);
         registerNavigationButton = (Button) findViewById(R.id.registerNavigationButton);
         registerNavigationButton.setOnClickListener(this);
-        loginNavigationButton = (Button) findViewById(R.id.loginNavigationButton);
+        loginNavigationButton = (Button) findViewById(R.id.button3);
+        //loginNavigationButton.setOnClickListener(this); // not needed
         editTextUsername = (EditText) findViewById(R.id.inputName);
         editTextPassword = (EditText) findViewById(R.id.editTextPasswort);
         editTextPassword.setOnKeyListener(myKeyListener);
-        editTextUsername.requestFocus();
+
+        EvaluationOnTime();
+
+        if(!isConnectingToInternet(MainActivity.this))
+        {
+            Toast.makeText(getApplicationContext(),"No Internet connection detected!",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void EvaluationOnTime()
+    {
+        Thread t = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(100);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+                                if (db_handle.getInitDone() && findViewById(R.id.waitingAnimation).getVisibility() == VISIBLE)
+                                {
+                                    findViewById(R.id.waitingAnimation).post(new Runnable()
+                                    {
+                                        @Override
+                                        public void run()
+                                        {
+                                            serverReady();
+                                        }
+                                    });
+                                    Thread.currentThread().interrupt();
+                                }
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        t.start();
     }
 
     @Override
@@ -81,8 +181,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
         //QUpApp.getInstance().getDBHandler().removeAuthStListener();
     }
 
+    public static Context getContext(){
+        //return instance;
+        return instance.getApplicationContext();
+    }
+
     public void switchActivities() {
-        Intent mapIntent = new Intent(this, MapsActivity.class);
+        Intent mapIntent = new Intent(MainActivity.this, MapsActivity.class);
         startActivity(mapIntent);
     }
 
@@ -129,12 +234,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         // now check if password is correct
                         if (u.password.equals(editTextPassword.getText().toString())) {
                             // given password matches entry in database
-
+                            db_handle.usersUnlock();
                             Toast.makeText(getApplicationContext(),
                                     LOGIN_SUCCESSFUL_MESSAGE, Toast.LENGTH_SHORT).show();
                             currentUser = u;
+                            SaveSharedPreference.setUserName(QUpApp.getContext(), u.userName);
                             switchActivities();
-                            db_handle.usersUnlock();
                             return;
                         }
                         break;

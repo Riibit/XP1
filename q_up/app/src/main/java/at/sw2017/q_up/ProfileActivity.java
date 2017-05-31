@@ -1,5 +1,6 @@
 package at.sw2017.q_up;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ public class ProfileActivity extends AppCompatActivity {
         buttonLogout.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {
+                SaveSharedPreference.setUserName(QUpApp.getContext(), "");
                 goToMain();
             }
         });

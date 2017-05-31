@@ -4,11 +4,15 @@ import android.content.Intent;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 public class InfoActivity extends AppCompatActivity {
 
@@ -18,6 +22,9 @@ public class InfoActivity extends AppCompatActivity {
     private TextView txtViewTitle;
     private TextView txtViewLongtitude;
     private TextView txtViewlatitude;
+    private TextView txtviewOpening;
+    private TextView txtViewAdress;
+    private TextView txtViewLink;
     private DatabaseHandler db_handle;
     private Place place;
 
@@ -28,11 +35,15 @@ public class InfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_info);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         bundle = getIntent().getExtras();
-        title  =  "Information of " + bundle.getString("title");
+        title  = bundle.getString("title");
         id = bundle.getString("id");
         txtViewTitle = (TextView) findViewById(R.id.txtView_title_info);
         txtViewLongtitude = (TextView) findViewById(R.id.txtView_longtitude);
         txtViewlatitude = (TextView) findViewById(R.id.txtViewlatitude);
+        txtviewOpening = (TextView) findViewById(R.id.txtview_opening);
+        txtViewAdress = (TextView) findViewById(R.id.txtview_address);
+        txtViewLink = (TextView) findViewById(R.id.txt_homepage);
+
 
         txtViewTitle.setText(title);
 
@@ -42,6 +53,9 @@ public class InfoActivity extends AppCompatActivity {
         {
             txtViewLongtitude.setText(place.longitude);
             txtViewlatitude.setText(place.latitude);
+            txtviewOpening.setText(place.opening_hours);
+            txtViewAdress.setText(place.address);
+            txtViewLink.setText(place.link);
         }
     }
 
@@ -58,7 +72,7 @@ public class InfoActivity extends AppCompatActivity {
                 "onRestart", Toast.LENGTH_SHORT).show();
 
         bundle = getIntent().getExtras();
-        title  =  "Information of " + bundle.getString("title");
+        title  =  bundle.getString("title");
         id = bundle.getString("id");
         txtViewTitle.setText(title);
         place = db_handle.getPlaceFromId(id);
