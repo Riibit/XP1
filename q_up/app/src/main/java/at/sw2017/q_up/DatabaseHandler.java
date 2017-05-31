@@ -497,16 +497,6 @@ public class DatabaseHandler {
         return return_value;
     }
 
-    public User getUserFromId(String uid) {
-        usersLock();
-        for (User u : usersList) {
-            if (u.userId.equals(uid))
-                return u;
-        }
-        usersUnlock();
-        return null;
-    }
-
     public User getUserFromName(String uname) {
         usersLock();
         for (User u : usersList) {

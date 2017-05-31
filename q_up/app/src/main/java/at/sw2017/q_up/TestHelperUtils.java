@@ -61,6 +61,7 @@ public class TestHelperUtils {
         for (String id : oldtestusers_to_remove) {
             this.db_handle.removeUser(id);
         }
+
         return true;
     }
 
