@@ -49,9 +49,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     @TargetApi(21)
     public static boolean isConnectingToInternet(Context context) {
-        ConnectivityManager connectivity =
-                (ConnectivityManager) context.getSystemService(
-                        Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         Network[] network = connectivity.getAllNetworks();
         if (connectivity != null) {
             for (int i = 0; i < network.length; i++) {
@@ -154,6 +152,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
+        if(!isConnectingToInternet(MainActivity.this))
+        {
+            Toast.makeText(getApplicationContext(),"No Internet connection detected!",Toast.LENGTH_LONG).show();
+        }
 
 
     }

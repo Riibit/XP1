@@ -300,61 +300,62 @@ public class PlaceDetails extends Activity implements OnClickListener {
     */
     @Override
     public void onClick(View v) {
-        ToggleButton clicked = (ToggleButton)v;
-        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-        String Username = (MainActivity.currentUser.userName);
-        bundle = getIntent().getExtras();
-        place_id  = bundle.getString("id");
-        //String text = (String) clicked.getText();
+        ToggleButton clicked = (ToggleButton) v;
+        if (!MainActivity.isConnectingToInternet(PlaceDetails.this)) {
+            clicked.setChecked(false);
+            Toast.makeText(getApplicationContext(), "No Internet connection detected!", Toast.LENGTH_LONG).show();
+        } else {
+            DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+            String Username = (MainActivity.currentUser.userName);
+            bundle = getIntent().getExtras();
+            place_id = bundle.getString("id");
+            //String text = (String) clicked.getText();
 
 
-        if(clicked.isChecked()) {
-            db_handle.usersLock();
-            for (User u : db_handle.getUsersList()) {
-                if (u.userName.equals(Username)) {
-                    user_id = u.userId;
+            if (clicked.isChecked()) {
+                db_handle.usersLock();
+                for (User u : db_handle.getUsersList()) {
+                    if (u.userName.equals(Username)) {
+                        user_id = u.userId;
+                    }
                 }
-            }
-            db_handle.usersUnlock();
-            db_handle.checkUserIntoPlace(user_id, place_id);
-            QdUP = true;
-            decision = true;
-            cal = Calendar.getInstance();
-            start = cal.get(Calendar.SECOND);
-            ButtonLike.setEnabled(true);
-            ButtonDislike.setEnabled(true);
-            time_1.setText("");
-            ButtonLike.setEnabled(true);
-            ButtonDislike.setEnabled(true);
+                db_handle.usersUnlock();
+                db_handle.checkUserIntoPlace(user_id, place_id);
+                QdUP = true;
+                decision = true;
+                cal = Calendar.getInstance();
+                start = cal.get(Calendar.SECOND);
+                ButtonLike.setEnabled(true);
+                ButtonDislike.setEnabled(true);
+                time_1.setText("");
+                ButtonLike.setEnabled(true);
+                ButtonDislike.setEnabled(true);
 
-        }
-        else {
-            db_handle.checkOutOfPlace(user_id);
-            QdUP = false;
-            decision = false;
-            cal = Calendar.getInstance();
-            end = cal.get(Calendar.SECOND);
+            } else {
+                db_handle.checkOutOfPlace(user_id);
+                QdUP = false;
+                decision = false;
+                cal = Calendar.getInstance();
+                end = cal.get(Calendar.SECOND);
 
-            if(end < start)
-            {
-                end += 60;
-                time = end - start;
-                if(time < 0)
-                    time = time * (-1);
-                // Qtime = "Queue Time:" + Integer.toString(time);
-                //     time_1.setText(Qtime);
+                if (end < start) {
+                    end += 60;
+                    time = end - start;
+                    if (time < 0)
+                        time = time * (-1);
+                    // Qtime = "Queue Time:" + Integer.toString(time);
+                    //     time_1.setText(Qtime);
 
-            }
-            else
-            {
-                time = start - end;
-                if(time < 0)
-                    time = time * (-1);
-                //   Qtime = "Queue Time:" + Integer.toString(time);
-                //time_1.setText(Qtime);
+                } else {
+                    time = start - end;
+                    if (time < 0)
+                        time = time * (-1);
+                    //   Qtime = "Queue Time:" + Integer.toString(time);
+                    //time_1.setText(Qtime);
+
+                }
 
             }
-
         }
     }
     @Override
