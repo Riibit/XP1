@@ -126,10 +126,8 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                     LikeDislike();
                                     Chat();
                                     getNumberOfUsers();
-                                    //correctWaitingTime();
                                     getAverageWaitingTime();
                                     if(QdUP == true) {
-
                                         ButtonLike.setVisibility(View.VISIBLE);
                                         ButtonDislike.setVisibility(View.VISIBLE);
                                         txtViewlike.setVisibility(View.VISIBLE);
@@ -140,7 +138,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                     }
                                     else {
                                         positionInQ = db_handle.getQueuedUserCountFromPlace(place_id);
-                                        //getAverageWaitingTime();
                                         int like = Integer.valueOf(txtViewlike.getText().toString());
                                         int dislike = Integer.valueOf(txtViewdislike.getText().toString());
                                         float stern = (((float)like) / ((float)like+(float)dislike))*100;
@@ -240,20 +237,13 @@ public class PlaceDetails extends Activity implements OnClickListener {
     {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
         // int timee = db_handle.getQueuedUserCountFromPlace(place_id)* db_handle.getPlaceAvgProcessingSecsFromId(place_id);
-        if(db_handle.getQueuedUserCountFromPlace(place_id) == 0 || db_handle.getQueuedUserCountFromPlace(place_id) == 1  )
+        if(db_handle.getQueuedUserCountFromPlace(place_id) == 0 )
         {
 
             Qtime = "Queue Time: 00:00";
             time_1.setText(Qtime);
         }
-        else if(QdUP)
-        {
-            int timee = positionInQ* db_handle.getPlaceAvgProcessingSecsFromId(place_id);
-            Minutes = timee /60;
-            Seconds = timee % 60;
-            Qtime = "Queue Time:" + Integer.toString(Minutes) + ":" + Integer.toString(Seconds);
-            time_1.setText(Qtime);
-        }
+
         else
         {
             int timee = positionInQ* db_handle.getPlaceAvgProcessingSecsFromId(place_id);
@@ -273,23 +263,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
         peopleInQueue.setText(peopleinQ);
 
     }
-
-    /*public void correctWaitingTime()
-    {
-        if(db_handle.getQueuedUserCountFromPlace(place_id) == 0 || db_handle.getQueuedUserCountFromPlace(place_id) == 1  )
-        {
-
-            Qtime = "Queue Time: 00:00";
-            time_1.setText(Qtime);
-        }
-        else
-        {
-            int time_difference = positionInQ * db_handle.getPlaceAvgProcessingSecsFromId(place_id);
-
-            Qtime = "Queue Time:" + Integer.toString(Minutes - time_difference / 60) + ":" + Integer.toString(Seconds - time_difference % 60);
-            time_1.setText(Qtime);
-        }
-    }*/
 
     @Override
     protected void onResume() {
