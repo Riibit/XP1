@@ -213,7 +213,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
         ButtonQ.setOnClickListener(this);
         time_1.setText("");
         decision = false;
-       // ButtonQ.setChecked(getDefaults("togglekey",this));
+        // ButtonQ.setChecked(getDefaults("togglekey",this));
         //setDefaults("togglekey",ButtonQ.isChecked(),this);
         ButtonLike = (Button) findViewById(R.id.buttonlike);
         ButtonDislike = (Button) findViewById(R.id.buttondislike);
@@ -242,13 +242,13 @@ public class PlaceDetails extends Activity implements OnClickListener {
         bundle = getIntent().getExtras();
         place_id  = bundle.getString("id");
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-        peopleinQ = "People in queue:" + Integer.toString(db_handle.getQueuedUserCountFromPlace(place_id));
+        peopleinQ = "People in queue: \n" + Integer.toString(db_handle.getQueuedUserCountFromPlace(place_id));
         peopleInQueue.setText(peopleinQ);
         int timee = db_handle.getQueuedUserCountFromPlace(place_id)* db_handle.getPlaceAvgProcessingSecsFromId(place_id);
         int Minutes = timee /60;
         int Seconds = timee % 60;
 
-        Qtime = "Queue Time:" + Integer.toString(Minutes) + ":" + Integer.toString(Seconds);
+        Qtime = "Queue Time: \n" + Integer.toString(Minutes) + ":" + Integer.toString(Seconds);
         time_1.setText(Qtime);
 
 
@@ -265,39 +265,39 @@ public class PlaceDetails extends Activity implements OnClickListener {
         title = current_place.placeName;
 
     }
-/*
-    public static void setDefaults(String key,Boolean value,Context context)
-    {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(key,value);
-        editor.apply();
-    }
-    public static Boolean getDefaults(String key,Context context)
-    {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getBoolean(key,true);
-    }
-    @Override
-    public void onStart(){
-        super.onStart();
-        ButtonQ.setChecked(getDefaults("togglekey",this));
-        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-        String Username = (MainActivity.currentUser.userName);
-        db_handle.usersLock();
-        for (Place p : db_handle.getPlacesList()) {
-            p.placeId
-                Toast.makeText(getApplicationContext(),
-                        p.idCheckInPlace, Toast.LENGTH_SHORT).show();
+    /*
+        public static void setDefaults(String key,Boolean value,Context context)
+        {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean(key,value);
+            editor.apply();
         }
-        db_handle.usersUnlock();
-    }
-    @Override
-    public void onStop(){
-        super.onStop();
-        setDefaults("togglekey",ButtonQ.isChecked(),this);
-    }
-*/
+        public static Boolean getDefaults(String key,Context context)
+        {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            return preferences.getBoolean(key,true);
+        }
+        @Override
+        public void onStart(){
+            super.onStart();
+            ButtonQ.setChecked(getDefaults("togglekey",this));
+            DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
+            String Username = (MainActivity.currentUser.userName);
+            db_handle.usersLock();
+            for (Place p : db_handle.getPlacesList()) {
+                p.placeId
+                    Toast.makeText(getApplicationContext(),
+                            p.idCheckInPlace, Toast.LENGTH_SHORT).show();
+            }
+            db_handle.usersUnlock();
+        }
+        @Override
+        public void onStop(){
+            super.onStop();
+            setDefaults("togglekey",ButtonQ.isChecked(),this);
+        }
+    */
     @Override
     public void onClick(View v) {
         ToggleButton clicked = (ToggleButton)v;
@@ -332,28 +332,28 @@ public class PlaceDetails extends Activity implements OnClickListener {
             db_handle.checkOutOfPlace(user_id);
             QdUP = false;
             decision = false;
-                cal = Calendar.getInstance();
-                end = cal.get(Calendar.SECOND);
+            cal = Calendar.getInstance();
+            end = cal.get(Calendar.SECOND);
 
-                if(end < start)
-                {
-                    end += 60;
-                    time = end - start;
-                    if(time < 0)
+            if(end < start)
+            {
+                end += 60;
+                time = end - start;
+                if(time < 0)
                     time = time * (-1);
-                   // Qtime = "Queue Time:" + Integer.toString(time);
-               //     time_1.setText(Qtime);
+                // Qtime = "Queue Time:" + Integer.toString(time);
+                //     time_1.setText(Qtime);
 
-                }
-                else
-                {
-                    time = start - end;
-                    if(time < 0)
-                        time = time * (-1);
-                 //   Qtime = "Queue Time:" + Integer.toString(time);
-                    //time_1.setText(Qtime);
+            }
+            else
+            {
+                time = start - end;
+                if(time < 0)
+                    time = time * (-1);
+                //   Qtime = "Queue Time:" + Integer.toString(time);
+                //time_1.setText(Qtime);
 
-                }
+            }
 
         }
     }
