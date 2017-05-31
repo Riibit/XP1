@@ -1,8 +1,8 @@
 package at.sw2017.q_up;
 
-import android.app.Activity;
-import android.app.Instrumentation;
-import android.content.Context;
+
+import android.graphics.Rect;
+import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.intent.Intents;
@@ -24,33 +24,29 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.junit.Assert.assertEquals;
+import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * Instrumentation test, which will execute on an Android device.
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
- 
 @RunWith(AndroidJUnit4.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @LargeTest
-public class UserProfileTest {
-
+public class ChatTest {
+    private UiDevice device;
     private SimpleIdlingResource placesIdlingResource;
     private SimpleIdlingResource usersIdlingResource;
 
-    private UiDevice device;
+    private TestHelperUtils test_utils;
+
+
+
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
@@ -59,6 +55,7 @@ public class UserProfileTest {
     public static void initTestCase() {
         // forget about logged in users
         SaveSharedPreference.setUserName(QUpApp.getContext(), "");
+
         // wait for the sign in process to complete
         QUpApp.getInstance().getDBHandler().waitSignInComplete(10);
         QUpApp.getInstance().getDBHandler().waitPlacesComplete(10);
@@ -66,10 +63,10 @@ public class UserProfileTest {
     }
 
     @Before
-    public void registerIntentServiceIdlingResource() throws UiObjectNotFoundException {
-        Log.d("TestUP", "Before");
-        // forget about logged in users
-        SaveSharedPreference.setUserName(QUpApp.getContext(), "");
+    public void beforeEachTest() throws UiObjectNotFoundException {
+        Log.d("TestPD", "Before");
+
+        this.test_utils = new TestHelperUtils();
 
         // prepare UiAutomator
         this.device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -80,49 +77,78 @@ public class UserProfileTest {
         usersIdlingResource = QUpApp.getInstance().getDBHandler().getUsersIdlingResource();
         Espresso.registerIdlingResources(usersIdlingResource);
 
+        // initialize DB
+        assertNotNull(this.test_utils.db_handle);
+        assertEquals(true, this.test_utils.beforeEachTest());
+
         // log in
         Intents.init();
-        onView( withId(R.id.inputName)).perform(click());
-        onView( withId(R.id.inputName)).perform(typeText("hans"));
+        onView(withId(R.id.inputName)).perform(click());
+        onView(withId(R.id.inputName)).perform(typeText(TestHelperUtils.TESTUSER_NAME));
         Espresso.closeSoftKeyboard();
 
-        onView( withId(R.id.editTextPasswort)).perform(click());
-        onView( withId(R.id.editTextPasswort)).perform(typeText("password"));
+        onView(withId(R.id.editTextPasswort)).perform(click());
+        onView(withId(R.id.editTextPasswort)).perform(typeText(TestHelperUtils.TESTUSER_PW));
         Espresso.closeSoftKeyboard();
 
-        onView( withId(R.id.buttonLogin)).perform(click());
+        onView(withId(R.id.buttonLogin)).perform(click());
         intended(hasComponent(MapsActivity.class.getName()));
         Intents.release();
 
-        // go to my profile
+        // go to place
         Intents.init();
-        device.findObject(new UiSelector().text("My Profile")).click();
-        intended(hasComponent(ProfileActivity.class.getName()));
+        device.waitForIdle(10000);
+        SystemClock.sleep(500);
+        UiObject marker = device.findObject(new UiSelector().descriptionContains(TestHelperUtils.TESTPLACE_NAME));
+        marker.click();
+
+        // click on the place's label
+        SystemClock.sleep(500);
+        Rect bounds = marker.getBounds();
+        int clickX = bounds.centerX();
+        int clickY = bounds.centerY();
+        clickY -= 114;
+        device.click(clickX, clickY);
+
+        SystemClock.sleep(500);
+        intended(hasComponent(PlaceDetails.class.getName()));
         Intents.release();
     }
 
+
     @After
-    public void unregisterIntentServiceIdlingResource() {
-        Log.d("TestUP", "After");
+    public void afterEachTest() {
+        Log.d("TestPD", "After");
+
+        assertEquals(true, test_utils.afterEachTest());
+
         Espresso.unregisterIdlingResources(placesIdlingResource);
         Espresso.unregisterIdlingResources(usersIdlingResource);
     }
 
-    @Test
-    public void testButtonLogout() throws Exception {
-        Intents.init();
-        onView(withText("Log Out")).perform(click());
-        intended(hasComponent(MainActivity.class.getName()));
-        Intents.release();
-    }
+
 
     @Test
-    public void testMapButton() throws Exception {
-        Intents.init();
-        device.findObject(new UiSelector().text("Map")).click();
-        intended(hasComponent(MapsActivity.class.getName()));
-        Intents.release();
+    public void testChatInput() throws Exception {
+        Log.d("TestPD", "testChat");
+
+        // queue
+        onView(withId(R.id.btn_chat)).check(matches(withText("Chat!")));
+        onView(withId(R.id.btn_chat)).perform(click());
+        SystemClock.sleep(10);
+
+        onView( withId(R.id.input)).perform(click());
+        onView( withId(R.id.input)).perform(typeText("This is a text message"));
+        Espresso.closeSoftKeyboard();
+
+
+        onView(withId(R.id.fab)).perform(click());
+
+
+
+
+
     }
+
+
 }
-
-

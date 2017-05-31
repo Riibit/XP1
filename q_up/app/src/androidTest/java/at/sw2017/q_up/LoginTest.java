@@ -41,6 +41,8 @@ public class LoginTest {
 
     @BeforeClass
     public static void initTestCase() {
+        // forget about logged in users
+        SaveSharedPreference.setUserName(QUpApp.getContext(), "");
         // wait for the sign in process to complete
         QUpApp.getInstance().getDBHandler().waitSignInComplete(10);
         QUpApp.getInstance().getDBHandler().waitPlacesComplete(10);
@@ -50,6 +52,8 @@ public class LoginTest {
     @Before
     public void registerIntentServiceIdlingResource() {
         Log.d("TestLogin", "Before");
+        // forget about logged in users
+        SaveSharedPreference.setUserName(QUpApp.getContext(), "");
 
         placesIdlingResource = QUpApp.getInstance().getDBHandler().getPlacesIdlingResource();
         Espresso.registerIdlingResources(placesIdlingResource);

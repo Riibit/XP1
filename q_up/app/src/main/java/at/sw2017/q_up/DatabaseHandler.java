@@ -282,14 +282,17 @@ public class DatabaseHandler {
      */
     public int removePlace(String id) {
 
-        DatabaseReference place_reference = FirebaseDatabase.getInstance().getReference("places");
+        if (!id.equals("")) {
+            DatabaseReference place_reference = FirebaseDatabase.getInstance().getReference("places");
 
-        getPlacesLatch = new CountDownLatch(1);
-        if (placesIdlingResource != null) {
-            placesIdlingResource.setIdleState(false);
+            getPlacesLatch = new CountDownLatch(1);
+            if (placesIdlingResource != null) {
+                placesIdlingResource.setIdleState(false);
+            }
+            place_reference.child(id).removeValue();
+            return 0;
         }
-        place_reference.child(id).removeValue();
-        return 0;
+        return 1;
     }
 
     /**
@@ -542,14 +545,17 @@ public class DatabaseHandler {
      */
     public int removeUser(String id) {
 
-        DatabaseReference user_reference = FirebaseDatabase.getInstance().getReference("users");
+        if (!id.equals("")) {
+            DatabaseReference user_reference = FirebaseDatabase.getInstance().getReference("users");
 
-        getUsersLatch = new CountDownLatch(1);
-        if (usersIdlingResource != null) {
-            usersIdlingResource.setIdleState(false);
+            getUsersLatch = new CountDownLatch(1);
+            if (usersIdlingResource != null) {
+                usersIdlingResource.setIdleState(false);
+            }
+            user_reference.child(id).removeValue();
+            return 0;
         }
-        user_reference.child(id).removeValue();
-        return 0;
+        return 1;
     }
 
     /**
