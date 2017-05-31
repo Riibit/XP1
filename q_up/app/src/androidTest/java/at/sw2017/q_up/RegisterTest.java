@@ -1,11 +1,14 @@
 package at.sw2017.q_up;
 
+import android.content.ComponentName;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
+
+import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,6 +21,7 @@ import org.junit.runners.MethodSorters;
 
 import java.util.List;
 
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -38,6 +42,8 @@ public class RegisterTest {
     private SimpleIdlingResource placesIdlingResource;
     private SimpleIdlingResource usersIdlingResource;
 
+    private TestHelperUtils test_utils;
+
     @Rule
     public ActivityTestRule<RegisterActivity> mActivityRule = new ActivityTestRule<>(RegisterActivity.class);
 
@@ -54,6 +60,9 @@ public class RegisterTest {
     @Before
     public void registerIntentServiceIdlingResource() {
         Log.d("TestRegister", "Before");
+
+        this.test_utils = new TestHelperUtils();
+
         // forget about logged in users
         SaveSharedPreference.setUserName(QUpApp.getContext(), "");
         //Activity activity = activityTestRule.getActivity();
@@ -67,6 +76,9 @@ public class RegisterTest {
     @After
     public void unregisterIntentServiceIdlingResource() {
         Log.d("TestRegister", "After");
+
+        Assert.assertEquals(true, test_utils.afterEachTest());
+
         Espresso.unregisterIdlingResources(placesIdlingResource);
         Espresso.unregisterIdlingResources(usersIdlingResource);
     }
@@ -77,15 +89,15 @@ public class RegisterTest {
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
 
         onView( withId(R.id.inputUsername)).perform(click());
-        onView( withId(R.id.inputUsername)).perform(typeText("Testhannes"));
+        onView( withId(R.id.inputUsername)).perform(typeText(TestHelperUtils.TESTUSER_NAME));
         Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.inputPassword)).perform(click());
-        onView( withId(R.id.inputPassword)).perform(typeText("password"));
+        onView( withId(R.id.inputPassword)).perform(typeText(TestHelperUtils.TESTUSER_PW));
         Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.confirmPassword)).perform(click());
-        onView( withId(R.id.confirmPassword)).perform(typeText("password"));
+        onView( withId(R.id.confirmPassword)).perform(typeText(TestHelperUtils.TESTUSER_PW));
         Espresso.closeSoftKeyboard();
 
         Espresso.closeSoftKeyboard();
@@ -97,8 +109,8 @@ public class RegisterTest {
             // look for testuser in list
             db_handle.usersLock();
             for (User u : db_handle.getUsersList()) {
-                if (u.userName.equals("Testhannes")) {
-                    if (u.password.equals("password")) {
+                if (u.userName.equals(TestHelperUtils.TESTUSER_NAME)) {
+                    if (u.password.equals(TestHelperUtils.TESTUSER_PW)) {
                         testuser_id = u.userId;
                         break;
                     }
@@ -118,15 +130,15 @@ public class RegisterTest {
 
         Intents.init();
         onView( withId(R.id.inputUsername)).perform(click());
-        onView( withId(R.id.inputUsername)).perform(typeText("Testhannes"));
+        onView( withId(R.id.inputUsername)).perform(typeText(TestHelperUtils.TESTUSER_NAME));
         Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.inputPassword)).perform(click());
-        onView( withId(R.id.inputPassword)).perform(typeText("password"));
+        onView( withId(R.id.inputPassword)).perform(typeText(TestHelperUtils.TESTUSER_PW));
         Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.confirmPassword)).perform(click());
-        onView( withId(R.id.confirmPassword)).perform(typeText("password"));
+        onView( withId(R.id.confirmPassword)).perform(typeText(TestHelperUtils.TESTUSER_PW));
         Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.loginNavigationButton)).perform(click());
@@ -137,8 +149,9 @@ public class RegisterTest {
     @Test
     public void WrongConfirm() throws Exception {
 
+        Intents.init();
         onView( withId(R.id.inputUsername)).perform(click());
-        onView( withId(R.id.inputUsername)).perform(typeText("Failhannes"));
+        onView( withId(R.id.inputUsername)).perform(typeText(TestHelperUtils.TESTUSER_NAME));
         Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.inputPassword)).perform(click());
@@ -150,24 +163,9 @@ public class RegisterTest {
         Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.registerButton)).perform(click());
-    }
+        intended(hasComponent(RegisterActivity.class.getName()));
 
-
-    @Test
-    public void newFranz() throws Exception {
-
-        onView( withId(R.id.inputUsername)).perform(click());
-        onView( withId(R.id.inputUsername)).perform(typeText("franz"));
-        Espresso.closeSoftKeyboard();
-
-        onView( withId(R.id.inputPassword)).perform(click());
-        onView( withId(R.id.inputPassword)).perform(typeText("password"));
-        Espresso.closeSoftKeyboard();
-
-        onView( withId(R.id.confirmPassword)).perform(click());
-        onView( withId(R.id.confirmPassword)).perform(typeText("password"));
-        Espresso.closeSoftKeyboard();
-
-        onView( withId(R.id.registerButton)).perform(click());
+        //intended(hasComponent(new ComponentName(getTargetContext(), RegisterActivity.class)));
+        Intents.release();
     }
 }

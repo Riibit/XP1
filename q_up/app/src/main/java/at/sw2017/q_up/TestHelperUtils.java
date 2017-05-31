@@ -27,6 +27,42 @@ public class TestHelperUtils {
         this.db_handle = QUpApp.getInstance().getDBHandler();
     }
 
+    public boolean removeAllTestplaces() {
+
+        List<String> oldtestplaces_to_remove = new ArrayList<>();
+
+        this.db_handle.placesLock();
+        for (Place p : this.db_handle.getPlacesList()) {
+            if (p.placeName.equals(TESTPLACE_NAME)) {
+                oldtestplaces_to_remove.add(p.placeId);
+            }
+        }
+        this.db_handle.placesUnlock();
+
+        for (String id : oldtestplaces_to_remove) {
+            this.db_handle.removePlace(id);
+        }
+
+        return true;
+    }
+
+    public boolean removeAllTestUsers() {
+
+        List<String> oldtestusers_to_remove = new ArrayList<>();
+
+        this.db_handle.usersLock();
+        for (User u : this.db_handle.getUsersList()) {
+            if (u.userName.equals(TESTUSER_NAME)) {
+                oldtestusers_to_remove.add(u.userId);
+            }
+        }
+        this.db_handle.usersUnlock();
+
+        for (String id : oldtestusers_to_remove) {
+            this.db_handle.removeUser(id);
+        }
+        return true;
+    }
 
     // returns true if everything worked correctly
     public boolean beforeEachTest() {
@@ -43,17 +79,7 @@ public class TestHelperUtils {
             return false;
 
         // try to remove all old testplaces
-        List<String> oldtestplaces_to_remove = new ArrayList<>();
-        this.db_handle.placesLock();
-        for (Place p : this.db_handle.getPlacesList()) {
-            if (p.placeName.equals(TESTPLACE_NAME)) {
-                oldtestplaces_to_remove.add(p.placeId);
-            }
-        }
-        this.db_handle.placesUnlock();
-        for (String id : oldtestplaces_to_remove) {
-            this.db_handle.removePlace(id);
-        }
+        removeAllTestplaces();
 
         // create new testplace
 
@@ -76,17 +102,7 @@ public class TestHelperUtils {
             return false;
 
         // try to remove all old testusers
-        List<String> oldtestusers_to_remove = new ArrayList<>();
-        this.db_handle.usersLock();
-        for (User u : this.db_handle.getUsersList()) {
-            if (u.userName.equals(TESTUSER_NAME)) {
-                oldtestusers_to_remove.add(u.userId);
-            }
-        }
-        this.db_handle.usersUnlock();
-        for (String id : oldtestusers_to_remove) {
-            this.db_handle.removeUser(id);
-        }
+        removeAllTestUsers();
 
         // create testuser
         this.db_handle.addUser(TESTUSER_NAME, TESTUSER_PW);
