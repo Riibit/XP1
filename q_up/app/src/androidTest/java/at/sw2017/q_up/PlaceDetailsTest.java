@@ -48,12 +48,11 @@ import static org.junit.Assert.assertNotNull;
 @LargeTest
 public class PlaceDetailsTest {
 
+    private UiDevice device;
     private SimpleIdlingResource placesIdlingResource;
     private SimpleIdlingResource usersIdlingResource;
 
-    private UiDevice device;
-    private String testplace_id = "";
-    private String testuser_id = "";
+    private TestHelperUtils test_utils;
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
@@ -62,6 +61,7 @@ public class PlaceDetailsTest {
     public static void initTestCase() {
         // forget about logged in users
         SaveSharedPreference.setUserName(QUpApp.getContext(), "");
+
         // wait for the sign in process to complete
         QUpApp.getInstance().getDBHandler().waitSignInComplete(10);
         QUpApp.getInstance().getDBHandler().waitPlacesComplete(10);
@@ -69,10 +69,10 @@ public class PlaceDetailsTest {
     }
 
     @Before
-    public void registerIntentServiceIdlingResource() throws UiObjectNotFoundException {
+    public void beforeEachTest() throws UiObjectNotFoundException {
         Log.d("TestPD", "Before");
-        // forget about logged in users
-        SaveSharedPreference.setUserName(QUpApp.getContext(), "");
+
+        this.test_utils = new TestHelperUtils();
 
         // prepare UiAutomator
         this.device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -83,107 +83,32 @@ public class PlaceDetailsTest {
         usersIdlingResource = QUpApp.getInstance().getDBHandler().getUsersIdlingResource();
         Espresso.registerIdlingResources(usersIdlingResource);
 
-        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-        assertNotNull(db_handle);
-
-        // get existing places from db
-        long startTime = System.currentTimeMillis(); //fetch starting time
-        while((System.currentTimeMillis()-startTime) < 5000) {
-            if (!db_handle.isPlacesListEmpty())
-                break;
-        }
-        assertEquals(false, db_handle.isPlacesListEmpty());
-
-        // try to remove all old testplaces
-        List<String> oldtestplaces_to_remove = new ArrayList<>();
-        db_handle.placesLock();
-        for (Place p : db_handle.getPlacesList()) {
-            if (p.placeName.equals("testplace")) {
-                oldtestplaces_to_remove.add(p.placeId);
-            }
-        }
-        db_handle.placesUnlock();
-        for (String id : oldtestplaces_to_remove) {
-            db_handle.removePlace(id);
-        }
-
-        // create new testplace
-
-        // add a place at center of camera: 47.0707, 15.4395
-        db_handle.addPlace("testplace", "47.0707", "15.4395", "0", "0", "10", "www.testplace.at", "0-2", "testplaceStreet1");
-
-        // look for testplace in list
-        startTime = System.currentTimeMillis(); //fetch starting time
-        while((System.currentTimeMillis()-startTime) < 5000) {
-            db_handle.placesLock();
-            for (Place p : db_handle.getPlacesList()) {
-                if (p.placeName.equals("testplace")) {
-                    testplace_id = p.placeId;
-                    break;
-                }
-            }
-            db_handle.placesUnlock();
-        }
-        assertNotEquals("", testplace_id);
-
-        // try to remove all old testusers
-        List<String> oldtestusers_to_remove = new ArrayList<>();
-        db_handle.usersLock();
-        for (User u : db_handle.getUsersList()) {
-            if (u.userName.equals("testCaseUser")) {
-                oldtestusers_to_remove.add(u.userId);
-            }
-        }
-        db_handle.usersUnlock();
-        for (String id : oldtestusers_to_remove) {
-            db_handle.removeUser(id);
-        }
-
-        // create testuser
-        db_handle.addUser("testCaseUser", "lalala");
-
-        startTime = System.currentTimeMillis(); //fetch starting time
-        boolean finished = false;
-        while(!finished && (System.currentTimeMillis()-startTime) < 5000) {
-            db_handle.usersLock();
-            for (User u : db_handle.getUsersList()) {
-                if (u.userName.equals("testCaseUser")) {
-                    finished = true;
-                    testuser_id = u.userId;
-                    break;
-                }
-            }
-            db_handle.usersUnlock();
-        }
-        assertEquals(true, finished);
+        // initialize DB
+        assertNotNull(this.test_utils.db_handle);
+        assertEquals(true, this.test_utils.beforeEachTest());
 
         // log in
         Intents.init();
         onView(withId(R.id.inputName)).perform(click());
-        onView(withId(R.id.inputName)).perform(typeText("testCaseUser"));
+        onView(withId(R.id.inputName)).perform(typeText(TestHelperUtils.TESTUSER_NAME));
         Espresso.closeSoftKeyboard();
 
         onView(withId(R.id.editTextPasswort)).perform(click());
-        onView(withId(R.id.editTextPasswort)).perform(typeText("lalala"));
+        onView(withId(R.id.editTextPasswort)).perform(typeText(TestHelperUtils.TESTUSER_PW));
         Espresso.closeSoftKeyboard();
 
         onView(withId(R.id.buttonLogin)).perform(click());
         intended(hasComponent(MapsActivity.class.getName()));
         Intents.release();
 
-        // zoom map to test position
-        /*
-        MapsActivity mAct = (MapsActivity) QUpApp.getInstance().getCurrentActivity();
-        mAct.zoomToPosition(12.06, 34.4639);
-        */
-
         // go to place
         Intents.init();
         device.waitForIdle(10000);
         SystemClock.sleep(500);
-        UiObject marker = device.findObject(new UiSelector().descriptionContains("testplace"));
+        UiObject marker = device.findObject(new UiSelector().descriptionContains(TestHelperUtils.TESTPLACE_NAME));
         marker.click();
 
+        // click on the place's label
         SystemClock.sleep(500);
         Rect bounds = marker.getBounds();
         int clickX = bounds.centerX();
@@ -197,11 +122,11 @@ public class PlaceDetailsTest {
     }
 
     @After
-    public void unregisterIntentServiceIdlingResource() {
+    public void afterEachTest() {
         Log.d("TestPD", "After");
-        DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
-        db_handle.removePlace(testplace_id);
-        db_handle.removeUser(testuser_id);
+
+        assertEquals(true, test_utils.afterEachTest());
+
         Espresso.unregisterIdlingResources(placesIdlingResource);
         Espresso.unregisterIdlingResources(usersIdlingResource);
     }
