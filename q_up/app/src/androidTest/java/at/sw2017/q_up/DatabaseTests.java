@@ -359,15 +359,10 @@ final boolean regenarte_testcase = false;
         String id = "";
         String old_idCheckInPlace = "";
 
-        db_handle.usersLock();
-        for (User u : db_handle.getUsersList()) {
-            if (u.userName.equals("franz")) {
-                id = u.userId;
-                old_idCheckInPlace = u.idCheckInPlace;
-                break;
-            }
-        }
-        db_handle.usersUnlock();
+        User myFranz = db_handle.getUserFromName("franz");
+        assertNotEquals(null, myFranz);
+        id = myFranz.userId;
+        old_idCheckInPlace = myFranz.idCheckInPlace;
 
         assertNotEquals("", id);
 
