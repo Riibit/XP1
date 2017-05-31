@@ -47,16 +47,19 @@
             android:label="@string/title_activity_maps" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".PlaceViewList" />
-        <activity android:name=".PlaceDetails"
-            android:parentActivityName=".PlaceDetails"
-            android:label="@string/PlaceDetails"/>
-        <activity android:name=".ProfileActivity"
+        <activity
+            android:name=".PlaceDetails"
+            android:label="@string/PlaceDetails"
+            android:parentActivityName=".PlaceDetails" />
+        <activity
+            android:name=".ProfileActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".InfoActivity"
+        <activity
+            android:name=".InfoActivity"
             android:label="@string/info"
-            android:parentActivityName="at.sw2017.q_up.PlaceDetails">
-
-        </activity>
+            android:parentActivityName=".PlaceDetails" />
+        <activity android:name=".ChangePasswordActivity" />
+        <activity android:name=".ChangeInfoActivity"></activity>
     </application>
 
 </manifest>

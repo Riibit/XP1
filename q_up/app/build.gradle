@@ -22,7 +22,7 @@ android {
         }
     }
     defaultConfig {
-       multiDexEnabled true
+        multiDexEnabled true
     }
 }
 
@@ -45,8 +45,9 @@ dependencies {
     })
 
 
-    compile 'com.android.support:appcompat-v7:+'
-    compile 'com.android.support:design:+'
+
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.google.firebase:firebase-database:10.2.0'
     compile 'com.google.firebase:firebase-auth:10.2.0'
@@ -54,7 +55,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:10.2.0'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support.test.espresso:espresso-idling-resource:2.2.2'
-
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 }

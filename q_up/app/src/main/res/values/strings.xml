@@ -26,6 +26,8 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="info">Info</string>
     <string name="PlaceDetails">Details</string>
+    <string name="change_password">Change password</string>
+    <string name="change_info">Change user info</string>
 
     <string name="chatButton">Chat!</string>
 
