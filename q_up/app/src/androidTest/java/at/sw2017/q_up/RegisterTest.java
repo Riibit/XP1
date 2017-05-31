@@ -1,6 +1,5 @@
 package at.sw2017.q_up;
 
-import android.content.ComponentName;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.filters.LargeTest;
@@ -19,18 +18,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
-import java.util.List;
-
-import static android.support.test.InstrumentationRegistry.getTargetContext;
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -45,7 +40,8 @@ public class RegisterTest {
     private TestHelperUtils test_utils;
 
     @Rule
-    public ActivityTestRule<RegisterActivity> mActivityRule = new ActivityTestRule<>(RegisterActivity.class);
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
+    //public ActivityTestRule<RegisterActivity> mActivityRule = new ActivityTestRule<>(RegisterActivity.class);
 
     @BeforeClass
     public static void initTestCase() {
@@ -71,6 +67,11 @@ public class RegisterTest {
         Espresso.registerIdlingResources(placesIdlingResource);
         usersIdlingResource = QUpApp.getInstance().getDBHandler().getUsersIdlingResource();
         Espresso.registerIdlingResources(usersIdlingResource);
+
+        Intents.init();
+        onView(withId(R.id.registerNavigationButton)).perform(click());
+        intended(hasComponent(RegisterActivity.class.getName()));
+        Intents.release();
     }
 
     @After
@@ -149,7 +150,6 @@ public class RegisterTest {
     @Test
     public void WrongConfirm() throws Exception {
 
-        Intents.init();
         onView( withId(R.id.inputUsername)).perform(click());
         onView( withId(R.id.inputUsername)).perform(typeText(TestHelperUtils.TESTUSER_NAME));
         Espresso.closeSoftKeyboard();
@@ -159,13 +159,12 @@ public class RegisterTest {
         Espresso.closeSoftKeyboard();
 
         onView( withId(R.id.confirmPassword)).perform(click());
-        onView( withId(R.id.confirmPassword)).perform(typeText("passwrd"));
+        onView( withId(R.id.confirmPassword)).perform(typeText("passwd"));
         Espresso.closeSoftKeyboard();
 
+        // this checks if we are still on the register activity
+        // a check with intended threw an exception - only works if you actually switch activities
         onView( withId(R.id.registerButton)).perform(click());
-        intended(hasComponent(RegisterActivity.class.getName()));
-
-        //intended(hasComponent(new ComponentName(getTargetContext(), RegisterActivity.class)));
-        Intents.release();
+        onView(withId(R.id.registerButton)).check(matches(isDisplayed()));
     }
 }
