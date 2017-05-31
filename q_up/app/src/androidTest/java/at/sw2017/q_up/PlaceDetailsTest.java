@@ -60,6 +60,8 @@ public class PlaceDetailsTest {
 
     @BeforeClass
     public static void initTestCase() {
+        // forget about logged in users
+        SaveSharedPreference.setUserName(QUpApp.getContext(), "");
         // wait for the sign in process to complete
         QUpApp.getInstance().getDBHandler().waitSignInComplete(10);
         QUpApp.getInstance().getDBHandler().waitPlacesComplete(10);
@@ -69,6 +71,8 @@ public class PlaceDetailsTest {
     @Before
     public void registerIntentServiceIdlingResource() throws UiObjectNotFoundException {
         Log.d("TestPD", "Before");
+        // forget about logged in users
+        SaveSharedPreference.setUserName(QUpApp.getContext(), "");
 
         // prepare UiAutomator
         this.device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -106,7 +110,7 @@ public class PlaceDetailsTest {
         // create new testplace
 
         // add a place at center of camera: 47.0707, 15.4395
-        db_handle.addPlace("testplace", "12.06", "34.4639", "0", "0", "10", "www.testplace.at", "0-2", "testplaceStreet1");
+        db_handle.addPlace("testplace", "47.0707", "15.4395", "0", "0", "10", "www.testplace.at", "0-2", "testplaceStreet1");
 
         // look for testplace in list
         startTime = System.currentTimeMillis(); //fetch starting time

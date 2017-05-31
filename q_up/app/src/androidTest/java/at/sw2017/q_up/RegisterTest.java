@@ -43,6 +43,8 @@ public class RegisterTest {
 
     @BeforeClass
     public static void initTestCase() {
+        // forget about logged in users
+        SaveSharedPreference.setUserName(QUpApp.getContext(), "");
         // wait for the sign in process to complete
         QUpApp.getInstance().getDBHandler().waitSignInComplete(10);
         QUpApp.getInstance().getDBHandler().waitPlacesComplete(10);
@@ -52,6 +54,8 @@ public class RegisterTest {
     @Before
     public void registerIntentServiceIdlingResource() {
         Log.d("TestRegister", "Before");
+        // forget about logged in users
+        SaveSharedPreference.setUserName(QUpApp.getContext(), "");
         //Activity activity = activityTestRule.getActivity();
 
         placesIdlingResource = QUpApp.getInstance().getDBHandler().getPlacesIdlingResource();

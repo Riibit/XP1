@@ -57,6 +57,8 @@ public class UserProfileTest {
 
     @BeforeClass
     public static void initTestCase() {
+        // forget about logged in users
+        SaveSharedPreference.setUserName(QUpApp.getContext(), "");
         // wait for the sign in process to complete
         QUpApp.getInstance().getDBHandler().waitSignInComplete(10);
         QUpApp.getInstance().getDBHandler().waitPlacesComplete(10);
@@ -66,6 +68,8 @@ public class UserProfileTest {
     @Before
     public void registerIntentServiceIdlingResource() throws UiObjectNotFoundException {
         Log.d("TestUP", "Before");
+        // forget about logged in users
+        SaveSharedPreference.setUserName(QUpApp.getContext(), "");
 
         // prepare UiAutomator
         this.device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
