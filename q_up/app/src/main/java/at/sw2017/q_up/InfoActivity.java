@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,7 +35,7 @@ public class InfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_info);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         bundle = getIntent().getExtras();
-        title  =  "Information of " + bundle.getString("title");
+        title  = bundle.getString("title");
         id = bundle.getString("id");
         txtViewTitle = (TextView) findViewById(R.id.txtView_title_info);
         txtViewLongtitude = (TextView) findViewById(R.id.txtView_longtitude);
@@ -55,9 +56,6 @@ public class InfoActivity extends AppCompatActivity {
             txtviewOpening.setText(place.opening_hours);
             txtViewAdress.setText(place.address);
             txtViewLink.setText(place.link);
-
-
-
         }
     }
 
@@ -74,7 +72,7 @@ public class InfoActivity extends AppCompatActivity {
                 "onRestart", Toast.LENGTH_SHORT).show();
 
         bundle = getIntent().getExtras();
-        title  =  "Information of " + bundle.getString("title");
+        title  =  bundle.getString("title");
         id = bundle.getString("id");
         txtViewTitle.setText(title);
         place = db_handle.getPlaceFromId(id);
