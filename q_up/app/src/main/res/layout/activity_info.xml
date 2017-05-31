@@ -19,8 +19,7 @@
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.017"
-        tools:layout_editor_absoluteX="3dp" />
+        app:layout_constraintVertical_bias="0.017" />
 
     <TextView
         android:id="@+id/txtViewlatitude"
@@ -184,24 +183,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintHorizontal_bias="0.031"
         app:layout_constraintVertical_bias="0.072" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="info"
-        android:textColorLink="@color/com_facebook_button_background_color_focused_disabled"
-        android:textSize="25sp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/txtView_title_info"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintVertical_bias="0.0" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
