@@ -1,8 +1,12 @@
 package at.sw2017.q_up;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -42,6 +46,20 @@ public class MainActivity extends Activity implements View.OnClickListener {
             return false;
         }
     };
+
+    @TargetApi(21)
+    public static boolean isConnectingToInternet(Context context) {
+        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        Network[] network = connectivity.getAllNetworks();
+        if (connectivity != null) {
+            for (int i = 0; i < network.length; i++) {
+                if (connectivity.getNetworkInfo(network[i]).getState() == NetworkInfo.State.CONNECTED) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public void serverReady() {
         waitingAnimation = (RelativeLayout)findViewById(R.id.waitingAnimation);
@@ -88,6 +106,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         editTextPassword.setOnKeyListener(myKeyListener);
 
         EvaluationOnTime();
+
+        if(!isConnectingToInternet(MainActivity.this))
+        {
+            Toast.makeText(getApplicationContext(),"No Internet connection detected!",Toast.LENGTH_LONG).show();
+        }
     }
 
     public void EvaluationOnTime()
@@ -129,6 +152,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
+        if(!isConnectingToInternet(MainActivity.this))
+        {
+            Toast.makeText(getApplicationContext(),"No Internet connection detected!",Toast.LENGTH_LONG).show();
+        }
 
 
     }
