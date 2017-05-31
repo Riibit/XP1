@@ -132,6 +132,9 @@ public class TestHelperUtils {
         this.db_handle.removePlace(this.testplace_id);
         this.db_handle.removeUser(this.testuser_id);
 
+        // dismiss saved user
+        SaveSharedPreference.setUserName(QUpApp.getContext(), "");
+
         return true;
     }
 }
