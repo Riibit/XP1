@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -15,6 +17,21 @@ import com.google.firebase.database.FirebaseDatabase;
 public class ChatActivity extends AppCompatActivity {
 
     private FirebaseListAdapter<ChatMessage> adapter;
+    private TextView inputView;
+
+    View.OnKeyListener myKeyListener = new View.OnKeyListener() {
+        @Override
+        public boolean onKey(View arg0, int actionID, KeyEvent event) {
+            // TODO: do what you got to do
+            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                    (actionID == KeyEvent.KEYCODE_ENTER)) {
+                FloatingActionButton click = (FloatingActionButton)findViewById(R.id.fab);
+                click.performClick();
+
+            }
+            return false;
+        }
+    };
 
 
     private void sendMessageToDatabase() {
@@ -77,5 +94,7 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
         sendMessageToDatabase();
         displayChatMessages();
+        inputView = (TextView) findViewById(R.id.input);
+        inputView.setOnKeyListener(myKeyListener);
     }
 }
