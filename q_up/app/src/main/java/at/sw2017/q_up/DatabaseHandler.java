@@ -58,6 +58,14 @@ public class DatabaseHandler {
     @Nullable
     private SimpleIdlingResource usersIdlingResource;
 
+    private boolean placesReady = false;
+    private boolean usersReady = false;
+    private boolean initDone = false;
+
+    public boolean getInitDone() {
+        return initDone;
+    }
+
     /**
      * wait for sign in to complete (might take a while)
      * @param timeout_s timeout in seconds
@@ -208,6 +216,10 @@ public class DatabaseHandler {
                 }
                 placesUnlock();
 
+                placesReady = true;
+                if (usersReady && placesReady && !initDone)
+                    initDone = true;
+
                 // signal, that we are finished
                 getPlacesLatch.countDown();
                 if (placesIdlingResource != null) {
@@ -247,12 +259,13 @@ public class DatabaseHandler {
      * add a new place to the database
      * @return 0 if OK
      */
-    public Integer addPlace(String name, String lat, String lon, String rating_pos, String rating_neg, String processing_time) {
+    public Integer addPlace(String name, String lat, String lon, String rating_pos, String rating_neg, String processing_time, String link,
+                            String op_hours, String address) {
 
         DatabaseReference place_reference = FirebaseDatabase.getInstance().getReference("places");
 
         String placeId = place_reference.push().getKey();
-        Place place = new Place(placeId, name, lat, lon, rating_pos, rating_neg, processing_time);
+        Place place = new Place(placeId, name, lat, lon, rating_pos, rating_neg, processing_time, link, op_hours, address);
 
         getPlacesLatch = new CountDownLatch(1);
         if (placesIdlingResource != null) {
@@ -442,6 +455,10 @@ public class DatabaseHandler {
                 }
                 usersUnlock();
 
+                usersReady = true;
+                if (usersReady && placesReady && !initDone)
+                    initDone = true;
+
                 // signal, that we are finished
                 getUsersLatch.countDown();
                 if (usersIdlingResource != null) {
@@ -475,6 +492,26 @@ public class DatabaseHandler {
             return_value = true;
         usersUnlock();
         return return_value;
+    }
+
+    public User getUserFromId(String uid) {
+        usersLock();
+        for (User u : usersList) {
+            if (u.userId.equals(uid))
+                return u;
+        }
+        usersUnlock();
+        return null;
+    }
+
+    public User getUserFromName(String uname) {
+        usersLock();
+        for (User u : usersList) {
+            if (u.userName.equals(uname))
+                return u;
+        }
+        usersUnlock();
+        return null;
     }
 
     /**
