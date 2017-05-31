@@ -45,9 +45,6 @@ public class ChatTest {
 
     private TestHelperUtils test_utils;
 
-
-
-
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
@@ -135,10 +132,16 @@ public class ChatTest {
         // queue
         onView(withId(R.id.btn_chat)).check(matches(withText("Chat!")));
         onView(withId(R.id.btn_chat)).perform(click());
+
+        //UiObject marker = device.findObject(new UiSelector().text("CHAT!"));
+        //String lala = marker.getText();
+        //boolean boo = marker.exists();
+        //marker.click();
+
         SystemClock.sleep(10);
 
         onView( withId(R.id.input)).perform(click());
-        onView( withId(R.id.input)).perform(typeText("This is a text message"));
+        onView( withId(R.id.input)).perform(typeText("msg"));
         Espresso.closeSoftKeyboard();
 
 
