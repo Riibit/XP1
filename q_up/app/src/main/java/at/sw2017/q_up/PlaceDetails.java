@@ -222,7 +222,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
         // int timee = db_handle.getQueuedUserCountFromPlace(place_id)* db_handle.getPlaceAvgProcessingSecsFromId(place_id);
         if(db_handle.getQueuedUserCountFromPlace(place_id) == 0)
         {
-            Qtime = "Queue Time: 00:00";
+            Qtime = "Queue Time:\n00:00";
             time_1.setText(Qtime);
         }
 
@@ -231,7 +231,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
             int timee = positionInQ* db_handle.getPlaceAvgProcessingSecsFromId(place_id);
             Minutes = timee /60;
             Seconds = timee % 60;
-            Qtime = "Queue Time:" + Integer.toString(Minutes) + ":" + Integer.toString(Seconds);
+            Qtime = "Queue Time:\n" + Integer.toString(Minutes) + ":" + Integer.toString(Seconds);
             time_1.setText(Qtime);
         }
     }

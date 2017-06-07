@@ -9,6 +9,7 @@ public class User {
     public String userName;
     public String password;
     public String idCheckInPlace; // ID of place where user is checked in
+    public String idLastCheckInPlace; // ID of place where user last checked in
 
     public User() {
 
@@ -19,5 +20,6 @@ public class User {
         this.userName = name;
         this.password = pw;
         this.idCheckInPlace = chinplace;
+        this.idLastCheckInPlace = "";
     }
 }

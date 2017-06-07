@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
-    DatabaseHandler db_handler = QUpApp.getInstance().getDBHandler();
+    DatabaseHandler db_handler;
     EditText newPassword;
     EditText newPasswordConfirm;
 
@@ -18,6 +18,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
+
+        db_handler = QUpApp.getInstance().getDBHandler();
 
         newPassword = (EditText) findViewById(R.id.PWchange_newPassword);
         newPasswordConfirm = (EditText) findViewById(R.id.PWchange_confirmPassword);

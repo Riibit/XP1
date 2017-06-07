@@ -199,6 +199,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     public static User getUser() {
+        DatabaseHandler db_handler = QUpApp.getInstance().getDBHandler();
+        currentUser = db_handler.getUserFromName(SaveSharedPreference.getUserName(QUpApp.getContext()));
         return currentUser;
     }
 

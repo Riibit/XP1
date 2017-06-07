@@ -604,6 +604,7 @@ public class DatabaseHandler {
             return;
 
         modifyUserAttribute(userID, "idCheckInPlace" ,placeID);
+        modifyUserAttribute(userID, "idLastCheckInPlace" ,placeID);
     }
 
     /**

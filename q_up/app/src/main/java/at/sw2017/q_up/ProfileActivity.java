@@ -1,18 +1,18 @@
 package at.sw2017.q_up;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    DatabaseHandler db_handler;
     User currentUser = MainActivity.getUser();
+    TextView lastCheckinPlaceText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,9 +20,13 @@ public class ProfileActivity extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_profile);
 
-        TextView usernameText = (TextView) findViewById(R.id.textView);
+        db_handler = QUpApp.getInstance().getDBHandler();
 
+        TextView usernameText = (TextView) findViewById(R.id.Profile_username);
         usernameText.setText(currentUser.userName);
+
+        lastCheckinPlaceText = (TextView) findViewById(R.id.Profile_lastPlace);
+        lastCheckinPlaceText.setText(db_handler.getPlaceNameFromId(currentUser.idLastCheckInPlace));
 
         Button buttonMap =(Button) findViewById(R.id.buttonMap);
         buttonMap.setRotation(270);
@@ -54,6 +58,13 @@ public class ProfileActivity extends AppCompatActivity {
         buttonMap.setRotation(90);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        QUpApp.getInstance().setCurrentActivity(this);
+        lastCheckinPlaceText.setText(db_handler.getPlaceNameFromId(currentUser.idLastCheckInPlace));
+    }
+
     public void goToMaps() {
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
@@ -69,3 +80,5 @@ public class ProfileActivity extends AppCompatActivity {
         startActivity(intent);
     }
 }
+
+
