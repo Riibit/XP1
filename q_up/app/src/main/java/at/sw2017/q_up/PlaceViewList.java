@@ -38,10 +38,10 @@ public class PlaceViewList extends Activity {
         for (Place p : db_handle.getPlacesList()) {
             places_to_show.add(p);
         }
-        Collections.sort(places_to_show);
         db_handle.placesUnlock();
+        Collections.sort(places_to_show);
 
-        for(Place p : places_to_show) {
+        for (Place p : places_to_show) {
             place_names.add(p.placeName + " " + p.address);
             place_ids.add(p.placeId);
         }

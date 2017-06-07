@@ -122,7 +122,7 @@ public class PlaceViewListTest {
     @Test
     public void testListClick() throws Exception {
         Intents.init();
-        device.findObject(new UiSelector().text("Hofer" + "  " + "Lendkai 59")).click();
+        device.findObject(new UiSelector().text("Hofer" + " " + "Lendkai 59")).click();
         intended(hasComponent(PlaceDetails.class.getName()));
         Intents.release();
     }
