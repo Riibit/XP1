@@ -224,7 +224,14 @@ public class PlaceDetails extends Activity implements OnClickListener {
             int timee = positionInQ* db_handle.getPlaceAvgProcessingSecsFromId(place_id);
             Minutes = timee /60;
             Seconds = timee % 60;
-            Qtime = "Queue Time:\n" + Integer.toString(Minutes) + ":" + Integer.toString(Seconds);
+            if ((Minutes < 10) && (Seconds < 10))
+                Qtime = "Queue Time:\n" + "0" + Integer.toString(Minutes) + ":" + "0" + Integer.toString(Seconds);
+            else if (Seconds < 10)
+                Qtime = "Queue Time:\n" + Integer.toString(Minutes) + ":" + "0" + Integer.toString(Seconds);
+            else if (Minutes < 10)
+                Qtime = "Queue Time:\n" + "0" + Integer.toString(Minutes) + ":" + Integer.toString(Seconds);
+            else
+                Qtime = "Queue Time:\n" + Integer.toString(Minutes) + ":" + Integer.toString(Seconds);
             time_1.setText(Qtime);
         }
     }
