@@ -14,6 +14,7 @@ public class TestHelperUtils {
 
     public static final String TESTUSER_NAME = "testCaseUser";
     public static final String TESTUSER_PW = "lalala";
+    public static final String TESTUSER_PW_NEW = "lululu";
 
     public static final String TESTPLACE_NAME= "testplace";
 
