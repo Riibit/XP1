@@ -58,7 +58,6 @@
             android:label="@string/info"
             android:parentActivityName=".PlaceDetails" />
         <activity android:name=".ChangePasswordActivity" />
-        <activity android:name=".ChangeInfoActivity"></activity>
     </application>
 
 </manifest>
