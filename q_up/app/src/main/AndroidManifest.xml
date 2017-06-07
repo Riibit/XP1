@@ -47,7 +47,8 @@
             android:label="@string/title_activity_maps" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".PlaceViewList" />
-        <activity android:name=".ChatActivity" />
+        <activity android:name=".ChatActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".PlaceDetails"
             android:parentActivityName=".PlaceDetails"
             android:label="@string/PlaceDetails"/>
