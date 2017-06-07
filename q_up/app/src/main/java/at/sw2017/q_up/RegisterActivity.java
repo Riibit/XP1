@@ -110,13 +110,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                     break;
                 }
 
-                if(inputPassword.getText().toString().equals(""))
-                {
-                    Toast.makeText(getApplicationContext(),
-                            "Enter a password for registration", Toast.LENGTH_SHORT).show();
-                    break;
-                }
-
                 // check if user already exists
                 db_handle.usersLock();
                 for (User u : db_handle.getUsersList()) {
