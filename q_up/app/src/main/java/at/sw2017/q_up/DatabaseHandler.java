@@ -500,8 +500,10 @@ public class DatabaseHandler {
     public User getUserFromName(String uname) {
         usersLock();
         for (User u : usersList) {
-            if (u.userName.equals(uname))
+            if (u.userName.equals(uname)) {
+                usersUnlock();
                 return u;
+            }
         }
         usersUnlock();
         return null;
