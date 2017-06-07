@@ -25,8 +25,10 @@ import org.junit.runners.MethodSorters;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertNotNull;
@@ -142,5 +144,35 @@ public class PasswordChangeTest {
         onView( withId(R.id.PWchange_cancelPassButton)).perform(click());
         intended(hasComponent(ProfileActivity.class.getName()));
         Intents.release();
+    }
+
+    @Test
+    public void testPWempty() throws Exception {
+
+        onView( withId(R.id.PWchange_newPassword)).perform(click());
+        onView( withId(R.id.PWchange_newPassword)).perform(typeText(""));
+        Espresso.closeSoftKeyboard();
+
+        onView( withId(R.id.PWchange_confirmPassword)).perform(click());
+        onView( withId(R.id.PWchange_confirmPassword)).perform(typeText(""));
+        Espresso.closeSoftKeyboard();
+
+        device.findObject(new UiSelector().text("CONFIRM")).click();
+        onView(withId(R.id.PWchange_confirmPassButton)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testPWdontMatch() throws Exception {
+
+        onView( withId(R.id.PWchange_newPassword)).perform(click());
+        onView( withId(R.id.PWchange_newPassword)).perform(typeText(TestHelperUtils.TESTUSER_PW));
+        Espresso.closeSoftKeyboard();
+
+        onView( withId(R.id.PWchange_confirmPassword)).perform(click());
+        onView( withId(R.id.PWchange_confirmPassword)).perform(typeText(TestHelperUtils.TESTUSER_PW_NEW));
+        Espresso.closeSoftKeyboard();
+
+        device.findObject(new UiSelector().text("CONFIRM")).click();
+        onView(withId(R.id.PWchange_confirmPassButton)).check(matches(isDisplayed()));
     }
 }
