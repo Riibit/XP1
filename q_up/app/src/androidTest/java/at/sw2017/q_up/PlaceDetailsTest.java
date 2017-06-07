@@ -33,6 +33,7 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
@@ -238,5 +239,15 @@ public class PlaceDetailsTest {
         // exit queue
         onView(withId(R.id.btn_qup)).perform(click());
         onView(withId(R.id.btn_qup)).check(matches(withText("Q UP!")));
+    }
+
+    @Test
+    public void BackButtonTest() throws Throwable
+    {
+        Log.d("TestPD", "BackButtonTest");
+        onView(withId(R.id.btn_qup)).check(matches(withText("Q UP!")));
+        onView(withId(R.id.btn_qup)).perform(click());
+        Espresso.pressBack();
+        onView(withId(R.id.btn_qup)).check(matches(withText("EXIT Q")));
     }
 }
