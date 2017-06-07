@@ -46,7 +46,7 @@
         <activity android:name=".InfoActivity"
             android:label="@string/info"
             android:parentActivityName="at.sw2017.q_up.PlaceDetails">
-
         </activity>
+        <activity android:name=".ChangePasswordActivity" />
     </application>
 </manifest>

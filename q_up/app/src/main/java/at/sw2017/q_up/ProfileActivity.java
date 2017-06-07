@@ -43,6 +43,14 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        Button buttonChangePW =(Button) findViewById(R.id.buttonChangePassword);
+        buttonChangePW.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View arg0) {
+                goToChangePW();
+            }
+        });
+
         buttonMap.setRotation(90);
     }
 
@@ -53,6 +61,11 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void goToMain() {
         Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToChangePW() {
+        Intent intent = new Intent(this, ChangePasswordActivity.class);
         startActivity(intent);
     }
 }
