@@ -31,10 +31,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
     private RatingBar ratingbar;
     TextView peopleInQueue;
     boolean QdUP;
-    Calendar cal;
-    int start;
-    int end;
-    int time;
     TextView time_1;
     private Intent intent;
     ToggleButton ButtonQ;
@@ -208,9 +204,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
         ButtonDislike.setVisibility(View.GONE);
         txtViewlike.setVisibility(View.GONE);
         txtViewdislike.setVisibility(View.GONE);
-        start = 0;
-        end = 0;
-        time = 0;
         EvaluationOnTime();
         InfoButton();
         getNumberOfUsers();
@@ -286,8 +279,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
                 db_handle.checkUserIntoPlace(user_id, place_id);
                 QdUP = true;
                 decision = true;
-                cal = Calendar.getInstance();
-                start = cal.get(Calendar.SECOND);
                 ButtonLike.setEnabled(true);
                 ButtonDislike.setEnabled(true);
                 time_1.setText("");
@@ -298,26 +289,6 @@ public class PlaceDetails extends Activity implements OnClickListener {
                 db_handle.checkOutOfPlace(user_id);
                 QdUP = false;
                 decision = false;
-                cal = Calendar.getInstance();
-                end = cal.get(Calendar.SECOND);
-
-                if (end < start) {
-                    end += 60;
-                    time = end - start;
-                    if (time < 0)
-                        time = time * (-1);
-                    // Qtime = "Queue Time:" + Integer.toString(time);
-                    //     time_1.setText(Qtime);
-
-                } else {
-                    time = start - end;
-                    if (time < 0)
-                        time = time * (-1);
-                    //   Qtime = "Queue Time:" + Integer.toString(time);
-                    //time_1.setText(Qtime);
-
-                }
-
             }
         }
     }
