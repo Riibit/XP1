@@ -167,4 +167,50 @@ public class RegisterTest {
         onView( withId(R.id.registerButton)).perform(click());
         onView(withId(R.id.registerButton)).check(matches(isDisplayed()));
     }
+
+    @Test
+    public void emptyUser() throws Exception {
+
+        onView( withId(R.id.inputUsername)).perform(click());
+        onView( withId(R.id.inputUsername)).perform(typeText(""));
+        Espresso.closeSoftKeyboard();
+
+        onView( withId(R.id.inputPassword)).perform(click());
+        onView( withId(R.id.inputPassword)).perform(typeText("password"));
+        Espresso.closeSoftKeyboard();
+
+        onView( withId(R.id.confirmPassword)).perform(click());
+        onView( withId(R.id.confirmPassword)).perform(typeText("password"));
+        Espresso.closeSoftKeyboard();
+
+        // this checks if we are still on the register activity
+        // a check with intended threw an exception - only works if you actually switch activities
+        onView( withId(R.id.registerButton)).perform(click());
+        onView(withId(R.id.registerButton)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void UserExists() throws Exception {
+
+        onView( withId(R.id.inputUsername)).perform(click());
+        onView( withId(R.id.inputUsername)).perform(typeText("hans"));
+        Espresso.closeSoftKeyboard();
+
+        onView( withId(R.id.inputPassword)).perform(click());
+        onView( withId(R.id.inputPassword)).perform(typeText("password"));
+        Espresso.closeSoftKeyboard();
+
+        onView( withId(R.id.confirmPassword)).perform(click());
+        onView( withId(R.id.confirmPassword)).perform(typeText("password"));
+        Espresso.closeSoftKeyboard();
+
+        // this checks if we are still on the register activity
+        // a check with intended threw an exception - only works if you actually switch activities
+        onView( withId(R.id.registerButton)).perform(click());
+        onView(withId(R.id.registerButton)).check(matches(isDisplayed()));
+    }
+
+
+
+
 }
