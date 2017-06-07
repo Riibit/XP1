@@ -1,6 +1,8 @@
 package at.sw2017.q_up;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +31,7 @@ public class InfoActivity extends AppCompatActivity {
     private Place place;
 
 
+    @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,11 +54,14 @@ public class InfoActivity extends AppCompatActivity {
         place = db_handle.getPlaceFromId(id);
         if (place != null)
         {
+
+            String address = "<a href=\"http://" + place.link + "\">" + "Go to website" + "</a>";
+            txtViewLink.setText(Html.fromHtml(address));
             txtViewLongtitude.setText(place.longitude);
             txtViewlatitude.setText(place.latitude);
             txtviewOpening.setText(place.opening_hours);
             txtViewAdress.setText(place.address);
-            txtViewLink.setText(place.link);
+            txtViewLink.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
 
