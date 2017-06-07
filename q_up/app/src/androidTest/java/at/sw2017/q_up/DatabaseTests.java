@@ -292,9 +292,16 @@ public class DatabaseTests {
         List<Place> testplaces = new ArrayList<>();
         testplaces.add(new Place("", "Pail Coffee", "47.06", "15.4639", "0", "0", "300", "www.facebook.com/pages/Cafe-Pail/224103501023336", "Mo-Fr: 08.00 - 16.00", "Klosterwiesgasse 5"));
         testplaces.add(new Place("", "Spar Market", "47.0608", "15.4682", "0", "0", "150", "www.spar.at", "Mo-Sa 07.00 - 19.30", "Friedrichgasse 15"));
-        testplaces.add(new Place("", "McDonalds", "47.055496", "15.448409", "0", "0", "200", "www.mcdonalds.at", "Mo-So 06.00 - 24.00", "Jakominiplatz 10"));
+        testplaces.add(new Place("", "McDonalds", "47.055496", "15.448409", "0", "0", "200", "www.mcdonalds.at", "Mo-So 06.00 - 24.00", "Jakominiplatz 18"));
         testplaces.add(new Place("", "Davinci", "47.054160", "15.444241", "0", "0", "220", "www.davinci-pizza.at", "Mo-Fr 09.00 - 24.00", "Fröhlichgasse 10"));
-        testplaces.add(new Place("", "Hofer", "47.055717", "15.441392", "0", "0", "150", "www.hofer.at", "Mo-Fr 08.00 - 19.00", "Lendplatz 10"));
+        testplaces.add(new Place("", "Hofer", "47.076432", "15.431879", "0", "0", "150", "www.hofer.at", "Mo-Fr 08.00 - 19.00", "Lendkai 59"));
+        testplaces.add(new Place("", "Hofer", "47.055636", "15.441328", "0", "0", "160", "www.hofer.at", "Mo-Sa 07.40 - 20.00", "Schönaugasse 121"));
+        testplaces.add(new Place("", "McDonald's", "47.064141", "15.464896", "0", "0", "200", "www.mcdonalds.at", "Mo-Sa 07.00 - 00.00", "Plüddemanngasse 62"));
+        testplaces.add(new Place("", "Hofer", "47.063298", "15.465450", "0", "0", "100", "www.hofer.at", "Mo-Sa 07.40 - 18.00", "Plüddemanngasse 66"));
+        testplaces.add(new Place("", "Spar Market","47.077486", "15.462518","0","0","220","www.spar.at","Mo-Sa 07.15 - 19.30","Elisabethstraße 80"));
+        testplaces.add(new Place("", "Spar Market","47.075499", "15.459063","0","0","220","www.spar.at","Mo-Sa 07.15 - 19.30","Leonhardstraße 95"));
+        testplaces.add(new Place("", "Spar Market","47.066292", "15.446914","0","0","220","www.spar.at","Mo-Sa 07.15 - 19.30","Dietrichsteinplatz 12"));
+        testplaces.add(new Place("", "Spar Market","47.080322", "15.444991","0","0","220","www.spar.at","Mo-Sa 07.15 - 19.30","Humboldtstraße 37"));
 
         //==========================================================================================
 final boolean regenarte_testcase = false;

@@ -29,6 +29,7 @@
     <string name="change_password">Change password</string>
     <string name="change_info">Change user info</string>
 
+    <string name="website_text">Go to website</string>
     <string name="chatButton">Chat!</string>
 
 </resources>
