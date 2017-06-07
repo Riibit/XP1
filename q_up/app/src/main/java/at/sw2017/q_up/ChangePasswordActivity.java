@@ -28,7 +28,12 @@ public class ChangePasswordActivity extends AppCompatActivity {
             public void onClick(View arg0) {
 
                 // check if passwords match
-                if (newPassword.getText().toString().equals(newPasswordConfirm.getText().toString())) {
+                if(newPasswordConfirm.getText().toString().equals("") || newPassword.getText().toString().equals(""))
+                {
+                    Toast.makeText(getApplicationContext(),
+                            "Enter your Password!", Toast.LENGTH_SHORT).show();
+                }
+                else if (newPassword.getText().toString().equals(newPasswordConfirm.getText().toString())) {
                     db_handler.modifyUserAttribute(MainActivity.getUser().userId, "password", newPassword.getText().toString());
                     SaveSharedPreference.setUserName(QUpApp.getContext(), "");
                     goToMain();
