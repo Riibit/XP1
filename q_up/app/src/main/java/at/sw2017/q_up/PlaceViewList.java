@@ -34,12 +34,12 @@ public class PlaceViewList extends Activity {
         // fill list with places from DB
         db_handle.placesLock();
         for (Place p : db_handle.getPlacesList()) {
-            places_to_show.add(p.placeName + "  " + p.address);           ///////////////////
+            places_to_show.add(p.placeName + "  " + p.address);
             place_ids.add(p.placeId);
         }
         db_handle.placesUnlock();
 
-        Collections.sort(places_to_show);            /////////////////////////
+        /////Collections.sort(places_to_show); sorting breaks the list
         ListAdapter myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, places_to_show);
         ListView list = (ListView) findViewById(R.id.list);
         list.setAdapter(myAdapter);
