@@ -27,20 +27,26 @@ public class PlaceViewList extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_places);
 
-        final List<String> places_to_show = new ArrayList<>();
+
+        final List<Place> places_to_show = new ArrayList<>();
+        final List<String> place_names = new ArrayList<>();
         final List<String> place_ids = new ArrayList<>();
         DatabaseHandler db_handle = QUpApp.getInstance().getDBHandler();
 
         // fill list with places from DB
         db_handle.placesLock();
         for (Place p : db_handle.getPlacesList()) {
-            places_to_show.add(p.placeName + "  " + p.address);
-            place_ids.add(p.placeId);
+            places_to_show.add(p);
         }
+        Collections.sort(places_to_show);
         db_handle.placesUnlock();
 
-        /////Collections.sort(places_to_show); sorting breaks the list
-        ListAdapter myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, places_to_show);
+        for(Place p : places_to_show) {
+            place_names.add(p.placeName + " " + p.address);
+            place_ids.add(p.placeId);
+        }
+
+        ListAdapter myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, place_names);
         ListView list = (ListView) findViewById(R.id.list);
         list.setAdapter(myAdapter);
 

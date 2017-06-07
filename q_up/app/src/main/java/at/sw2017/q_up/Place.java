@@ -1,6 +1,8 @@
 package at.sw2017.q_up;
 
-public class Place {
+import android.support.annotation.NonNull;
+
+public class Place implements Comparable<Place>{
     public String placeId;
     public String placeName;
     public String latitude;
@@ -34,4 +36,10 @@ public class Place {
         address = ad;
 
     }
+
+    @Override
+    public int compareTo(Place other) {
+        return placeName.compareTo(other.placeName);
+    }
+
 }
