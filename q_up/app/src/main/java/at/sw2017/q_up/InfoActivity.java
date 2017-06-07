@@ -74,8 +74,6 @@ public class InfoActivity extends AppCompatActivity {
     protected void onRestart()
     {
         super.onRestart();
-        Toast.makeText(getApplicationContext(),
-                "onRestart", Toast.LENGTH_SHORT).show();
 
         bundle = getIntent().getExtras();
         title  =  bundle.getString("title");
