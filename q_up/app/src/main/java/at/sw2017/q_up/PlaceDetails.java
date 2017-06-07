@@ -129,15 +129,15 @@ public class PlaceDetails extends Activity implements OnClickListener {
                                         int dislike = Integer.valueOf(txtViewdislike.getText().toString());
                                         float stern = (((float)like) / ((float)like+(float)dislike))*100;
                                         ratingbar.setVisibility(View.VISIBLE);
-                                        if((int)stern >=90)
+                                        if((int)stern >= 83)
                                             ratingbar.setRating(5);
-                                        else if((int)stern >=75)
+                                        else if((int)stern >= 67)
                                             ratingbar.setRating(4);
-                                        else if((int)stern >=60)
+                                        else if((int)stern >= 50)
                                             ratingbar.setRating(3);
-                                        else if((int)stern >=45)
+                                        else if((int)stern >= 33)
                                             ratingbar.setRating(2);
-                                        else if((int)stern >=30)
+                                        else if((int)stern >= 17)
                                             ratingbar.setRating(1);
                                         else
                                             ratingbar.setRating(0);
@@ -224,14 +224,7 @@ public class PlaceDetails extends Activity implements OnClickListener {
             int timee = positionInQ* db_handle.getPlaceAvgProcessingSecsFromId(place_id);
             Minutes = timee /60;
             Seconds = timee % 60;
-            if ((Minutes < 10) && (Seconds < 10))
-                Qtime = "Queue Time:\n" + "0" + Integer.toString(Minutes) + ":" + "0" + Integer.toString(Seconds);
-            else if (Seconds < 10)
-                Qtime = "Queue Time:\n" + Integer.toString(Minutes) + ":" + "0" + Integer.toString(Seconds);
-            else if (Minutes < 10)
-                Qtime = "Queue Time:\n" + "0" + Integer.toString(Minutes) + ":" + Integer.toString(Seconds);
-            else
-                Qtime = "Queue Time:\n" + Integer.toString(Minutes) + ":" + Integer.toString(Seconds);
+            Qtime = "Queue Time:\n" + String.format("%02d", Minutes) + ":" + String.format("%02d", Seconds);
             time_1.setText(Qtime);
         }
     }
