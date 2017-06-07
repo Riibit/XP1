@@ -112,7 +112,6 @@ public class ChatTest {
         Intents.release();
     }
 
-
     @After
     public void afterEachTest() {
         Log.d("TestPD", "After");
@@ -138,18 +137,14 @@ public class ChatTest {
         //boolean boo = marker.exists();
         //marker.click();
 
-        SystemClock.sleep(10);
+        //SystemClock.sleep(10);
 
-        onView( withId(R.id.input)).perform(click());
+       // onView( withId(R.id.input)).perform(click());
         onView( withId(R.id.input)).perform(typeText("msg"));
         Espresso.closeSoftKeyboard();
 
 
         onView(withId(R.id.fab)).perform(click());
-
-
-
-
 
     }
 
