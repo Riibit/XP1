@@ -18,7 +18,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener  {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener  {
 
     public void mapsGoBack() {
         Intent intent = new Intent(this, ProfileActivity.class);
@@ -147,27 +147,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mapsGoDetails(p.placeId);
     }
 
-    @Override
-    public boolean onMarkerClick(final Marker marker) {
-
-        // Retrieve the data from the marker.
-        Integer clickCount = (Integer) marker.getTag();
-
-        // Check if a click count was set, then display the click count.
-        if (clickCount != null) {
-            clickCount = clickCount + 1;
-            marker.setTag(clickCount);
-            Toast.makeText(this,
-                    marker.getPosition() +
-                            " has been clicked " + clickCount + " times.",
-                    Toast.LENGTH_SHORT).show();
-        }
-
-        // Return false to indicate that we have not consumed the event and that we wish
-        // for the default behavior to occur (which is for the camera to move such that the
-        // marker is centered and for the marker's info window to open, if it has one).
-        return false;
-
-    }
 }
 
